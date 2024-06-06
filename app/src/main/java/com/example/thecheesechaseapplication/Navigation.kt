@@ -36,5 +36,13 @@ fun Navigation(modifier: Modifier){
                 navController = navController
             )
         }
+        composable(
+            route = Screen.Game.route
+        ) {
+            Game(
+                modifier = modifier,
+                navController = navController
+            )
+        }
     }
 }

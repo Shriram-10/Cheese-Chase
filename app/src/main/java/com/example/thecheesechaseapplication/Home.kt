@@ -52,15 +52,7 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun Home(modifier: Modifier, navController: NavController){
-    var trueAfter500ms by remember { mutableStateOf(false) }
-    var showPlayButton by remember { mutableStateOf(false) }
     var animatedWidth by remember { mutableStateOf(120) }
-
-    LaunchedEffect(Unit){
-        delay(500)
-        trueAfter500ms = true
-        showPlayButton = true
-    }
 
     Column(
         modifier = modifier
