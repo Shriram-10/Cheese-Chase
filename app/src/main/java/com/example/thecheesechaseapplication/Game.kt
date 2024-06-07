@@ -87,9 +87,13 @@ fun Game(modifier: Modifier, navController: NavController){
     }
     if (moveLeft.value){
         MoveJerryLeft()
+        xRight.value = x.value + width.value/15f
+        xLeft.value = x.value - width.value/15f
     }
     if (moveRight.value){
         MoveJerryRight()
+        xRight.value = x.value + width.value/15f
+        xLeft.value = x.value - width.value/15f
     }
 }
 
@@ -252,8 +256,7 @@ fun MoveJerryLeft(){
             while(x.value > width.value/2){
                 delay(8)
                 x.value -= 15
-                xRight.value = x.value + width.value/15f
-                xLeft.value = x.value - width.value/15f
+
             }
             if (x.value <= width.value/2){
                 jerryLocate.value = 0
@@ -265,8 +268,7 @@ fun MoveJerryLeft(){
             while(x.value > width.value/6){
                 delay(8)
                 x.value -= 15
-                xRight.value = x.value + width.value/15f
-                xLeft.value = x.value - width.value/15f
+
             }
             if (x.value <= width.value/6){
                 jerryLocate.value = -1
@@ -283,8 +285,7 @@ fun MoveJerryRight(){
             while(x.value < width.value/2){
                 delay(8)
                 x.value += 15
-                xRight.value = x.value + width.value/15f
-                xLeft.value = x.value - width.value/15f
+
             }
             if (x.value >= width.value/2){
                 jerryLocate.value = 0
@@ -296,8 +297,6 @@ fun MoveJerryRight(){
             while(x.value < width.value * 5/6){
                 delay(8)
                 x.value += 15
-                xRight.value = x.value + width.value/15f
-                xLeft.value = x.value - width.value/15f
             }
             if (x.value >= width.value * 5/6){
                 jerryLocate.value = 1
