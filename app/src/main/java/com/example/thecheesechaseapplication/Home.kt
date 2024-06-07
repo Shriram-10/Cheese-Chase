@@ -51,8 +51,6 @@ import androidx.navigation.NavController
 import com.example.thecheesechaseapplication.ui.theme.fontFamily
 import kotlinx.coroutines.delay
 
-var yBox : MutableList<Float> = mutableStateListOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f)
-
 @Composable
 fun Home(modifier: Modifier, navController: NavController){
     var animatedWidth by remember { mutableStateOf(120) }

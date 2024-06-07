@@ -37,7 +37,6 @@ fun Settings(modifier: Modifier, navController: NavController){
     ){
         Button(
             onClick = {
-                yBox = mutableStateListOf<Float>(0f,0f, height.value/4,height.value/2,height.value/2,0f,0f,0f,0f,0f)
                 navController.navigate(Screen.Game.route)
             },
             modifier = modifier.height(64.dp),
