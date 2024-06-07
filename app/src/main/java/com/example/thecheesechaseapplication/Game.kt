@@ -7,6 +7,8 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,6 +24,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
@@ -32,14 +35,10 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
 
-var height = mutableStateOf(0f)
-var width = mutableStateOf(0f)
-var yBox = mutableStateListOf<Float>(0f,0f, height.value/4,height.value/2,height.value/2,0f,0f,0f,0f,0f)
-var x = mutableStateOf(0f)
-
 @Composable
 fun Game(modifier: Modifier, navController: NavController){
     var elapsedTime by remember { mutableStateOf(0f) }
+
     LaunchedEffect(Unit){
         delay(1000)
         val startTime = withFrameMillis { it }
@@ -60,7 +59,37 @@ fun Game(modifier: Modifier, navController: NavController){
                 text = height.value.toString() + "\n" + width.value.toString(),
                 color = Color.White
             )
+            Text(
+                text = x.value.toString(),
+                color = Color.White
+            )
+            Text(
+                text = jerryLocate.value.toString(),
+                color = Color.White
+            )
+            Text(
+                text = xLeft.value.toString(),
+                color = Color.White
+            )
+            Text(
+                text = xRight.value.toString(),
+                color = Color.White
+            )
+            Text(
+                text = moveLeft.value.toString(),
+                color = Color.White
+            )
+            Text(
+                text = moveRight.value.toString(),
+                color = Color.White
+            )
         }
+    }
+    if (moveLeft.value){
+        MoveJerryLeft()
+    }
+    if (moveRight.value){
+        MoveJerryRight()
     }
 }
 
@@ -68,12 +97,10 @@ fun Game(modifier: Modifier, navController: NavController){
 fun GameCanvas() {
     val jerryHappy = ImageBitmap.imageResource(id = R.drawable.jerryhappy)
     val angryTom = ImageBitmap.imageResource(id = R.drawable.angrytom)
-    var xRight by remember { mutableStateOf(0f) }
-    var xLeft by remember { mutableStateOf(0f) }
-    var jerryLocate by remember { mutableStateOf(1) }
-
     var y by remember { mutableStateOf(0f) }
     var velocity by remember { mutableStateOf((height.value + width.value)/200) }
+    xRight.value = x.value + width.value/15f
+    xLeft.value = x.value - width.value/15f
 
     LaunchedEffect(Unit){
         delay(1000)
@@ -109,11 +136,11 @@ fun GameCanvas() {
             .background(Color(78, 92, 170))
             .pointerInput(Unit){
                 detectTapGestures (
-                    onTap = {offset ->
-                        if (offset.x > xRight && (offset.x > 2 * size.width / 3 || offset.x > size.width / 3)){
-                            moveJerryRight(jerryLocate)
-                        } else if (offset.x < xLeft && (offset.x < size.width / 3 || offset.x < 2 * size.width / 3)){
-                            moveJerryLeft(jerryLocate)
+                    onTap = {
+                        if (it.x < xLeft.value){
+                            moveLeft.value = true
+                        }else if (it.x > xRight.value){
+                            moveRight.value = true
                         }
                     }
                 )
@@ -121,10 +148,6 @@ fun GameCanvas() {
     ){
         height.value = size.height
         width.value = size.width
-        x.value = size.width/2
-        xRight = x.value + size.width/15f
-        xLeft = x.value - size.width/15f
-        jerryLocate = 1
 
         drawLine(
             color = Color.White,
@@ -222,10 +245,64 @@ fun GameCanvas() {
     }
 }
 
-fun moveJerryRight(locate : Int){
-
+@Composable
+fun MoveJerryLeft(){
+    if (jerryLocate.value == 1){
+        LaunchedEffect(Unit){
+            while(x.value > width.value/2){
+                delay(8)
+                x.value -= 15
+                xRight.value = x.value + width.value/15f
+                xLeft.value = x.value - width.value/15f
+            }
+            if (x.value <= width.value/2){
+                jerryLocate.value = 0
+                moveLeft.value = false
+            }
+        }
+    } else if (jerryLocate.value == 0){
+        LaunchedEffect(Unit){
+            while(x.value > width.value/6){
+                delay(8)
+                x.value -= 15
+                xRight.value = x.value + width.value/15f
+                xLeft.value = x.value - width.value/15f
+            }
+            if (x.value <= width.value/6){
+                jerryLocate.value = -1
+                moveLeft.value = false
+            }
+        }
+    }
 }
 
-fun moveJerryLeft(locate : Int){
-
+@Composable
+fun MoveJerryRight(){
+    if (jerryLocate.value == -1){
+        LaunchedEffect(Unit){
+            while(x.value < width.value/2){
+                delay(8)
+                x.value += 15
+                xRight.value = x.value + width.value/15f
+                xLeft.value = x.value - width.value/15f
+            }
+            if (x.value >= width.value/2){
+                jerryLocate.value = 0
+                moveRight.value = false
+            }
+        }
+    } else if (jerryLocate.value == 0){
+        LaunchedEffect(Unit){
+            while(x.value < width.value * 5/6){
+                delay(8)
+                x.value += 15
+                xRight.value = x.value + width.value/15f
+                xLeft.value = x.value - width.value/15f
+            }
+            if (x.value >= width.value * 5/6){
+                jerryLocate.value = 1
+                moveRight.value = false
+            }
+        }
+    }
 }
