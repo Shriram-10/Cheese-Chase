@@ -307,3 +307,27 @@ fun MoveJerryRight(){
         }
     }
 }
+
+fun checkCollision(){
+     for (i in 0..9){
+         if (movingBoxes[i].centerX - movingBoxes[i].width / 2 == movingJerry.value.centerX + movingJerry.value.width / 2){
+             if (movingBoxes[i].centerY - movingBoxes[i].height / 2 == movingJerry.value.centerY){
+                 collided.value = true
+             } else if(movingBoxes[i].centerY + movingBoxes[i].height / 2 == movingJerry.value.centerY){
+                 collided.value = true
+             }
+         } else if (movingBoxes[i].centerX + movingBoxes[i].width / 2  == movingJerry.value.centerX - movingJerry.value.width / 2){
+             if (movingBoxes[i].centerY - movingBoxes[i].height / 2 == movingJerry.value.centerY){
+                 collided.value = true
+             } else if(movingBoxes[i].centerY + movingBoxes[i].height / 2 == movingJerry.value.centerY){
+                 collided.value = true
+             }
+         } else if (movingBoxes[i].centerY - movingBoxes[i].height / 2 == movingJerry.value.centerY + movingJerry.value.height/2){
+             if (movingBoxes[i].centerX - movingBoxes[i].width / 2 == movingJerry.value.centerX){
+                 collided.value = true
+             } else if (movingBoxes[i].centerX + movingBoxes[i].width / 2 == movingJerry.value.centerX){
+                 collided.value = true
+             }
+         }
+     }
+}

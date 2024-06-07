@@ -13,6 +13,9 @@ var xLeft = mutableStateOf(0f)
 var moveRight = mutableStateOf(false)
 var moveLeft = mutableStateOf(false)
 var jerryVelocity = mutableStateOf(15f)
+var collided = mutableStateOf(false)
+
+
 var movingJerry = mutableStateOf<Dimensions>(
     Dimensions(
         0f,
