@@ -36,6 +36,10 @@ fun Settings(modifier: Modifier, navController: NavController){
     ){
         Button(
             onClick = {
+                movingJerry.value.centerX = width.value / 2
+                movingJerry.value.centerY = height.value
+                movingJerry.value.width = width.value / 15
+                movingJerry.value.height = width.value / 15
                 navController.navigate(Screen.Game.route)
             },
             modifier = modifier.height(64.dp),

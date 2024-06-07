@@ -110,9 +110,10 @@ fun GameCanvas() {
         delay(1000)
         val startTime = withFrameMillis { it }
         while(y < height.value/3){
-            delay(16)
+            delay(8)
             val elapsedTime = withFrameMillis { it } - startTime
-            y += elapsedTime / 100f
+            y += elapsedTime / 50f
+            movingJerry.value.centerY += elapsedTime / 50f
         }
     }
 
@@ -120,15 +121,15 @@ fun GameCanvas() {
         yBox = mutableStateListOf<Float>(0f,0f, height.value/4,height.value/2,height.value/2,-height.value/4,-height.value/2,-height.value/2,- 3 * height.value / 4,0f,0f)
         velocity = (height.value + width.value)/200
         delay(3000)
-        /*var startTime = withFrameMillis { it }*/
         while(true){
             delay(16)
-            /*var elapsedTime = withFrameMillis { it } - startTime*/
             for(i in 0..9){
                 if (yBox[i] < height.value + 6 * width.value / 5){
                     yBox[i] += velocity
+                    movingBoxes[i].centerY += velocity
                 } else {
                     yBox[i] -= height.value + 6 * width.value / 5
+                    movingBoxes[i].centerY -= height.value + 6 * width.value / 5
                 }
             }
         }
@@ -256,7 +257,7 @@ fun MoveJerryLeft(){
             while(x.value > width.value/2){
                 delay(8)
                 x.value -= 15
-
+                movingJerry.value.centerX -= 15
             }
             if (x.value <= width.value/2){
                 jerryLocate.value = 0
@@ -268,7 +269,7 @@ fun MoveJerryLeft(){
             while(x.value > width.value/6){
                 delay(8)
                 x.value -= 15
-
+                movingJerry.value.centerX -= 15
             }
             if (x.value <= width.value/6){
                 jerryLocate.value = -1
@@ -285,7 +286,7 @@ fun MoveJerryRight(){
             while(x.value < width.value/2){
                 delay(8)
                 x.value += 15
-
+                movingJerry.value.centerX += 15
             }
             if (x.value >= width.value/2){
                 jerryLocate.value = 0
@@ -297,6 +298,7 @@ fun MoveJerryRight(){
             while(x.value < width.value * 5/6){
                 delay(8)
                 x.value += 15
+                movingJerry.value.centerX += 15
             }
             if (x.value >= width.value * 5/6){
                 jerryLocate.value = 1

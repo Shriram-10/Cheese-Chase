@@ -12,4 +12,80 @@ var xRight = mutableStateOf(0f)
 var xLeft = mutableStateOf(0f)
 var moveRight = mutableStateOf(false)
 var moveLeft = mutableStateOf(false)
-var jerryVelocity = mutableStateOf(30f)
+var jerryVelocity = mutableStateOf(15f)
+var movingJerry = mutableStateOf<Dimensions>(
+    Dimensions(
+        0f,
+        0f,
+        0f,
+        0f
+    )
+)
+var movingBoxes = mutableStateListOf<Dimensions>(
+    Dimensions(
+        width.value / 5,
+        width.value / 5,
+        width.value/10,
+        width.value/10
+    ),
+    Dimensions(
+        width.value / 5,
+        width.value / 5,
+        width.value / 1.2f,
+        width.value / 10
+    ),
+    Dimensions(
+        width.value / 5,
+        width.value / 5,
+        width.value / 2,
+        height.value / 4 + width.value / 10
+    ),
+    Dimensions(
+        width.value / 5,
+        width.value / 5,
+        width.value/10,
+        height.value/ 2 + width.value / 10
+    ),
+    Dimensions(
+        width.value / 5,
+        width.value / 5,
+        width.value / 1.2f,
+        height.value/ 2 + width.value / 10
+    ),
+    Dimensions(
+        width.value / 5,
+        width.value / 5,
+        width.value / 2,
+        - height.value / 4 + width.value / 10
+    ),
+    Dimensions(
+        width.value / 5,
+        width.value / 5,
+        width.value/10,
+        - height.value / 2 + width.value/10
+    ),
+    Dimensions(
+        width.value / 5,
+        width.value / 5,
+        width.value / 1.2f,
+        - height.value / 2 + width.value/10
+    ),
+    Dimensions(
+        width.value / 5,
+        width.value / 5,
+        width.value / 2,
+        - 3 * height.value / 4 + width.value / 10
+    ),
+    Dimensions(
+        width.value / 5,
+        width.value / 5,
+        width.value/10,
+        width.value/10
+    ),
+    Dimensions(
+        width.value / 5,
+        width.value / 5,
+        width.value / 1.2f,
+        width.value / 10
+    )
+)
