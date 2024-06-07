@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -28,16 +29,23 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun Game(modifier: Modifier, navController: NavController){
+    var elapsedTime by remember { mutableStateOf(0f) }
+    LaunchedEffect(Unit){
+        delay(1000)
+        val startTime = withFrameMillis { it }
+        while(true) {
+            elapsedTime = (withFrameMillis { it } - startTime) * 0.001f
+        }
+    }
     Box(
         modifier = modifier.fillMaxSize(),
     ){
         GameCanvas()
+        Text(
+            text = elapsedTime.toString(),
+            color = Color.White
+        )
     }
-}
-
-@Composable
-fun TimeCalc() {
-
 }
 
 @Composable
@@ -49,7 +57,6 @@ fun GameCanvas(){
 
     LaunchedEffect(Unit){
         delay(1000)
-        y = 300f
         val startTime = withFrameMillis { it }
         while(y < 800){
             delay(16)
