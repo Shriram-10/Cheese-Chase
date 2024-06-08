@@ -42,14 +42,24 @@ fun Game(modifier: Modifier, navController: NavController){
     LaunchedEffect(Unit){
         delay(1000)
         val startTime = withFrameMillis { it }
-        while(true) {
+        while(!collided.value) {
             elapsedTime = (withFrameMillis { it } - startTime) * 0.001f
+        }
+    }
+
+    LaunchedEffect(Unit){
+        delay(3000)
+        while(!collided.value){
+            delay(4)
+            checkCollision()
         }
     }
     Box(
         modifier = modifier.fillMaxSize(),
     ){
-        GameCanvas()
+        if (!collided.value){
+            GameCanvas(modifier)
+        }
         Column {
             Text(
                 text = elapsedTime.roundToInt().toString(),
@@ -139,10 +149,14 @@ fun Game(modifier: Modifier, navController: NavController){
         xRight.value = x.value + width.value/15f
         xLeft.value = x.value - width.value/15f
     }
+    if (moveLeft.value && moveRight.value){
+        moveLeft.value = !moveLeft.value
+        moveRight.value = !moveRight.value
+    }
 }
 
 @Composable
-fun GameCanvas() {
+fun GameCanvas(modifier:Modifier) {
     val jerryHappy = ImageBitmap.imageResource(id = R.drawable.jerryhappy)
     val angryTom = ImageBitmap.imageResource(id = R.drawable.angrytom)
     var y by remember { mutableStateOf(0f) }
@@ -157,7 +171,7 @@ fun GameCanvas() {
             delay(8)
             val elapsedTime = withFrameMillis { it } - startTime
             y += elapsedTime / 50f
-            movingJerry.value.centerY += elapsedTime / 50f
+            movingJerry.value.centerY -= elapsedTime / 50f
         }
     }
 
@@ -168,20 +182,12 @@ fun GameCanvas() {
         while(true){
             delay(16)
             for(i in 0..9){
-                if (yBox[i] < height.value + 6 * width.value / 5){
+                if (yBox[i] < height.value + width.value){
                     yBox[i] += velocity
                     movingBoxes[i].centerY += velocity
-                    checkCollision()
-                    if (collided.value){
-                        y = height.value
-                    }
                 } else {
-                    yBox[i] -= height.value + 6 * width.value / 5
-                    movingBoxes[i].centerY -= height.value + 6 * width.value / 5
-                    checkCollision()
-                    if (collided.value){
-                        y = height.value
-                    }
+                    yBox[i] -= height.value + width.value
+                    movingBoxes[i].centerY -= height.value + width.value
                 }
             }
         }
@@ -362,15 +368,15 @@ fun MoveJerryRight(){
 
 fun checkCollision(){
      for (i in 0..9){
-         if (movingBoxes[i].centerX - movingBoxes[i].width / 2 == movingJerry.value.centerX + movingJerry.value.width / 2){
+         if (movingBoxes[i].centerX - movingJerry.value.centerX <= movingBoxes[i].width / 2 + movingJerry.value.width / 2 && movingBoxes[i].centerX - movingJerry.value.centerX >= 0){
              if ((movingBoxes[i].centerY - movingBoxes[i].height / 2 <= movingJerry.value.centerY) && (movingBoxes[i].centerY + movingBoxes[i].height / 2 >= movingJerry.value.centerY)){
                  collided.value = true
              }
-         } else if (movingBoxes[i].centerX + movingBoxes[i].width / 2  == movingJerry.value.centerX - movingJerry.value.width / 2){
+         } else if (movingJerry.value.width / 2 + movingBoxes[i].width / 2  >= movingJerry.value.centerX - movingBoxes[i].centerX && movingJerry.value.centerX - movingBoxes[i].centerX >= 0){
              if ((movingBoxes[i].centerY - movingBoxes[i].height / 2 <= movingJerry.value.centerY) && (movingBoxes[i].centerY + movingBoxes[i].height / 2 >= movingJerry.value.centerY)){
                  collided.value = true
              }
-         } else if (movingBoxes[i].centerY - movingBoxes[i].height / 2 == movingJerry.value.centerY + movingJerry.value.height/2){
+         } else if (movingBoxes[i].centerY - movingJerry.value.centerY <= movingBoxes[i].height / 2  + movingJerry.value.height/2 && movingBoxes[i].centerY - movingJerry.value.centerY >= 0){
              if ((movingBoxes[i].centerX - movingBoxes[i].width / 2 <= movingJerry.value.centerX) && (movingBoxes[i].centerX + movingBoxes[i].width / 2 >= movingJerry.value.centerX)){
                  collided.value = true
              }
