@@ -42,26 +42,47 @@ fun Game(modifier: Modifier, navController: NavController){
     LaunchedEffect(Unit){
         delay(1000)
         val startTime = withFrameMillis { it }
-        while(!collided.value) {
+        while(!(collided1.value || collided2.value || collided3.value)) {
             elapsedTime = (withFrameMillis { it } - startTime) * 0.001f
         }
     }
 
-    LaunchedEffect(Unit){
-        delay(3000)
-        while(!collided.value){
-            delay(4)
-            checkCollision()
+    if (!(collided1.value || collided2.value || collided3.value)){
+        LaunchedEffect(Unit){
+            delay(1000)
+            while(!(collided1.value || collided2.value || collided3.value)){
+                delay(4)
+                checkCollision()
+            }
         }
     }
+
     Box(
         modifier = modifier.fillMaxSize(),
     ){
-        if (!collided.value){
+        if (collisionCount.value < 2){
             GameCanvas(modifier)
+        } else if (collisionCount.value == 2){
+            Column(modifier = modifier.fillMaxSize().background(Color.Red)) {}
         }
         Column {
             Text(
+                text = collided1.value.toString(),
+                color = Color.White
+            )
+            Text(
+                text = collided2.value.toString(),
+                color = Color.White
+            )
+            Text(
+                text = collided3.value.toString(),
+                color = Color.White
+            )
+            Text(
+                text = collisionCount.value.toString(),
+                color = Color.White
+            )
+            /*Text(
                 text = elapsedTime.roundToInt().toString(),
                 color = Color.White
             )
@@ -91,10 +112,6 @@ fun Game(modifier: Modifier, navController: NavController){
             )
             Text(
                 text = moveRight.value.toString(),
-                color = Color.White
-            )
-            Text(
-                text = collided.value.toString(),
                 color = Color.White
             )
             Text(
@@ -136,7 +153,7 @@ fun Game(modifier: Modifier, navController: NavController){
             Text(
                 text = movingJerry.value.toString(),
                 color = Color.White
-            )
+            )*/
         }
     }
     if (moveLeft.value){
@@ -165,7 +182,7 @@ fun GameCanvas(modifier:Modifier) {
     xLeft.value = x.value - width.value/15f
 
     LaunchedEffect(Unit){
-        delay(1000)
+        delay(500)
         val startTime = withFrameMillis { it }
         while(y < height.value/3){
             delay(8)
@@ -178,7 +195,7 @@ fun GameCanvas(modifier:Modifier) {
     LaunchedEffect(Unit){
         yBox = mutableStateListOf<Float>(0f,0f, height.value/4,height.value/2,height.value/2,-height.value/4,-height.value/2,-height.value/2,- 3 * height.value / 4,0f,0f)
         velocity = (height.value + width.value)/200
-        delay(3000)
+        delay(1250)
         while(true){
             delay(16)
             for(i in 0..9){
@@ -188,6 +205,16 @@ fun GameCanvas(modifier:Modifier) {
                 } else {
                     yBox[i] -= height.value + width.value
                     movingBoxes[i].centerY -= height.value + width.value
+                }
+                if (collided1.value){
+                    delay(2000)
+                    collided1.value = false
+                } else if (collided2.value){
+                    delay(2000)
+                    collided2.value = false
+                } else if (collided3.value){
+                    delay(2000)
+                    collided3.value = false
                 }
             }
         }
@@ -314,8 +341,8 @@ fun MoveJerryLeft(){
         LaunchedEffect(Unit){
             while(x.value > width.value/2){
                 delay(8)
-                x.value -= 15
-                movingJerry.value.centerX -= 15
+                x.value -= jerryVelocity.value
+                movingJerry.value.centerX -= jerryVelocity.value
             }
             if (x.value <= width.value/2){
                 jerryLocate.value = 0
@@ -326,8 +353,8 @@ fun MoveJerryLeft(){
         LaunchedEffect(Unit){
             while(x.value > width.value/6){
                 delay(8)
-                x.value -= 15
-                movingJerry.value.centerX -= 15
+                x.value -= jerryVelocity.value
+                movingJerry.value.centerX -= jerryVelocity.value
             }
             if (x.value <= width.value/6){
                 jerryLocate.value = -1
@@ -343,8 +370,8 @@ fun MoveJerryRight(){
         LaunchedEffect(Unit){
             while(x.value < width.value/2){
                 delay(8)
-                x.value += 15
-                movingJerry.value.centerX += 15
+                x.value += jerryVelocity.value
+                movingJerry.value.centerX += jerryVelocity.value
             }
             if (x.value >= width.value/2){
                 jerryLocate.value = 0
@@ -355,8 +382,8 @@ fun MoveJerryRight(){
         LaunchedEffect(Unit){
             while(x.value < width.value * 5/6){
                 delay(8)
-                x.value += 15
-                movingJerry.value.centerX += 15
+                x.value += jerryVelocity.value
+                movingJerry.value.centerX += jerryVelocity.value
             }
             if (x.value >= width.value * 5/6){
                 jerryLocate.value = 1
@@ -370,15 +397,18 @@ fun checkCollision(){
      for (i in 0..9){
          if (movingBoxes[i].centerX - movingJerry.value.centerX <= movingBoxes[i].width / 2 + movingJerry.value.width / 2 && movingBoxes[i].centerX - movingJerry.value.centerX >= 0){
              if ((movingBoxes[i].centerY - movingBoxes[i].height / 2 <= movingJerry.value.centerY) && (movingBoxes[i].centerY + movingBoxes[i].height / 2 >= movingJerry.value.centerY)){
-                 collided.value = true
+                 collided1.value = true
+                 collisionCount.value += 1
              }
          } else if (movingJerry.value.width / 2 + movingBoxes[i].width / 2  >= movingJerry.value.centerX - movingBoxes[i].centerX && movingJerry.value.centerX - movingBoxes[i].centerX >= 0){
              if ((movingBoxes[i].centerY - movingBoxes[i].height / 2 <= movingJerry.value.centerY) && (movingBoxes[i].centerY + movingBoxes[i].height / 2 >= movingJerry.value.centerY)){
-                 collided.value = true
+                 collided2.value = true
+                 collisionCount.value += 1
              }
          } else if (movingBoxes[i].centerY - movingJerry.value.centerY <= movingBoxes[i].height / 2  + movingJerry.value.height/2 && movingBoxes[i].centerY - movingJerry.value.centerY >= 0){
              if ((movingBoxes[i].centerX - movingBoxes[i].width / 2 <= movingJerry.value.centerX) && (movingBoxes[i].centerX + movingBoxes[i].width / 2 >= movingJerry.value.centerX)){
-                 collided.value = true
+                 collided3.value = true
+                 collisionCount.value += 1
              }
          }
      }
