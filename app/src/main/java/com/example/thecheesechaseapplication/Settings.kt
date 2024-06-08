@@ -25,7 +25,75 @@ import androidx.navigation.NavController
 @Composable
 fun Settings(modifier: Modifier, navController: NavController){
     androidx.compose.foundation.Canvas(modifier = Modifier.fillMaxWidth()) {
+        movingJerry.value.centerX = size.width / 2
+        movingJerry.value.centerY = size.height
+        movingJerry.value.width = size.width / 15
+        movingJerry.value.height = size.width / 15
         x.value = size.width/2
+        width.value = size.width
+        height.value = size.height
+        movingBoxes[0] = Dimensions(
+            width.value / 5,
+            width.value / 5,
+            width.value/10,
+            width.value/10
+        )
+
+        movingBoxes[1] = Dimensions(
+            width.value / 5,
+            width.value / 5,
+            width.value / 1.2f,
+            width.value / 10
+        )
+
+        movingBoxes[2] = Dimensions(
+            width.value / 5,
+            width.value / 5,
+            width.value / 2,
+            height.value / 4 + width.value / 10
+        )
+
+        movingBoxes[3] = Dimensions(
+            width.value / 5,
+            width.value / 5,
+            width.value/10,
+            height.value/ 2 + width.value / 10
+        )
+
+        movingBoxes[4] = Dimensions(
+            width.value / 5,
+            width.value / 5,
+            width.value / 1.2f,
+            height.value/ 2 + width.value / 10
+        )
+
+        movingBoxes[5] = Dimensions(
+            width.value / 5,
+            width.value / 5,
+            width.value / 2,
+            - height.value / 4 + width.value / 10
+        )
+
+        movingBoxes[6] = Dimensions(
+            width.value / 5,
+            width.value / 5,
+            width.value/10,
+            - height.value / 2 + width.value/10
+        )
+
+        movingBoxes[7] = Dimensions(
+            width.value / 5,
+            width.value / 5,
+            width.value / 1.2f,
+            - height.value / 2 + width.value/10
+        )
+
+        movingBoxes[8] = Dimensions(
+            width.value / 5,
+            width.value / 5,
+            width.value / 2,
+            - 3 * height.value / 4 + width.value / 10
+        )
     }
     Column(
         modifier = modifier
@@ -36,10 +104,6 @@ fun Settings(modifier: Modifier, navController: NavController){
     ){
         Button(
             onClick = {
-                movingJerry.value.centerX = width.value / 2
-                movingJerry.value.centerY = height.value
-                movingJerry.value.width = width.value / 15
-                movingJerry.value.height = width.value / 15
                 navController.navigate(Screen.Game.route)
             },
             modifier = modifier.height(64.dp),

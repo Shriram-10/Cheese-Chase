@@ -83,6 +83,50 @@ fun Game(modifier: Modifier, navController: NavController){
                 text = moveRight.value.toString(),
                 color = Color.White
             )
+            Text(
+                text = collided.value.toString(),
+                color = Color.White
+            )
+            Text(
+                text = movingBoxes[0].toString(),
+                color = Color.White
+            )
+            Text(
+                text = movingBoxes[1].toString(),
+                color = Color.White
+            )
+            Text(
+                text = movingBoxes[2].toString(),
+                color = Color.White
+            )
+            Text(
+                text = movingBoxes[3].toString(),
+                color = Color.White
+            )
+            Text(
+                text = movingBoxes[4].toString(),
+                color = Color.White
+            )
+            Text(
+                text = movingBoxes[5].toString(),
+                color = Color.White
+            )
+            Text(
+                text = movingBoxes[6].toString(),
+                color = Color.White
+            )
+            Text(
+                text = movingBoxes[7].toString(),
+                color = Color.White
+            )
+            Text(
+                text = movingBoxes[8].toString(),
+                color = Color.White
+            )
+            Text(
+                text = movingJerry.value.toString(),
+                color = Color.White
+            )
         }
     }
     if (moveLeft.value){
@@ -127,9 +171,17 @@ fun GameCanvas() {
                 if (yBox[i] < height.value + 6 * width.value / 5){
                     yBox[i] += velocity
                     movingBoxes[i].centerY += velocity
+                    checkCollision()
+                    if (collided.value){
+                        y = height.value
+                    }
                 } else {
                     yBox[i] -= height.value + 6 * width.value / 5
                     movingBoxes[i].centerY -= height.value + 6 * width.value / 5
+                    checkCollision()
+                    if (collided.value){
+                        y = height.value
+                    }
                 }
             }
         }
@@ -311,21 +363,15 @@ fun MoveJerryRight(){
 fun checkCollision(){
      for (i in 0..9){
          if (movingBoxes[i].centerX - movingBoxes[i].width / 2 == movingJerry.value.centerX + movingJerry.value.width / 2){
-             if (movingBoxes[i].centerY - movingBoxes[i].height / 2 == movingJerry.value.centerY){
-                 collided.value = true
-             } else if(movingBoxes[i].centerY + movingBoxes[i].height / 2 == movingJerry.value.centerY){
+             if ((movingBoxes[i].centerY - movingBoxes[i].height / 2 <= movingJerry.value.centerY) && (movingBoxes[i].centerY + movingBoxes[i].height / 2 >= movingJerry.value.centerY)){
                  collided.value = true
              }
          } else if (movingBoxes[i].centerX + movingBoxes[i].width / 2  == movingJerry.value.centerX - movingJerry.value.width / 2){
-             if (movingBoxes[i].centerY - movingBoxes[i].height / 2 == movingJerry.value.centerY){
-                 collided.value = true
-             } else if(movingBoxes[i].centerY + movingBoxes[i].height / 2 == movingJerry.value.centerY){
+             if ((movingBoxes[i].centerY - movingBoxes[i].height / 2 <= movingJerry.value.centerY) && (movingBoxes[i].centerY + movingBoxes[i].height / 2 >= movingJerry.value.centerY)){
                  collided.value = true
              }
          } else if (movingBoxes[i].centerY - movingBoxes[i].height / 2 == movingJerry.value.centerY + movingJerry.value.height/2){
-             if (movingBoxes[i].centerX - movingBoxes[i].width / 2 == movingJerry.value.centerX){
-                 collided.value = true
-             } else if (movingBoxes[i].centerX + movingBoxes[i].width / 2 == movingJerry.value.centerX){
+             if ((movingBoxes[i].centerX - movingBoxes[i].width / 2 <= movingJerry.value.centerX) && (movingBoxes[i].centerX + movingBoxes[i].width / 2 >= movingJerry.value.centerX)){
                  collided.value = true
              }
          }
