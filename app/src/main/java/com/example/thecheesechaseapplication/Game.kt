@@ -52,9 +52,16 @@ fun Game(modifier: Modifier, navController: NavController){
             delay(1000)
             while(!(collided1.value || collided2.value || collided3.value)){
                 delay(4)
+                if (collisionCount.value == 1 && !tomStarts.value){
+                    tomStarts.value = true
+                }
                 checkCollision()
             }
         }
+    }
+
+    if (tomStarts.value){
+        moveTom()
     }
 
     Box(
@@ -261,8 +268,8 @@ fun GameCanvas(modifier:Modifier) {
 
         drawCircle(
             color = Color.Gray,
-            radius = size.width/10f,
-            center = Offset(size.width/2, size.height)
+            radius = if (collisionCount.value == 0) size.width/10f else size.width/15f,
+            center = Offset(movingTom.value.centerX, movingTom.value.centerY)
         )
 
         /*scale(scale = 0.4f){
@@ -412,4 +419,11 @@ fun checkCollision(){
              }
          }
      }
+}
+
+@Composable
+fun moveTom(){
+    LaunchedEffect(Unit){
+
+    }
 }

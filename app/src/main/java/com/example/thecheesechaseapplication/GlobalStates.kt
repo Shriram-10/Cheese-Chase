@@ -26,6 +26,17 @@ var movingJerry = mutableStateOf<Dimensions>(
         0f
     )
 )
+
+var movingTom = mutableStateOf<Dimensions>(
+    Dimensions(
+        0f,
+        0f,
+        0f,
+        0f
+    )
+)
+var tomStarts = mutableStateOf(false)
+
 var movingBoxes = mutableStateListOf<Dimensions>(
     Dimensions(
         width.value / 5,
