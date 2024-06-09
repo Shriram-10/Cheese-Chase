@@ -60,18 +60,19 @@ fun Game(modifier: Modifier, navController: NavController){
         }
     }
 
-    if (tomStarts.value){
+    if(tomStarts.value){
         moveTom()
     }
 
     Box(
         modifier = modifier.fillMaxSize(),
     ){
-        if (collisionCount.value < 2){
-            GameCanvas(modifier)
-        } else if (collisionCount.value == 2){
-            Column(modifier = modifier.fillMaxSize().background(Color.Red)) {}
+        GameCanvas(modifier)
+
+        if (collisionCount.value == 2){
+            WinnerPage(modifier)
         }
+
         Column {
             Text(
                 text = collided1.value.toString(),
@@ -188,43 +189,73 @@ fun GameCanvas(modifier:Modifier) {
     xRight.value = x.value + width.value/15f
     xLeft.value = x.value - width.value/15f
 
-    LaunchedEffect(Unit){
-        delay(500)
-        val startTime = withFrameMillis { it }
-        while(y < height.value/3){
-            delay(8)
-            val elapsedTime = withFrameMillis { it } - startTime
-            y += elapsedTime / 50f
-            movingJerry.value.centerY -= elapsedTime / 50f
-        }
-    }
 
-    LaunchedEffect(Unit){
-        yBox = mutableStateListOf<Float>(0f,0f, height.value/4,height.value/2,height.value/2,-height.value/4,-height.value/2,-height.value/2,- 3 * height.value / 4,0f,0f)
-        velocity = (height.value + width.value)/200
-        delay(1250)
-        while(true){
-            delay(16)
-            for(i in 0..9){
-                if (yBox[i] < height.value + width.value){
-                    yBox[i] += velocity
-                    movingBoxes[i].centerY += velocity
-                } else {
-                    yBox[i] -= height.value + width.value
-                    movingBoxes[i].centerY -= height.value + width.value
-                }
-                if (collided1.value){
-                    delay(2000)
-                    collided1.value = false
-                } else if (collided2.value){
-                    delay(2000)
-                    collided2.value = false
-                } else if (collided3.value){
-                    delay(2000)
-                    collided3.value = false
+    if (collisionCount.value < 2) {
+        LaunchedEffect(Unit) {
+            delay(500)
+            val startTime = withFrameMillis { it }
+            while (y < height.value / 3) {
+                delay(8)
+                val elapsedTime = withFrameMillis { it } - startTime
+                y += elapsedTime / 50f
+                movingJerry.value.centerY -= elapsedTime / 50f
+            }
+        }
+
+        LaunchedEffect(Unit) {
+            yBox = mutableStateListOf<Float>(
+                0f,
+                0f,
+                height.value / 4,
+                height.value / 2,
+                height.value / 2,
+                -height.value / 4,
+                -height.value / 2,
+                -height.value / 2,
+                -3 * height.value / 4,
+                0f,
+                0f
+            )
+            velocity = (height.value + width.value) / 200
+            delay(1250)
+            while (true) {
+                delay(16)
+                for (i in 0..9) {
+                    if (yBox[i] < height.value + width.value) {
+                        yBox[i] += velocity
+                        movingBoxes[i].centerY += velocity
+                    } else {
+                        yBox[i] -= height.value + width.value
+                        movingBoxes[i].centerY -= height.value + width.value
+                    }
+                    if (collided1.value) {
+                        delay(2000)
+                        collided1.value = false
+                    } else if (collided2.value) {
+                        delay(2000)
+                        collided2.value = false
+                    } else if (collided3.value) {
+                        delay(2000)
+                        collided3.value = false
+                    }
                 }
             }
         }
+    } else if (collisionCount.value == 3){
+        y = 0f
+
+        yBox[0] = 0f
+        yBox[1] = 0f
+        yBox[2] = height.value / 4
+        yBox[3] = height.value / 2
+        yBox[4] = height.value / 2
+        yBox[5] = - height.value / 4
+        yBox[6] = - height.value / 2
+        yBox[7] = - height.value / 2
+        yBox[8] = - height.value * 3 / 4
+        yBox[9] = 0f
+        x.value = width.value/2
+        collisionCount.value = 0
     }
 
     Canvas(
@@ -234,10 +265,12 @@ fun GameCanvas(modifier:Modifier) {
             .pointerInput(Unit){
                 detectTapGestures (
                     onTap = {
-                        if (it.x < xLeft.value){
-                            moveLeft.value = true
-                        }else if (it.x > xRight.value){
-                            moveRight.value = true
+                        if (!(collided1.value || collided2.value || collided3.value)){
+                            if (it.x < xLeft.value){
+                                moveLeft.value = true
+                            }else if (it.x > xRight.value){
+                                moveRight.value = true
+                            }
                         }
                     }
                 )
@@ -423,7 +456,13 @@ fun checkCollision(){
 
 @Composable
 fun moveTom(){
+    var velocity by remember { mutableStateOf((height.value + width.value)/200) }
     LaunchedEffect(Unit){
+        /*for (i in 0..9){*/
 
+            while (movingTom.value.centerY >= height.value * 4 / 5){
+                delay(8)
+                movingTom.value.centerY -= velocity / 5
+            }
     }
 }
