@@ -8,6 +8,7 @@ var width = mutableStateOf(0f)
 var yBox = mutableStateListOf<Float>(0f,0f, height.value/4,height.value/2,height.value/2,0f,0f,0f,0f,0f)
 var x = mutableStateOf(0f)
 var jerryLocate = mutableStateOf(0)
+var tomLocate = mutableStateOf(0)
 var xRight = mutableStateOf(0f)
 var xLeft = mutableStateOf(0f)
 var moveRight = mutableStateOf(false)
@@ -26,6 +27,17 @@ var movingJerry = mutableStateOf<Dimensions>(
         0f
     )
 )
+
+var movingTom = mutableStateOf<Dimensions>(
+    Dimensions(
+        0f,
+        0f,
+        0f,
+        0f
+    )
+)
+var tomStarts = mutableStateOf(false)
+
 var movingBoxes = mutableStateListOf<Dimensions>(
     Dimensions(
         width.value / 5,
