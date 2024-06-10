@@ -51,6 +51,9 @@ fun WinnerPage(modifier: Modifier){
 
                     x.value = width.value/2
                     jerryLocate.value = 0
+                    tomLocate.value = 0
+                    moveTomLeft.value = false
+                    moveTomRight.value = false
 
                     movingBoxes[0] = Dimensions(
                         width.value / 5,

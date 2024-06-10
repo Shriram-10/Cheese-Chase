@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 
 @Composable
 fun Game(modifier: Modifier, navController: NavController){
@@ -64,6 +65,19 @@ fun Game(modifier: Modifier, navController: NavController){
                     delay(8)
                     movingTom.value.centerY -= jerryVelocity.value / 4
                 }
+            }
+        }
+    }
+
+    LaunchedEffect(key1 = collisionCount.value == 1){
+        while(true){
+            delay(4)
+            if (moveLeft.value){
+                delay((height.value / 4).roundToLong())
+                moveTomLeft.value = true
+            } else if (moveRight.value){
+                delay((height.value / 4).roundToLong())
+                moveTomRight.value = true
             }
         }
     }
@@ -228,6 +242,16 @@ fun Game(modifier: Modifier, navController: NavController){
     if (moveLeft.value && moveRight.value){
         moveLeft.value = !moveLeft.value
         moveRight.value = !moveRight.value
+    }
+    if (moveTomLeft.value){
+        MoveTomLeft()
+    }
+    if (moveTomRight.value){
+        MoveTomRight()
+    }
+    if (moveTomLeft.value && moveTomRight.value){
+        moveTomLeft.value = !moveTomLeft.value
+        moveTomRight.value = !moveTomRight.value
     }
 }
 
@@ -489,4 +513,58 @@ fun checkCollision(){
              }
          }
      }
+}
+
+@Composable
+fun MoveTomLeft(){
+    if (tomLocate.value == 1){
+        LaunchedEffect(Unit){
+            while(movingTom.value.centerX > width.value/2){
+                delay(8)
+                movingTom.value.centerX -= jerryVelocity.value
+            }
+            if (movingTom.value.centerX <= width.value/2){
+                tomLocate.value = 0
+                moveTomLeft.value = false
+            }
+        }
+    } else if (tomLocate.value == 0){
+        LaunchedEffect(Unit){
+            while(movingTom.value.centerX > width.value/6){
+                delay(8)
+                movingTom.value.centerX -= jerryVelocity.value
+            }
+            if (movingTom.value.centerX <= width.value/6){
+                tomLocate.value = -1
+                moveTomLeft.value = false
+            }
+        }
+    }
+}
+
+@Composable
+fun MoveTomRight(){
+    if (tomLocate.value == -1){
+        LaunchedEffect(Unit){
+            while(movingTom.value.centerX < width.value/2){
+                delay(8)
+                movingTom.value.centerX += jerryVelocity.value
+            }
+            if (movingTom.value.centerX >= width.value/2){
+                tomLocate.value = 0
+                moveTomRight.value = false
+            }
+        }
+    } else if (tomLocate.value == 0){
+        LaunchedEffect(Unit){
+            while(movingTom.value.centerX < width.value * 5/6){
+                delay(8)
+                movingTom.value.centerX += jerryVelocity.value
+            }
+            if (movingTom.value.centerX >= width.value * 5/6){
+                tomLocate.value = 1
+                moveTomRight.value = false
+            }
+        }
+    }
 }
