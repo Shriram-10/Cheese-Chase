@@ -28,8 +28,8 @@ fun Settings(modifier: Modifier, navController: NavController){
     androidx.compose.foundation.Canvas(modifier = modifier.fillMaxSize()) {
         movingJerry.value.centerX = size.width / 2
         movingJerry.value.centerY = size.height
-        movingJerry.value.width = size.width / 15
-        movingJerry.value.height = size.width / 15
+        movingJerry.value.width = size.width / 7.5f
+        movingJerry.value.height = size.width / 7.5f
 
         movingTom.value.centerX = size.width / 2
         movingTom.value.centerY = size.height
@@ -43,7 +43,7 @@ fun Settings(modifier: Modifier, navController: NavController){
         movingBoxes[0] = Dimensions(
             width.value / 5,
             width.value / 5,
-            width.value/10,
+            width.value / 6,
             width.value/10
         )
 
@@ -64,7 +64,7 @@ fun Settings(modifier: Modifier, navController: NavController){
         movingBoxes[3] = Dimensions(
             width.value / 5,
             width.value / 5,
-            width.value/10,
+            width.value / 6,
             height.value/ 2 + width.value / 10
         )
 
@@ -85,7 +85,7 @@ fun Settings(modifier: Modifier, navController: NavController){
         movingBoxes[6] = Dimensions(
             width.value / 5,
             width.value / 5,
-            width.value/10,
+            width.value / 6,
             - height.value / 2 + width.value/10
         )
 

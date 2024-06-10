@@ -49,7 +49,7 @@ fun Game(modifier: Modifier, navController: NavController){
 
     if (!(collided1.value || collided2.value || collided3.value)){
         LaunchedEffect(Unit){
-            delay(1000)
+            delay(400)
             while(!(collided1.value || collided2.value || collided3.value)){
                 delay(4)
                 checkCollision()
@@ -80,9 +80,29 @@ fun Game(modifier: Modifier, navController: NavController){
                 color = Color.White
             )
             Text(
+                text = collided4.value.toString(),
+                color = Color.White
+            )
+            Text(
                 text = collisionCount.value.toString(),
                 color = Color.White
             )
+            /*Text(
+                text = jerryLocate.value.toString(),
+                color = Color.White
+            )
+            Text(
+                text = movingJerry.value.centerX.toString(),
+                color = Color.White
+            )
+            Text(
+                text = movingBoxes[0].centerX.toString(),
+                color = Color.White
+            )
+            Text(
+                text = movingBoxes[3].centerX.toString(),
+                color = Color.White
+            )*/
             /*Text(
                 text = elapsedTime.roundToInt().toString(),
                 color = Color.White
@@ -278,14 +298,14 @@ fun GameCanvas(modifier:Modifier) {
 
         drawCircle(
             color = Color.Gray,
-            radius = size.width/10f,
+            radius = size.width/15f,
             center = Offset(size.width/2, size.height)
         )
 
         /*scale(scale = 0.4f){
             drawImage(
                 image = jerryHappy,
-                topLeft = Offset(size.width/3, size.height + size.width/2 - y),
+                topLeft = Offset(x.value - width.value / 4, size.height + size.width - y),
             )
         }
 
@@ -298,19 +318,19 @@ fun GameCanvas(modifier:Modifier) {
 
         drawRect(
             topLeft = Offset(size.width/3f + size.width/15, yBox[8]),
-            color = Color.Red,
+            color = Color.Green,
             size = Size(size.width/5, size.width/5)
         )
 
         drawRect(
             topLeft = Offset(size.width/2.5f - size.width/3, yBox[6]),
-            color = Color.Red,
+            color = Color.Blue,
             size = Size(size.width/5, size.width/5)
         )
 
         drawRect(
             topLeft = Offset(size.width/1.5f + size.width/15, yBox[7]),
-            color = Color.Red,
+            color = Color.LightGray,
             size = Size(size.width/5, size.width/5)
         )
 
@@ -322,31 +342,31 @@ fun GameCanvas(modifier:Modifier) {
 
         drawRect(
             topLeft = Offset(size.width/2.5f - size.width/3, yBox[0]),
-            color = Color.Red,
+            color = Color.Yellow,
             size = Size(size.width/5, size.width/5)
         )
 
         drawRect(
             topLeft = Offset(size.width/1.5f + size.width/15, yBox[1]),
-            color = Color.Red,
+            color = Color.DarkGray,
             size = Size(size.width/5, size.width/5)
         )
 
         drawRect(
             topLeft = Offset(size.width/3f + size.width/15, yBox[2]),
-            color = Color.Red,
+            color = Color.White,
             size = Size(size.width/5, size.width/5)
         )
 
         drawRect(
             topLeft = Offset(size.width/2.5f - size.width/3, yBox[3]),
-            color = Color.Red,
+            color = Color.Magenta,
             size = Size(size.width/5, size.width/5)
         )
 
         drawRect(
             topLeft = Offset(size.width/1.5f + size.width/15, yBox[4]),
-            color = Color.Red,
+            color = Color.Cyan,
             size = Size(size.width/5, size.width/5)
         )
     }
@@ -413,17 +433,17 @@ fun MoveJerryRight(){
 fun checkCollision(){
      for (i in 0..9){
          if (movingBoxes[i].centerX - movingJerry.value.centerX <= movingBoxes[i].width / 2 + movingJerry.value.width / 2 && movingBoxes[i].centerX - movingJerry.value.centerX >= 0){
-             if ((movingBoxes[i].centerY - movingBoxes[i].height / 2 <= movingJerry.value.centerY) && (movingBoxes[i].centerY + movingBoxes[i].height / 2 >= movingJerry.value.centerY)){
+             if ((movingBoxes[i].centerY - movingBoxes[i].height / 2 <= movingJerry.value.centerY + movingJerry.value.height / 2) && (movingBoxes[i].centerY + movingBoxes[i].height / 2 >= movingJerry.value.centerY - movingJerry.value.height / 2)){
                  collided1.value = true
                  collisionCount.value += 1
              }
-         } else if (movingJerry.value.width / 2 + movingBoxes[i].width / 2  >= movingJerry.value.centerX - movingBoxes[i].centerX && movingJerry.value.centerX - movingBoxes[i].centerX >= 0){
-             if ((movingBoxes[i].centerY - movingBoxes[i].height / 2 <= movingJerry.value.centerY) && (movingBoxes[i].centerY + movingBoxes[i].height / 2 >= movingJerry.value.centerY)){
+         } else if (movingBoxes[i].centerX == width.value / 6 && movingJerry.value.centerX - movingJerry.value.width / 2 <= movingBoxes[i].centerX + movingBoxes[i].width / 2){
+             if (movingBoxes[i].centerY - movingBoxes[i].height / 2 <= movingJerry.value.centerY + movingJerry.value.height / 2 && movingBoxes[i].centerY + movingBoxes[i].height / 2 >= movingJerry.value.centerY - movingJerry.value.height / 2){
                  collided2.value = true
                  collisionCount.value += 1
              }
-         } else if (movingBoxes[i].centerY - movingJerry.value.centerY <= movingBoxes[i].height / 2  + movingJerry.value.height/2 && movingBoxes[i].centerY - movingJerry.value.centerY >= 0){
-             if ((movingBoxes[i].centerX - movingBoxes[i].width / 2 <= movingJerry.value.centerX) && (movingBoxes[i].centerX + movingBoxes[i].width / 2 >= movingJerry.value.centerX)){
+         } else if (movingBoxes[i].centerX == width.value / 2 && movingJerry.value.centerX - movingJerry.value.width / 2 <= movingBoxes[i].centerX + movingBoxes[i].width / 2 && movingJerry.value.centerX + movingJerry.value.width / 2 >= movingBoxes[i].centerX - movingBoxes[i].width / 2){
+             if (movingBoxes[i].centerY - movingBoxes[i].height / 2 <= movingJerry.value.centerY + movingJerry.value.height / 2 && movingBoxes[i].centerY + movingBoxes[i].height / 2 >= movingJerry.value.centerY - movingJerry.value.height / 2){
                  collided3.value = true
                  collisionCount.value += 1
              }

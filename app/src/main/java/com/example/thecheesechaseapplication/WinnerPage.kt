@@ -2,6 +2,7 @@ package com.example.thecheesechaseapplication
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -23,32 +24,33 @@ fun WinnerPage(modifier: Modifier){
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White.copy(alpha = 0.5f)),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.TopCenter
     ){
-        Button(
-            onClick = { /*TODO*/ },
+        /*Button(
+            onClick = { *//*TODO*//* },
             modifier = Modifier
-                .height((height.value/3).dp)
+                .height((height.value/5).dp)
                 .width((width.value/3).dp),
             shape = RoundedCornerShape(20),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Gray,
                 contentColor = Color.Black
             )
-        ){
+        ){*/
             Button(
                 onClick = {
                     movingJerry.value.centerX = width.value / 2
                     movingJerry.value.centerY = height.value
-                    movingJerry.value.width = width.value / 15
-                    movingJerry.value.height = width.value / 15
+                    movingJerry.value.width = width.value / 7.5f
+                    movingJerry.value.height = width.value / 7.5f
                     x.value = width.value/2
                     movingJerry.value.centerY = height.value
+                    jerryLocate.value = 0
 
                     movingBoxes[0] = Dimensions(
                         width.value / 5,
                         width.value / 5,
-                        width.value/10,
+                        width.value / 6,
                         width.value/10
                     )
 
@@ -69,7 +71,7 @@ fun WinnerPage(modifier: Modifier){
                     movingBoxes[3] = Dimensions(
                         width.value / 5,
                         width.value / 5,
-                        width.value/10,
+                        width.value / 6,
                         height.value/ 2 + width.value / 10
                     )
 
@@ -90,7 +92,7 @@ fun WinnerPage(modifier: Modifier){
                     movingBoxes[6] = Dimensions(
                         width.value / 5,
                         width.value / 5,
-                        width.value/10,
+                        width.value / 6,
                         - height.value / 2 + width.value/10
                     )
 
@@ -112,6 +114,7 @@ fun WinnerPage(modifier: Modifier){
                     collided1.value = false
                     collided2.value = false
                     collided3.value = false
+                    collided4.value = false
                 },
                 modifier = Modifier
                     .height(60.dp),
@@ -126,6 +129,6 @@ fun WinnerPage(modifier: Modifier){
                     fontWeight = FontWeight.Bold
                 )
             }
-        }
+        /*}*/
     }
 }
