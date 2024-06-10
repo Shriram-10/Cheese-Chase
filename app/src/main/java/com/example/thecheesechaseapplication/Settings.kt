@@ -33,13 +33,13 @@ fun Settings(modifier: Modifier, navController: NavController){
 
         movingTom.value.centerX = size.width / 2
         movingTom.value.centerY = size.height
-        movingTom.value.width = size.width / 15
-        movingTom.value.height = size.width / 15
+        movingTom.value.width = size.width / 7.5f
+        movingTom.value.height = size.width / 7.5f
 
         x.value = size.width/2
         width.value = size.width
         height.value = size.height
-        movingJerry.value.centerY = size.height
+
         movingBoxes[0] = Dimensions(
             width.value / 5,
             width.value / 5,

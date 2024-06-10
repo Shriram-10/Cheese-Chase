@@ -42,17 +42,51 @@ fun Game(modifier: Modifier, navController: NavController){
     LaunchedEffect(Unit){
         delay(1000)
         val startTime = withFrameMillis { it }
-        while(!(collided1.value || collided2.value || collided3.value)) {
+        while(!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) {
             elapsedTime = (withFrameMillis { it } - startTime) * 0.001f
         }
     }
 
-    if (!(collided1.value || collided2.value || collided3.value)){
+    if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)){
         LaunchedEffect(Unit){
             delay(400)
-            while(!(collided1.value || collided2.value || collided3.value)){
+            while(!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)){
                 delay(4)
                 checkCollision()
+            }
+        }
+    }
+
+    LaunchedEffect(Unit){
+        while(true){
+            delay(4)
+            if (collisionCount.value == 1){
+                while(movingTom.value.centerY >= height.value * 4 / 5){
+                    delay(8)
+                    movingTom.value.centerY -= jerryVelocity.value / 4
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(Unit){
+        while(true){
+            delay(8)
+            if (collided1.value){
+                delay(2000)
+                collided1.value = false
+            } else if (collided2.value){
+                delay(2000)
+                collided2.value = false
+            } else if (collided3.value){
+                delay(2000)
+                collided3.value = false
+            } else if (collided4.value){
+                delay(2000)
+                collided4.value = false
+            } else if (collided5.value){
+                delay(2000)
+                collided5.value = false
             }
         }
     }
@@ -81,6 +115,10 @@ fun Game(modifier: Modifier, navController: NavController){
             )
             Text(
                 text = collided4.value.toString(),
+                color = Color.White
+            )
+            Text(
+                text = collided5.value.toString(),
                 color = Color.White
             )
             Text(
@@ -229,16 +267,6 @@ fun GameCanvas(modifier:Modifier) {
                         yBox[i] -= height.value + width.value
                         movingBoxes[i].centerY -= height.value + width.value
                     }
-                    if (collided1.value){
-                        delay(2000)
-                        collided1.value = false
-                    } else if (collided2.value){
-                        delay(2000)
-                        collided2.value = false
-                    } else if (collided3.value){
-                        delay(2000)
-                        collided3.value = false
-                    }
                 }
             }
         }
@@ -261,12 +289,12 @@ fun GameCanvas(modifier:Modifier) {
         modifier = Modifier
             .fillMaxSize()
             .background(Color(78, 92, 170))
-            .pointerInput(Unit){
-                detectTapGestures (
+            .pointerInput(Unit) {
+                detectTapGestures(
                     onTap = {
-                        if (it.x < xLeft.value){
+                        if (it.x < xLeft.value) {
                             moveLeft.value = true
-                        }else if (it.x > xRight.value){
+                        } else if (it.x > xRight.value) {
                             moveRight.value = true
                         }
                     }
@@ -299,7 +327,7 @@ fun GameCanvas(modifier:Modifier) {
         drawCircle(
             color = Color.Gray,
             radius = size.width/15f,
-            center = Offset(size.width/2, size.height)
+            center = Offset(movingTom.value.centerX, movingTom.value.centerY)
         )
 
         /*scale(scale = 0.4f){
@@ -432,21 +460,38 @@ fun MoveJerryRight(){
 
 fun checkCollision(){
      for (i in 0..9){
-         if (movingBoxes[i].centerX - movingJerry.value.centerX <= movingBoxes[i].width / 2 + movingJerry.value.width / 2 && movingBoxes[i].centerX - movingJerry.value.centerX >= 0){
+         if (movingJerry.value.centerX < movingBoxes[i].centerX){
+             if (movingJerry.value.centerY <= movingBoxes[i].centerY + movingBoxes[i].height / 2 && movingJerry.value.centerY >= movingBoxes[i].centerY - movingBoxes[i].height / 2){
+                 if (- movingJerry.value.centerX + movingBoxes[i].centerX <= movingBoxes[i].width / 2 + movingJerry.value.width / 2){
+                     if (movingBoxes[i].centerX == width.value / 2){
+                         collisionCount.value += 1
+                         collided4.value = true
+                     } else if (movingBoxes[i].centerX == width.value * 5 / 6){
+                         collisionCount.value += 1
+                         collided5.value = true
+                     }
+                 }
+             }
+         } else if (movingBoxes[i].centerX - movingJerry.value.centerX <= movingBoxes[i].width / 2 + movingJerry.value.width / 2 && movingBoxes[i].centerX - movingJerry.value.centerX >= 0){
              if ((movingBoxes[i].centerY - movingBoxes[i].height / 2 <= movingJerry.value.centerY + movingJerry.value.height / 2) && (movingBoxes[i].centerY + movingBoxes[i].height / 2 >= movingJerry.value.centerY - movingJerry.value.height / 2)){
-                 collided1.value = true
                  collisionCount.value += 1
+                 collided1.value = true
              }
          } else if (movingBoxes[i].centerX == width.value / 6 && movingJerry.value.centerX - movingJerry.value.width / 2 <= movingBoxes[i].centerX + movingBoxes[i].width / 2){
              if (movingBoxes[i].centerY - movingBoxes[i].height / 2 <= movingJerry.value.centerY + movingJerry.value.height / 2 && movingBoxes[i].centerY + movingBoxes[i].height / 2 >= movingJerry.value.centerY - movingJerry.value.height / 2){
-                 collided2.value = true
                  collisionCount.value += 1
+                 collided2.value = true
              }
          } else if (movingBoxes[i].centerX == width.value / 2 && movingJerry.value.centerX - movingJerry.value.width / 2 <= movingBoxes[i].centerX + movingBoxes[i].width / 2 && movingJerry.value.centerX + movingJerry.value.width / 2 >= movingBoxes[i].centerX - movingBoxes[i].width / 2){
              if (movingBoxes[i].centerY - movingBoxes[i].height / 2 <= movingJerry.value.centerY + movingJerry.value.height / 2 && movingBoxes[i].centerY + movingBoxes[i].height / 2 >= movingJerry.value.centerY - movingJerry.value.height / 2){
-                 collided3.value = true
                  collisionCount.value += 1
+                 collided3.value = true
              }
          }
      }
+}
+
+@Composable
+fun moveTom(){
+
 }

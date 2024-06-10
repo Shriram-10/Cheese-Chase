@@ -43,8 +43,13 @@ fun WinnerPage(modifier: Modifier){
                     movingJerry.value.centerY = height.value
                     movingJerry.value.width = width.value / 7.5f
                     movingJerry.value.height = width.value / 7.5f
+
+                    movingTom.value.centerX = width.value / 2
+                    movingTom.value.centerY = height.value
+                    movingTom.value.width = width.value / 7.5f
+                    movingTom.value.height = width.value / 7.5f
+
                     x.value = width.value/2
-                    movingJerry.value.centerY = height.value
                     jerryLocate.value = 0
 
                     movingBoxes[0] = Dimensions(
@@ -115,6 +120,7 @@ fun WinnerPage(modifier: Modifier){
                     collided2.value = false
                     collided3.value = false
                     collided4.value = false
+                    collided5.value = false
                 },
                 modifier = Modifier
                     .height(60.dp),
