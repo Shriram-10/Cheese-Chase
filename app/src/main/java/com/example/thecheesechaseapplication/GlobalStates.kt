@@ -20,6 +20,7 @@ var collided3 = mutableStateOf(false)
 var collided4 = mutableStateOf(false)
 var collided5 = mutableStateOf(false)
 var collisionCount = mutableStateOf(0)
+var reset = mutableStateOf(true)
 
 var movingJerry = mutableStateOf<Dimensions>(
     Dimensions(

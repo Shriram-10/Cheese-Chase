@@ -121,6 +121,7 @@ fun WinnerPage(modifier: Modifier){
                     collided3.value = false
                     collided4.value = false
                     collided5.value = false
+                    reset.value = true
                 },
                 modifier = Modifier
                     .height(60.dp),

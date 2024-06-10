@@ -49,7 +49,6 @@ fun Game(modifier: Modifier, navController: NavController){
 
     if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)){
         LaunchedEffect(Unit){
-            delay(400)
             while(!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)){
                 delay(4)
                 checkCollision()
@@ -69,25 +68,26 @@ fun Game(modifier: Modifier, navController: NavController){
         }
     }
 
-    LaunchedEffect(Unit){
-        while(true){
+    LaunchedEffect(key1 = reset.value){
+        while(collisionCount.value == 0){
             delay(8)
             if (collided1.value){
-                delay(2000)
+                delay(400)
                 collided1.value = false
             } else if (collided2.value){
-                delay(2000)
+                delay(400)
                 collided2.value = false
             } else if (collided3.value){
-                delay(2000)
+                delay(400)
                 collided3.value = false
             } else if (collided4.value){
-                delay(2000)
+                delay(400)
                 collided4.value = false
             } else if (collided5.value){
-                delay(2000)
+                delay(400)
                 collided5.value = false
             }
+            reset.value = false
         }
     }
 
@@ -489,9 +489,4 @@ fun checkCollision(){
              }
          }
      }
-}
-
-@Composable
-fun moveTom(){
-
 }
