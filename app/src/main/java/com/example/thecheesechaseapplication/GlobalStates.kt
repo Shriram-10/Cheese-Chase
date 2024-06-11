@@ -1,7 +1,10 @@
 package com.example.thecheesechaseapplication
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 
 var height = mutableStateOf(0f)
 var width = mutableStateOf(0f)
@@ -24,6 +27,8 @@ var reset = mutableStateOf(true)
 var moveTomLeft = mutableStateOf(false)
 var moveTomRight = mutableStateOf(false)
 var sidewaysCollision = mutableStateOf(false)
+var tomCatches = mutableStateOf(false)
+var showWinnerPage = mutableStateOf(false)
 
 var movingJerry = mutableStateOf<Dimensions>(
     Dimensions(
