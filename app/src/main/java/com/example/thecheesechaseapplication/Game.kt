@@ -215,25 +215,39 @@ fun Game(modifier: Modifier, navController: NavController){
                 }
             }
         }
+    } else if (collisionCount.value == 2){
+        LaunchedEffect(Unit){
+            while(movingTom.value.centerY >= height.value * 2 / 3 + movingJerry.value.height * 2 / 3) {
+                delay(8)
+                if (jerryLocate.value == tomLocate.value) {
+                    movingTom.value.centerY -= jerryVelocity.value
+                } else if (jerryLocate.value == tomLocate.value - 1 || jerryLocate.value == tomLocate.value - 2){
+                    moveTomLeft.value = true
+                } else if (jerryLocate.value == tomLocate.value + 1 || jerryLocate.value == tomLocate.value + 2){
+                    moveTomRight.value = true
+                }
+            }
+            showWinnerPage.value = true
+        }
     }
 
     LaunchedEffect(key1 = reset.value){
         while(collisionCount.value == 0){
             delay(8)
             if (collided1.value){
-                delay(400)
+                delay(1500)
                 collided1.value = false
             } else if (collided2.value){
-                delay(400)
+                delay(1500)
                 collided2.value = false
             } else if (collided3.value){
-                delay(400)
+                delay(1500)
                 collided3.value = false
             } else if (collided4.value){
-                delay(400)
+                delay(1500)
                 collided4.value = false
             } else if (collided5.value){
-                delay(400)
+                delay(1500)
                 collided5.value = false
             }
             reset.value = false
@@ -245,7 +259,7 @@ fun Game(modifier: Modifier, navController: NavController){
     ){
         GameCanvas(modifier)
 
-        if (collisionCount.value == 2){
+        if (showWinnerPage.value){
             WinnerPage(modifier)
         }
     }
@@ -311,8 +325,8 @@ fun GameCanvas(modifier:Modifier) {
                 delay(16)
                 for(i in 0..9){
                     if (yBox[i] < height.value + width.value){
-                        yBox[i] += velocity
-                        movingBoxes[i].centerY += velocity
+                        yBox[i] += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) velocity else velocity / 3
+                        movingBoxes[i].centerY += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) velocity else velocity / 3
                     } else {
                         yBox[i] -= height.value + width.value
                         movingBoxes[i].centerY -= height.value + width.value
@@ -342,7 +356,7 @@ fun GameCanvas(modifier:Modifier) {
             .pointerInput(Unit) {
                 detectTapGestures(
                     onTap = {
-                        if (collisionCount.value < 2) {
+                        if (collisionCount.value < 2 && !(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) {
                             if (it.x < xLeft.value) {
                                 moveLeft.value = true
                             } else if (it.x > xRight.value) {
