@@ -127,6 +127,7 @@ fun WinnerPage(modifier: Modifier){
                     sidewaysCollision.value = false
                     tomCatches.value = false
                     reset.value = true
+                    score.value = 0f
                     showWinnerPage.value = false
                 },
                 modifier = Modifier

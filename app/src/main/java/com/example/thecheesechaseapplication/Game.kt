@@ -15,9 +15,16 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -46,8 +53,10 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
@@ -117,7 +126,7 @@ fun Game(modifier: Modifier, navController: NavController){
                                     }
                                 }
                             }
-                        } else if (tomLocate.value == jerryLocate.value + 1){
+                        } else if (tomLocate.value == jerryLocate.value + 1 || tomLocate.value == jerryLocate.value + 2){
                             for (i in 0..9) {
                                 if (movingTom.value.centerX == movingBoxes[i].centerX){
                                     if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
@@ -125,7 +134,7 @@ fun Game(modifier: Modifier, navController: NavController){
                                     }
                                 }
                             }
-                        } else if (tomLocate.value == jerryLocate.value - 1){
+                        } else if (tomLocate.value == jerryLocate.value - 1 || tomLocate.value == jerryLocate.value - 2){
                             for (i in 0..9) {
                                 if (movingTom.value.centerX == movingBoxes[i].centerX){
                                     if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
@@ -153,7 +162,7 @@ fun Game(modifier: Modifier, navController: NavController){
                             delay((height.value * 200 * 30 / (12 * (height.value + width.value))).roundToLong())
                             moveTomRight.value = true
                         }
-                    } else if (tomLocate.value == jerryLocate.value - 1) {
+                    } else if (tomLocate.value == jerryLocate.value - 1 || tomLocate.value == jerryLocate.value - 2) {
                         for (i in 0..9) {
                             if (movingBoxes[i].centerX == movingTom.value.centerX) {
                                 if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
@@ -165,7 +174,7 @@ fun Game(modifier: Modifier, navController: NavController){
                             delay((height.value * 200 * 30 / (12 * (height.value + width.value))).roundToLong())
                             moveTomRight.value = true
                         }
-                    } else if (tomLocate.value == jerryLocate.value + 1) {
+                    } else if (tomLocate.value == jerryLocate.value + 1 || tomLocate.value == jerryLocate.value + 2) {
                         for (i in 0..9) {
                             if (movingBoxes[i].centerX == movingTom.value.centerX) {
                                 if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
@@ -187,7 +196,7 @@ fun Game(modifier: Modifier, navController: NavController){
                             delay((height.value * 200 * 30 / (12 * (height.value + width.value))).roundToLong())
                             moveTomRight.value = true
                         }
-                    } else if (tomLocate.value == jerryLocate.value - 1) {
+                    } else if (tomLocate.value == jerryLocate.value - 1 || tomLocate.value == jerryLocate.value - 2) {
                         for (i in 0..9) {
                             if (movingBoxes[i].centerX == movingTom.value.centerX) {
                                 if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
@@ -199,7 +208,7 @@ fun Game(modifier: Modifier, navController: NavController){
                             delay((height.value * 200 * 30 / (12 * (height.value + width.value))).roundToLong())
                             moveTomRight.value = true
                         }
-                    } else if (tomLocate.value == jerryLocate.value + 1) {
+                    } else if (tomLocate.value == jerryLocate.value + 1 || tomLocate.value == jerryLocate.value + 2) {
                         for (i in 0..9) {
                             if (movingBoxes[i].centerX == movingTom.value.centerX) {
                                 if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
@@ -227,6 +236,7 @@ fun Game(modifier: Modifier, navController: NavController){
                     moveTomRight.value = true
                 }
             }
+            delay(400)
             showWinnerPage.value = true
         }
     }
@@ -258,6 +268,36 @@ fun Game(modifier: Modifier, navController: NavController){
         modifier = modifier.fillMaxSize(),
     ){
         GameCanvas(modifier)
+        Column{
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ){
+                Button(
+                    modifier = Modifier.height(36.dp),
+                    onClick = {},
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(96,149,160)
+                    ),
+                    shape = RoundedCornerShape(25),
+                    elevation = ButtonDefaults.buttonElevation(
+                        defaultElevation = 8.dp,
+                        pressedElevation = 8.dp
+                    )
+                ){
+                    Text(
+                        text = "✨ Score : ${(score.value / 20).roundToInt()}",
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        fontSize = 16.sp
+                    )
+                }
+
+                Spacer(modifier = Modifier.width((width.value / 40).dp))
+            }
+        }
 
         if (showWinnerPage.value){
             WinnerPage(modifier)
@@ -332,6 +372,7 @@ fun GameCanvas(modifier:Modifier) {
                         movingBoxes[i].centerY -= height.value + width.value
                     }
                 }
+                score.value += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) ((height.value + width.value) / 2000) else ((height.value + width.value) / 6000)
             }
         }
     } else if (collisionCount.value == 3){

@@ -29,7 +29,7 @@ var moveTomRight = mutableStateOf(false)
 var sidewaysCollision = mutableStateOf(false)
 var tomCatches = mutableStateOf(false)
 var showWinnerPage = mutableStateOf(false)
-var checkCollision = mutableStateOf(true)
+var score = mutableStateOf(0f)
 
 var movingJerry = mutableStateOf<Dimensions>(
     Dimensions(
