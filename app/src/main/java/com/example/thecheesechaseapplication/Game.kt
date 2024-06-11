@@ -69,15 +69,29 @@ fun Game(modifier: Modifier, navController: NavController){
         }
     }
 
-    LaunchedEffect(key1 = collisionCount.value == 1){
-        while(true){
-            delay(4)
-            if (moveLeft.value){
-                delay((height.value / 4).roundToLong())
-                moveTomLeft.value = true
-            } else if (moveRight.value){
-                delay((height.value / 4).roundToLong())
-                moveTomRight.value = true
+    if (collisionCount.value == 1) {
+        LaunchedEffect(Unit) {
+            while (true) {
+                delay(4)
+                if (tomLocate.value == jerryLocate.value) {
+                    if (moveLeft.value) {
+                        delay((height.value * 200 * 30 / (12 * (height.value + width.value))).roundToLong())
+                        moveTomLeft.value = true
+                    } else if (moveRight.value) {
+                        delay((height.value * 200 * 30 / (12 * (height.value + width.value))).roundToLong())
+                        moveTomRight.value = true
+                    }
+                } else if (tomLocate.value == jerryLocate.value - 1) {
+                    if (moveRight.value) {
+                        delay((height.value * 200 * 30 / (12 * (height.value + width.value))).roundToLong())
+                        moveTomRight.value = true
+                    }
+                } else if(tomLocate.value == jerryLocate.value + 1){
+                    if (moveLeft.value) {
+                        delay((height.value * 200 * 30 / (12 * (height.value + width.value))).roundToLong())
+                        moveTomLeft.value = true
+                    }
+                }
             }
         }
     }
