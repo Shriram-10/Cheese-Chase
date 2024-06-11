@@ -33,8 +33,8 @@ fun Settings(modifier: Modifier, navController: NavController){
 
         movingTom.value.centerX = size.width / 2
         movingTom.value.centerY = size.height
-        movingTom.value.width = size.width / 7.5f
-        movingTom.value.height = size.width / 7.5f
+        movingTom.value.width = size.width / 6f
+        movingTom.value.height = size.width / 6f
 
         x.value = size.width/2
         width.value = size.width

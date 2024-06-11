@@ -1,10 +1,14 @@
 package com.example.thecheesechaseapplication
 
+import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animate
 import androidx.compose.animation.core.animateDecay
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -32,6 +36,8 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.drawscope.DrawStyle
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -242,129 +248,6 @@ fun Game(modifier: Modifier, navController: NavController){
         if (collisionCount.value == 2){
             WinnerPage(modifier)
         }
-
-        Column {
-            Text(
-                text = collided1.value.toString(),
-                color = Color.White
-            )
-            Text(
-                text = collided2.value.toString(),
-                color = Color.White
-            )
-            Text(
-                text = collided3.value.toString(),
-                color = Color.White
-            )
-            Text(
-                text = collided4.value.toString(),
-                color = Color.White
-            )
-            Text(
-                text = collided5.value.toString(),
-                color = Color.White
-            )
-            Text(
-                text = collisionCount.value.toString(),
-                color = Color.White
-            )
-            /*Text(
-                text = tomLocate.value.toString(),
-                color = Color.White
-            )
-            Text(
-                text = jerryLocate.value.toString(),
-                color = Color.White
-            )*/
-            /*Text(
-                text = jerryLocate.value.toString(),
-                color = Color.White
-            )
-            Text(
-                text = movingJerry.value.centerX.toString(),
-                color = Color.White
-            )
-            Text(
-                text = movingBoxes[0].centerX.toString(),
-                color = Color.White
-            )
-            Text(
-                text = movingBoxes[3].centerX.toString(),
-                color = Color.White
-            )*/
-            /*Text(
-                text = elapsedTime.roundToInt().toString(),
-                color = Color.White
-            )
-            Text(
-                text = height.value.toString() + "\n" + width.value.toString(),
-                color = Color.White
-            )
-            Text(
-                text = x.value.toString(),
-                color = Color.White
-            )
-            Text(
-                text = jerryLocate.value.toString(),
-                color = Color.White
-            )
-            Text(
-                text = xLeft.value.toString(),
-                color = Color.White
-            )
-            Text(
-                text = xRight.value.toString(),
-                color = Color.White
-            )
-            Text(
-                text = moveLeft.value.toString(),
-                color = Color.White
-            )
-            Text(
-                text = moveRight.value.toString(),
-                color = Color.White
-            )
-            Text(
-                text = movingBoxes[0].toString(),
-                color = Color.White
-            )
-            Text(
-                text = movingBoxes[1].toString(),
-                color = Color.White
-            )
-            Text(
-                text = movingBoxes[2].toString(),
-                color = Color.White
-            )
-            Text(
-                text = movingBoxes[3].toString(),
-                color = Color.White
-            )
-            Text(
-                text = movingBoxes[4].toString(),
-                color = Color.White
-            )
-            Text(
-                text = movingBoxes[5].toString(),
-                color = Color.White
-            )
-            Text(
-                text = movingBoxes[6].toString(),
-                color = Color.White
-            )
-            Text(
-                text = movingBoxes[7].toString(),
-                color = Color.White
-            )
-            Text(
-                text = movingBoxes[8].toString(),
-                color = Color.White
-            )
-            Text(
-                text = movingJerry.value.toString(),
-                color = Color.White
-            )*/
-        }
     }
     if (moveLeft.value){
         MoveJerryLeft()
@@ -398,6 +281,14 @@ fun GameCanvas(modifier:Modifier) {
     var velocity by remember { mutableStateOf((height.value + width.value)/200) }
     xRight.value = x.value + width.value/15f
     xLeft.value = x.value - width.value/15f
+    val infiniteTransition = rememberInfiniteTransition()
+    val colors = infiniteTransition.animateColor(
+        Color(64,64,64),
+        Color(190,53,50),
+        animationSpec = infiniteRepeatable(tween(300),
+            repeatMode = RepeatMode.Reverse
+        )
+    ).value
 
 
     if (collisionCount.value < 2){
@@ -447,14 +338,16 @@ fun GameCanvas(modifier:Modifier) {
     Canvas(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(78, 92, 170))
+            .background(Color(210,163,118))
             .pointerInput(Unit) {
                 detectTapGestures(
                     onTap = {
-                        if (it.x < xLeft.value) {
-                            moveLeft.value = true
-                        } else if (it.x > xRight.value) {
-                            moveRight.value = true
+                        if (collisionCount.value < 2) {
+                            if (it.x < xLeft.value) {
+                                moveLeft.value = true
+                            } else if (it.x > xRight.value) {
+                                moveRight.value = true
+                            }
                         }
                     }
                 )
@@ -464,21 +357,75 @@ fun GameCanvas(modifier:Modifier) {
         width.value = size.width
 
         drawLine(
-            color = Color.White,
+            color = Color(71,61,52),
             start = Offset(size.width/3, 0f),
             end = Offset(size.width/3, size.height),
-            strokeWidth = 2f
+            strokeWidth = 4f
         )
 
         drawLine(
-            color = Color.White,
+            color = Color(71,61,52),
             start = Offset(size.width/1.5f, 0f),
             end = Offset(size.width/1.5f, size.height),
-            strokeWidth = 2f
+            strokeWidth = 4f
+        )
+
+        drawRect(
+            topLeft = Offset(size.width/3f + size.width/15, yBox[8]),
+            color = Color(128,56,42),
+            size = Size(size.width/5, size.width/5)
+        )
+
+        drawRect(
+            topLeft = Offset(size.width/2.5f - size.width/3, yBox[6]),
+            color = Color(128,56,42),
+            size = Size(size.width/5, size.width/5)
+        )
+
+        drawRect(
+            topLeft = Offset(size.width/1.5f + size.width/15, yBox[7]),
+            color = Color(128,56,42),
+            size = Size(size.width/5, size.width/5)
+        )
+
+        drawRect(
+            topLeft = Offset(size.width/3f + size.width/15, yBox[5]),
+            color = Color(128,56,42),
+            size = Size(size.width/5, size.width/5)
+        )
+
+        drawRect(
+            topLeft = Offset(size.width/2.5f - size.width/3, yBox[0]),
+            color = Color(128,56,42),
+            size = Size(size.width/5, size.width/5)
+        )
+
+        drawRect(
+            topLeft = Offset(size.width/1.5f + size.width/15, yBox[1]),
+            color = Color(128,56,42),
+            size = Size(size.width/5, size.width/5)
+        )
+
+        drawRect(
+            topLeft = Offset(size.width/3f + size.width/15, yBox[2]),
+            color = Color(128,56,42),
+            size = Size(size.width/5, size.width/5)
+        )
+
+        drawRect(
+            topLeft = Offset(size.width/2.5f - size.width/3, yBox[3]),
+            color = Color(128,56,42),
+            size = Size(size.width/5, size.width/5)
+        )
+
+        drawRect(
+            topLeft = Offset(size.width/1.5f + size.width/15, yBox[4]),
+            color = Color(128,56,42),
+            size = Size(size.width/5, size.width/5)
         )
 
         drawCircle(
-            color = Color.Black,
+            color = if (collisionCount.value == 1) colors else Color.Black,
             radius = size.width/15f,
             center = Offset(movingJerry.value.centerX, size.height - y)
         )
@@ -489,62 +436,13 @@ fun GameCanvas(modifier:Modifier) {
                 radius = size.width/15f,
                 center = Offset(movingTom.value.centerX, movingTom.value.centerY)
             )
+            drawCircle(
+                color = Color.DarkGray,
+                radius = size.width/12f,
+                center = Offset(movingTom.value.centerX, movingTom.value.centerY),
+                style = Stroke(width = 8f)
+            )
         }
-
-
-        drawRect(
-            topLeft = Offset(size.width/3f + size.width/15, yBox[8]),
-            color = Color.Green,
-            size = Size(size.width/5, size.width/5)
-        )
-
-        drawRect(
-            topLeft = Offset(size.width/2.5f - size.width/3, yBox[6]),
-            color = Color.Blue,
-            size = Size(size.width/5, size.width/5)
-        )
-
-        drawRect(
-            topLeft = Offset(size.width/1.5f + size.width/15, yBox[7]),
-            color = Color.LightGray,
-            size = Size(size.width/5, size.width/5)
-        )
-
-        drawRect(
-            topLeft = Offset(size.width/3f + size.width/15, yBox[5]),
-            color = Color.Red,
-            size = Size(size.width/5, size.width/5)
-        )
-
-        drawRect(
-            topLeft = Offset(size.width/2.5f - size.width/3, yBox[0]),
-            color = Color.Yellow,
-            size = Size(size.width/5, size.width/5)
-        )
-
-        drawRect(
-            topLeft = Offset(size.width/1.5f + size.width/15, yBox[1]),
-            color = Color.DarkGray,
-            size = Size(size.width/5, size.width/5)
-        )
-
-        drawRect(
-            topLeft = Offset(size.width/3f + size.width/15, yBox[2]),
-            color = Color.White,
-            size = Size(size.width/5, size.width/5)
-        )
-
-        drawRect(
-            topLeft = Offset(size.width/2.5f - size.width/3, yBox[3]),
-            color = Color.Magenta,
-            size = Size(size.width/5, size.width/5)
-        )
-
-        drawRect(
-            topLeft = Offset(size.width/1.5f + size.width/15, yBox[4]),
-            color = Color.Cyan,
-            size = Size(size.width/5, size.width/5)
-        )
     }
 }
 
