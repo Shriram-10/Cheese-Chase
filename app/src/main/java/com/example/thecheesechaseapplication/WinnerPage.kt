@@ -124,6 +124,7 @@ fun WinnerPage(modifier: Modifier){
                     collided3.value = false
                     collided4.value = false
                     collided5.value = false
+                    sidewaysCollision.value = false
                     reset.value = true
                 },
                 modifier = Modifier

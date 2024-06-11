@@ -82,11 +82,25 @@ fun Game(modifier: Modifier, navController: NavController){
                         moveTomRight.value = true
                     }
                 } else if (tomLocate.value == jerryLocate.value - 1) {
+                    for(i in 0..9){
+                        if (movingBoxes[i].centerX == movingTom.value.centerX){
+                            if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2){
+                                moveTomRight.value = true
+                            }
+                        }
+                    }
                     if (moveRight.value) {
                         delay((height.value * 200 * 30 / (12 * (height.value + width.value))).roundToLong())
                         moveTomRight.value = true
                     }
                 } else if(tomLocate.value == jerryLocate.value + 1){
+                    for(i in 0..9){
+                        if (movingBoxes[i].centerX == movingTom.value.centerX){
+                            if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2){
+                                moveTomLeft.value = true
+                            }
+                        }
+                    }
                     if (moveLeft.value) {
                         delay((height.value * 200 * 30 / (12 * (height.value + width.value))).roundToLong())
                         moveTomLeft.value = true
@@ -149,8 +163,16 @@ fun Game(modifier: Modifier, navController: NavController){
                 text = collided5.value.toString(),
                 color = Color.White
             )
-            Text(
+            /*Text(
                 text = collisionCount.value.toString(),
+                color = Color.White
+            )*/
+            Text(
+                text = tomLocate.value.toString(),
+                color = Color.White
+            )
+            Text(
+                text = jerryLocate.value.toString(),
                 color = Color.White
             )
             /*Text(
@@ -503,9 +525,11 @@ fun checkCollision(){
                  if (- movingJerry.value.centerX + movingBoxes[i].centerX <= movingBoxes[i].width / 2 + movingJerry.value.width / 2){
                      if (movingBoxes[i].centerX == width.value / 2){
                          collisionCount.value += 1
+                         sidewaysCollision.value = true
                          collided4.value = true
                      } else if (movingBoxes[i].centerX == width.value * 5 / 6){
                          collisionCount.value += 1
+                         sidewaysCollision.value = true
                          collided5.value = true
                      }
                  }
@@ -518,11 +542,13 @@ fun checkCollision(){
          } else if (movingBoxes[i].centerX == width.value / 6 && movingJerry.value.centerX - movingJerry.value.width / 2 <= movingBoxes[i].centerX + movingBoxes[i].width / 2){
              if (movingBoxes[i].centerY - movingBoxes[i].height / 2 <= movingJerry.value.centerY + movingJerry.value.height / 2 && movingBoxes[i].centerY + movingBoxes[i].height / 2 >= movingJerry.value.centerY - movingJerry.value.height / 2){
                  collisionCount.value += 1
+                 sidewaysCollision.value = true
                  collided2.value = true
              }
          } else if (movingBoxes[i].centerX == width.value / 2 && movingJerry.value.centerX - movingJerry.value.width / 2 <= movingBoxes[i].centerX + movingBoxes[i].width / 2 && movingJerry.value.centerX + movingJerry.value.width / 2 >= movingBoxes[i].centerX - movingBoxes[i].width / 2){
              if (movingBoxes[i].centerY - movingBoxes[i].height / 2 <= movingJerry.value.centerY + movingJerry.value.height / 2 && movingBoxes[i].centerY + movingBoxes[i].height / 2 >= movingJerry.value.centerY - movingJerry.value.height / 2){
                  collisionCount.value += 1
+                 sidewaysCollision.value = true
                  collided3.value = true
              }
          }

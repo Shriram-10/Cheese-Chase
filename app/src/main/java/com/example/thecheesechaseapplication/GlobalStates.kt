@@ -23,6 +23,7 @@ var collisionCount = mutableStateOf(0)
 var reset = mutableStateOf(true)
 var moveTomLeft = mutableStateOf(false)
 var moveTomRight = mutableStateOf(false)
+var sidewaysCollision = mutableStateOf(false)
 
 var movingJerry = mutableStateOf<Dimensions>(
     Dimensions(
