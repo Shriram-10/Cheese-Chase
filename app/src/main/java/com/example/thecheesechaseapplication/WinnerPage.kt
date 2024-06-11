@@ -49,7 +49,7 @@ fun WinnerPage(modifier: Modifier){
                     movingTom.value.width = width.value / 7.5f
                     movingTom.value.height = width.value / 7.5f
 
-                    x.value = width.value/2
+                    x.value = width.value / 2
                     jerryLocate.value = 0
                     tomLocate.value = 0
                     moveTomLeft.value = false

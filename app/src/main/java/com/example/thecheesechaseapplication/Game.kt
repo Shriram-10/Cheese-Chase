@@ -1,5 +1,12 @@
 package com.example.thecheesechaseapplication
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animate
+import androidx.compose.animation.core.animateDecay
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,11 +34,16 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
@@ -117,11 +129,6 @@ fun Game(modifier: Modifier, navController: NavController){
                             }
                         }
                     }
-                }
-            } else if (collisionCount.value == 2 && tomCatches.value){
-                while(movingTom.value.centerY >= height.value * 2 / 3 + movingJerry.value.height * 2 / 3){
-                    delay(8)
-                    movingTom.value.centerY -= jerryVelocity.value / 4
                 }
             }
         }
@@ -227,20 +234,12 @@ fun Game(modifier: Modifier, navController: NavController){
         }
     }
 
-    if (collisionCount.value == 2){
-        LaunchedEffect(Unit){
-            tomCatches.value = true
-            delay(750)
-            showWinnerPage.value = true
-        }
-    }
-
     Box(
         modifier = modifier.fillMaxSize(),
     ){
         GameCanvas(modifier)
 
-        if (showWinnerPage.value){
+        if (collisionCount.value == 2){
             WinnerPage(modifier)
         }
 
@@ -265,18 +264,18 @@ fun Game(modifier: Modifier, navController: NavController){
                 text = collided5.value.toString(),
                 color = Color.White
             )
-            /*Text(
+            Text(
                 text = collisionCount.value.toString(),
                 color = Color.White
-            )*/
-            Text(
+            )
+            /*Text(
                 text = tomLocate.value.toString(),
                 color = Color.White
             )
             Text(
                 text = jerryLocate.value.toString(),
                 color = Color.White
-            )
+            )*/
             /*Text(
                 text = jerryLocate.value.toString(),
                 color = Color.White
@@ -395,8 +394,6 @@ fun Game(modifier: Modifier, navController: NavController){
 
 @Composable
 fun GameCanvas(modifier:Modifier) {
-    val jerryHappy = ImageBitmap.imageResource(id = R.drawable.jerryhappy)
-    val angryTom = ImageBitmap.imageResource(id = R.drawable.angrytom)
     var y by remember { mutableStateOf(0f) }
     var velocity by remember { mutableStateOf((height.value + width.value)/200) }
     xRight.value = x.value + width.value/15f
@@ -483,28 +480,17 @@ fun GameCanvas(modifier:Modifier) {
         drawCircle(
             color = Color.Black,
             radius = size.width/15f,
-            center = Offset(x.value, size.height - y)
+            center = Offset(movingJerry.value.centerX, size.height - y)
         )
 
-        drawCircle(
-            color = Color.Gray,
-            radius = size.width/15f,
-            center = Offset(movingTom.value.centerX, movingTom.value.centerY)
-        )
-
-        /*scale(scale = 0.4f){
-            drawImage(
-                image = jerryHappy,
-                topLeft = Offset(x.value - width.value / 4, size.height + size.width - y),
+        if (collisionCount.value >= 1){
+            drawCircle(
+                color = Color.Gray,
+                radius = size.width/15f,
+                center = Offset(movingTom.value.centerX, movingTom.value.centerY)
             )
         }
 
-        scale(scale = 0.4f){
-            drawImage(
-                image = angryTom,
-                topLeft = Offset(size.width/3,  size.height + size.width),
-            )
-        }*/
 
         drawRect(
             topLeft = Offset(size.width/3f + size.width/15, yBox[8]),
@@ -709,4 +695,10 @@ fun MoveTomRight(){
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GamePreview(){
+    Game(modifier = Modifier, navController = rememberNavController())
 }
