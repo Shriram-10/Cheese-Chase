@@ -268,34 +268,36 @@ fun Game(modifier: Modifier, navController: NavController){
         modifier = modifier.fillMaxSize(),
     ){
         GameCanvas(modifier)
-        Column{
-            Spacer(modifier = Modifier.height(12.dp))
+        if (collisionCount.value < 2) {
+            Column {
+                Spacer(modifier = Modifier.height(12.dp))
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
-            ){
-                Button(
-                    modifier = Modifier.height(36.dp),
-                    onClick = {},
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(96,149,160)
-                    ),
-                    shape = RoundedCornerShape(25),
-                    elevation = ButtonDefaults.buttonElevation(
-                        defaultElevation = 8.dp,
-                        pressedElevation = 8.dp
-                    )
-                ){
-                    Text(
-                        text = "✨ Score : ${(score.value / 20).roundToInt()}",
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White,
-                        fontSize = 16.sp
-                    )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Button(
+                        modifier = Modifier.height(36.dp),
+                        onClick = {},
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(96, 149, 160)
+                        ),
+                        shape = RoundedCornerShape(25),
+                        elevation = ButtonDefaults.buttonElevation(
+                            defaultElevation = 8.dp,
+                            pressedElevation = 8.dp
+                        )
+                    ) {
+                        Text(
+                            text = "Score : ${(score.value / 20).roundToInt()}✨",
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White,
+                            fontSize = 16.sp
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.width((width.value / 40).dp))
                 }
-
-                Spacer(modifier = Modifier.width((width.value / 40).dp))
             }
         }
 
