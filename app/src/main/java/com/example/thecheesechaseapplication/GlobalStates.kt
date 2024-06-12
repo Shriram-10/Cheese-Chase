@@ -31,6 +31,8 @@ var tomCatches = mutableStateOf(false)
 var showWinnerPage = mutableStateOf(false)
 var score = mutableStateOf(0f)
 var HighScore = mutableStateOf(0)
+var mode = mutableStateOf(0)
+var level = mutableStateOf(1)
 
 var movingJerry = mutableStateOf<Dimensions>(
     Dimensions(

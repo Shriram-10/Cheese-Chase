@@ -303,7 +303,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
         }
 
         if (showWinnerPage.value){
-            WinnerPage(modifier, highScore)
+            WinnerPage(modifier, highScore, navController)
         }
     }
     if (moveLeft.value){

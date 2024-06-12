@@ -91,6 +91,11 @@ fun Home(modifier: Modifier, navController: NavController){
                     HighScore.value = 0
                 } else if (highScore.getData("HS", "") != ""){
                     HighScore.value = highScore.getData("HS", "").toInt()
+                    if (HighScore.value in 51..99){
+                        level.value = 2
+                    } else if (HighScore.value > 100){
+                        level.value = 3
+                    }
                 }
                 navController.navigate(Screen.Settings.route)
             },
