@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
 @Composable
-fun Settings(modifier: Modifier, navController: NavController){
+fun Settings(modifier: Modifier, navController: NavController, highScore: HighScoreManager){
     androidx.compose.foundation.Canvas(modifier = modifier.fillMaxSize()) {
         movingJerry.value.centerX = size.width / 2
         movingJerry.value.centerY = size.height

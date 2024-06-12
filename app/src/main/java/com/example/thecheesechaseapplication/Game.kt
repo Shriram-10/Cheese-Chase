@@ -50,6 +50,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
@@ -64,7 +65,7 @@ import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 
 @Composable
-fun Game(modifier: Modifier, navController: NavController){
+fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreManager){
     var elapsedTime by remember { mutableStateOf(0f) }
 
     LaunchedEffect(Unit){
@@ -302,7 +303,7 @@ fun Game(modifier: Modifier, navController: NavController){
         }
 
         if (showWinnerPage.value){
-            WinnerPage(modifier)
+            WinnerPage(modifier, highScore)
         }
     }
     if (moveLeft.value){
@@ -655,5 +656,5 @@ fun MoveTomRight(){
 @Preview(showBackground = true)
 @Composable
 fun GamePreview(){
-    Game(modifier = Modifier, navController = rememberNavController())
+    Game(modifier = Modifier, navController = rememberNavController(), highScore = HighScoreManager(LocalContext.current))
 }

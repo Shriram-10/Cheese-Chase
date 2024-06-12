@@ -53,6 +53,8 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun Home(modifier: Modifier, navController: NavController){
+
+    val highScore = HighScoreManager(LocalContext.current)
     var animatedWidth by remember { mutableStateOf(120) }
 
     Column(
@@ -85,6 +87,11 @@ fun Home(modifier: Modifier, navController: NavController){
 
         Button(
             onClick = {
+                if (highScore.getData("HS", "") == ""){
+                    HighScore.value = 0
+                } else if (highScore.getData("HS", "") != ""){
+                    HighScore.value = highScore.getData("HS", "").toInt()
+                }
                 navController.navigate(Screen.Settings.route)
             },
             modifier = Modifier

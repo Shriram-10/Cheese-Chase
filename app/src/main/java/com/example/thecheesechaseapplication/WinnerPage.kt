@@ -24,7 +24,13 @@ import androidx.compose.ui.unit.sp
 import kotlin.math.roundToInt
 
 @Composable
-fun WinnerPage(modifier: Modifier){
+fun WinnerPage(modifier: Modifier, highScore: HighScoreManager){
+
+    if ((score.value / 20).roundToInt() >= HighScore.value.toInt()){
+        HighScore.value = (score.value / 20).roundToInt()
+        highScore.saveData("HS", HighScore.value.toString())
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -51,7 +57,7 @@ fun WinnerPage(modifier: Modifier){
             ){
                 Spacer(modifier = Modifier.height(20.dp))
 
-                if (score.value > 250){
+                if ((score.value / 20).roundToInt() > 250){
                     Button(
                         onClick = {},
                         modifier = Modifier.height(40.dp),
@@ -96,7 +102,7 @@ fun WinnerPage(modifier: Modifier){
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Text(
-                    text = "HIGH SCORE: ${highScore.value.toInt()}",
+                    text = "HIGH SCORE: ${HighScore.value.toInt()}",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )

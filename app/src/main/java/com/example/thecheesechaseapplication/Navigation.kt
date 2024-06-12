@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -25,7 +26,7 @@ fun Navigation(modifier: Modifier){
         ){
             Home(
                 modifier = modifier,
-                navController = navController
+                navController = navController,
             )
         }
         composable(
@@ -33,7 +34,8 @@ fun Navigation(modifier: Modifier){
         ) {
             Settings(
                 modifier = modifier,
-                navController = navController
+                navController = navController,
+                highScore = HighScoreManager(LocalContext.current)
             )
         }
         composable(
@@ -41,7 +43,8 @@ fun Navigation(modifier: Modifier){
         ) {
             Game(
                 modifier = modifier,
-                navController = navController
+                navController = navController,
+                highScore = HighScoreManager(LocalContext.current)
             )
         }
     }
