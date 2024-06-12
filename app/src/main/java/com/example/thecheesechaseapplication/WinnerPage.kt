@@ -142,21 +142,12 @@ fun WinnerPage(modifier: Modifier, highScore: HighScoreManager, navController: N
                 if (HighScore.value < (score.value / 20).roundToInt()) {
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    /*Button(
-                        onClick = {},
-                        modifier = Modifier.height(40.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = colors
-                        ),
-                        shape = RoundedCornerShape(15)
-                    ) {*/
-                        Text(
-                            text = "NEW HIGH SCORE!",
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = colors3
-                        )
-                   /* }*/
+                    Text(
+                        text = "NEW HIGH SCORE!",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = colors3
+                    )
                 }
 
                 if ((score.value / 20).roundToInt() >= 150){
