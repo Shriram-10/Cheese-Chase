@@ -23,86 +23,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import kotlin.math.roundToInt
 
 @Composable
 fun Settings(modifier: Modifier, navController: NavController, highScore: HighScoreManager){
     androidx.compose.foundation.Canvas(modifier = modifier.fillMaxSize()) {
-        movingJerry.value.centerX = size.width / 2
-        movingJerry.value.centerY = size.height
-        movingJerry.value.width = size.width / 7.5f
-        movingJerry.value.height = size.width / 7.5f
-
-        movingTom.value.centerX = size.width / 2
-        movingTom.value.centerY = size.height
-        movingTom.value.width = size.width / 6f
-        movingTom.value.height = size.width / 6f
-
-        x.value = size.width/2
         width.value = size.width
         height.value = size.height
-
-        movingBoxes[0] = Dimensions(
-            width.value / 5,
-            width.value / 5,
-            width.value / 6,
-            width.value/10
-        )
-
-        movingBoxes[1] = Dimensions(
-            width.value / 5,
-            width.value / 5,
-            width.value / 1.2f,
-            width.value / 10
-        )
-
-        movingBoxes[2] = Dimensions(
-            width.value / 5,
-            width.value / 5,
-            width.value / 2,
-            height.value / 4 + width.value / 10
-        )
-
-        movingBoxes[3] = Dimensions(
-            width.value / 5,
-            width.value / 5,
-            width.value / 6,
-            height.value/ 2 + width.value / 10
-        )
-
-        movingBoxes[4] = Dimensions(
-            width.value / 5,
-            width.value / 5,
-            width.value / 1.2f,
-            height.value/ 2 + width.value / 10
-        )
-
-        movingBoxes[5] = Dimensions(
-            width.value / 5,
-            width.value / 5,
-            width.value / 2,
-            - height.value / 4 + width.value / 10
-        )
-
-        movingBoxes[6] = Dimensions(
-            width.value / 5,
-            width.value / 5,
-            width.value / 6,
-            - height.value / 2 + width.value/10
-        )
-
-        movingBoxes[7] = Dimensions(
-            width.value / 5,
-            width.value / 5,
-            width.value / 1.2f,
-            - height.value / 2 + width.value/10
-        )
-
-        movingBoxes[8] = Dimensions(
-            width.value / 5,
-            width.value / 5,
-            width.value / 2,
-            - 3 * height.value / 4 + width.value / 10
-        )
     }
 
     Column(
@@ -114,6 +41,107 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
     ){
         Button(
             onClick = {
+                movingJerry.value.centerX = width.value / 2
+                movingJerry.value.centerY = height.value
+                movingJerry.value.width = width.value / 7.5f
+                movingJerry.value.height = width.value / 7.5f
+
+                movingTom.value.centerX = width.value / 2
+                movingTom.value.centerY = height.value
+                movingTom.value.width = width.value / 7.5f
+                movingTom.value.height = width.value / 7.5f
+
+                x.value = width.value / 2
+                jerryLocate.value = 0
+                tomLocate.value = 0
+                moveTomLeft.value = false
+                moveTomRight.value = false
+
+                movingBoxes[0] = Dimensions(
+                    width.value / 5,
+                    width.value / 5,
+                    width.value / 6,
+                    width.value/10
+                )
+
+                movingBoxes[1] = Dimensions(
+                    width.value / 5,
+                    width.value / 5,
+                    width.value / 1.2f,
+                    width.value / 10
+                )
+
+                movingBoxes[2] = Dimensions(
+                    width.value / 5,
+                    width.value / 5,
+                    width.value / 2,
+                    height.value / 4 + width.value / 10
+                )
+
+                movingBoxes[3] = Dimensions(
+                    width.value / 5,
+                    width.value / 5,
+                    width.value / 6,
+                    height.value/ 2 + width.value / 10
+                )
+
+                movingBoxes[4] = Dimensions(
+                    width.value / 5,
+                    width.value / 5,
+                    width.value / 1.2f,
+                    height.value/ 2 + width.value / 10
+                )
+
+                movingBoxes[5] = Dimensions(
+                    width.value / 5,
+                    width.value / 5,
+                    width.value / 2,
+                    - height.value / 4 + width.value / 10
+                )
+
+                movingBoxes[6] = Dimensions(
+                    width.value / 5,
+                    width.value / 5,
+                    width.value / 6,
+                    - height.value / 2 + width.value/10
+                )
+
+                movingBoxes[7] = Dimensions(
+                    width.value / 5,
+                    width.value / 5,
+                    width.value / 1.2f,
+                    - height.value / 2 + width.value/10
+                )
+
+                movingBoxes[8] = Dimensions(
+                    width.value / 5,
+                    width.value / 5,
+                    width.value / 2,
+                    - 3 * height.value / 4 + width.value / 10
+                )
+
+                collisionCount.value = 3
+                collided1.value = false
+                collided2.value = false
+                collided3.value = false
+                collided4.value = false
+                collided5.value = false
+                sidewaysCollision.value = false
+                tomCatches.value = false
+                reset.value = true
+                if ((score.value / 20).roundToInt() >= 50 && HighScore.value < 50 && level.value == 1 || (score.value / 20).roundToInt() > 100 && HighScore.value < 100 && level.value == 2){
+                    if ((score.value / 20).roundToInt() in 50..99){
+                        level.value = 2
+                    } else if ((score.value / 20).roundToInt() >= 100){
+                        level.value = 3
+                    }
+                }
+                if ((score.value / 20).roundToInt() >= HighScore.value) {
+                    HighScore.value = (score.value / 20).roundToInt()
+                    highScore.saveData("HS", HighScore.value.toString())
+                }
+                score.value = 0f
+                showWinnerPage.value = false
                 navController.navigate(Screen.Game.route)
             },
             modifier = modifier.height(64.dp),
@@ -131,7 +159,111 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
         }
 
         Button(
-            onClick = {},
+            onClick = {
+                mode.value = 2
+                movingJerry.value.centerX = width.value / 2
+                movingJerry.value.centerY = height.value
+                movingJerry.value.width = width.value / 7.5f
+                movingJerry.value.height = width.value / 7.5f
+
+                movingTom.value.centerX = width.value / 2
+                movingTom.value.centerY = height.value
+                movingTom.value.width = width.value / 7.5f
+                movingTom.value.height = width.value / 7.5f
+
+                x.value = width.value / 2
+                jerryLocate.value = 0
+                tomLocate.value = 0
+                moveTomLeft.value = false
+                moveTomRight.value = false
+
+                movingBoxes[0] = Dimensions(
+                    width.value / 5,
+                    width.value / 5,
+                    width.value / 6,
+                    width.value/10
+                )
+
+                movingBoxes[1] = Dimensions(
+                    width.value / 5,
+                    width.value / 5,
+                    width.value / 1.2f,
+                    width.value / 10
+                )
+
+                movingBoxes[2] = Dimensions(
+                    width.value / 5,
+                    width.value / 5,
+                    width.value / 2,
+                    height.value / 4 + width.value / 10
+                )
+
+                movingBoxes[3] = Dimensions(
+                    width.value / 5,
+                    width.value / 5,
+                    width.value / 6,
+                    height.value/ 2 + width.value / 10
+                )
+
+                movingBoxes[4] = Dimensions(
+                    width.value / 5,
+                    width.value / 5,
+                    width.value / 1.2f,
+                    height.value/ 2 + width.value / 10
+                )
+
+                movingBoxes[5] = Dimensions(
+                    width.value / 5,
+                    width.value / 5,
+                    width.value / 2,
+                    - height.value / 4 + width.value / 10
+                )
+
+                movingBoxes[6] = Dimensions(
+                    width.value / 5,
+                    width.value / 5,
+                    width.value / 6,
+                    - height.value / 2 + width.value/10
+                )
+
+                movingBoxes[7] = Dimensions(
+                    width.value / 5,
+                    width.value / 5,
+                    width.value / 1.2f,
+                    - height.value / 2 + width.value/10
+                )
+
+                movingBoxes[8] = Dimensions(
+                    width.value / 5,
+                    width.value / 5,
+                    width.value / 2,
+                    - 3 * height.value / 4 + width.value / 10
+                )
+
+                collisionCount.value = 3
+                collided1.value = false
+                collided2.value = false
+                collided3.value = false
+                collided4.value = false
+                collided5.value = false
+                sidewaysCollision.value = false
+                tomCatches.value = false
+                reset.value = true
+                if ((score.value / 20).roundToInt() >= 50 && HighScore.value < 50 && level.value == 1 || (score.value / 20).roundToInt() > 100 && HighScore.value < 100 && level.value == 2){
+                    if ((score.value / 20).roundToInt() in 50..99){
+                        level.value = 2
+                    } else if ((score.value / 20).roundToInt() >= 100){
+                        level.value = 3
+                    }
+                }
+                if ((score.value / 20).roundToInt() >= HighScore.value) {
+                    HighScore.value = (score.value / 20).roundToInt()
+                    highScore.saveData("HS", HighScore.value.toString())
+                }
+                score.value = 0f
+                showWinnerPage.value = false
+                navController.navigate(Screen.Game.route)
+            },
             modifier = modifier.height(64.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(80,80,80)
@@ -147,7 +279,111 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
         }
 
         Button(
-            onClick = {},
+            onClick = {
+                mode.value = 3
+                movingJerry.value.centerX = width.value / 2
+                movingJerry.value.centerY = height.value
+                movingJerry.value.width = width.value / 7.5f
+                movingJerry.value.height = width.value / 7.5f
+
+                movingTom.value.centerX = width.value / 2
+                movingTom.value.centerY = height.value
+                movingTom.value.width = width.value / 7.5f
+                movingTom.value.height = width.value / 7.5f
+
+                x.value = width.value / 2
+                jerryLocate.value = 0
+                tomLocate.value = 0
+                moveTomLeft.value = false
+                moveTomRight.value = false
+
+                movingBoxes[0] = Dimensions(
+                    width.value / 5,
+                    width.value / 5,
+                    width.value / 6,
+                    width.value/10
+                )
+
+                movingBoxes[1] = Dimensions(
+                    width.value / 5,
+                    width.value / 5,
+                    width.value / 1.2f,
+                    width.value / 10
+                )
+
+                movingBoxes[2] = Dimensions(
+                    width.value / 5,
+                    width.value / 5,
+                    width.value / 2,
+                    height.value / 4 + width.value / 10
+                )
+
+                movingBoxes[3] = Dimensions(
+                    width.value / 5,
+                    width.value / 5,
+                    width.value / 6,
+                    height.value/ 2 + width.value / 10
+                )
+
+                movingBoxes[4] = Dimensions(
+                    width.value / 5,
+                    width.value / 5,
+                    width.value / 1.2f,
+                    height.value/ 2 + width.value / 10
+                )
+
+                movingBoxes[5] = Dimensions(
+                    width.value / 5,
+                    width.value / 5,
+                    width.value / 2,
+                    - height.value / 4 + width.value / 10
+                )
+
+                movingBoxes[6] = Dimensions(
+                    width.value / 5,
+                    width.value / 5,
+                    width.value / 6,
+                    - height.value / 2 + width.value/10
+                )
+
+                movingBoxes[7] = Dimensions(
+                    width.value / 5,
+                    width.value / 5,
+                    width.value / 1.2f,
+                    - height.value / 2 + width.value/10
+                )
+
+                movingBoxes[8] = Dimensions(
+                    width.value / 5,
+                    width.value / 5,
+                    width.value / 2,
+                    - 3 * height.value / 4 + width.value / 10
+                )
+
+                collisionCount.value = 3
+                collided1.value = false
+                collided2.value = false
+                collided3.value = false
+                collided4.value = false
+                collided5.value = false
+                sidewaysCollision.value = false
+                tomCatches.value = false
+                reset.value = true
+                if ((score.value / 20).roundToInt() >= 50 && HighScore.value < 50 && level.value == 1 || (score.value / 20).roundToInt() > 100 && HighScore.value < 100 && level.value == 2){
+                    if ((score.value / 20).roundToInt() in 50..99){
+                        level.value = 2
+                    } else if ((score.value / 20).roundToInt() >= 100){
+                        level.value = 3
+                    }
+                }
+                if ((score.value / 20).roundToInt() >= HighScore.value) {
+                    HighScore.value = (score.value / 20).roundToInt()
+                    highScore.saveData("HS", HighScore.value.toString())
+                }
+                score.value = 0f
+                showWinnerPage.value = false
+                navController.navigate(Screen.Game.route)
+            },
             modifier = modifier.height(64.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(80,80,80)

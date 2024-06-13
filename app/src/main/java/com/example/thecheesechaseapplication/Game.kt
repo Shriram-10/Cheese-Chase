@@ -1,6 +1,7 @@
 package com.example.thecheesechaseapplication
 
 import android.content.Context
+import android.media.MediaPlayer
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.animateColor
@@ -17,7 +18,9 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -73,6 +76,9 @@ import kotlin.math.roundToLong
 @Composable
 fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreManager, context: Context){
     var elapsedTime by remember { mutableStateOf(0f) }
+    /*val mp: MediaPlayer = MediaPlayer.create(context, R.raw.gamebgm)
+    var gameStarting = true*/
+
 
     LaunchedEffect(Unit){
         delay(1000)
@@ -82,9 +88,9 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
         }
     }
 
-    if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)){
+    if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value) && !jerryJump.value){
         LaunchedEffect(Unit){
-            while(!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)){
+            while(!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value) && !jerryJump.value){
                 delay(4)
                 checkCollision()
             }
@@ -160,7 +166,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
         LaunchedEffect(Unit) {
             var hasVibrated = false
             while (true) {
-                if (!hasVibrated) {
+                if (!hasVibrated && (mode.value == 2 || mode.value == 3)) {
                     HapticFeedback().triggerHapticFeedback(context, 250)
                     hasVibrated = true
                 }
@@ -242,22 +248,24 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
             var hasVibrated2 = false
             var hasVibrated3 =  false
             while(movingTom.value.centerY >= height.value * 2 / 3 + movingJerry.value.height * 2 / 3) {
-                if (!hasVibrated) {
-                    HapticFeedback().triggerHapticFeedback(context, 150)
-                    delay(150)
-                    hasVibrated = true
-                }
-                if (!hasVibrated2){
-                    delay(200)
-                    HapticFeedback().triggerHapticFeedback(context, 100)
-                    delay(100)
-                    hasVibrated2 = true
-                }
-                if (!hasVibrated3){
-                    delay(350)
-                    HapticFeedback().triggerHapticFeedback(context, 200)
-                    delay(200)
-                    hasVibrated3 = true
+                if (mode.value == 2 || mode.value == 3) {
+                    if (!hasVibrated) {
+                        HapticFeedback().triggerHapticFeedback(context, 150)
+                        delay(150)
+                        hasVibrated = true
+                    }
+                    if (!hasVibrated2) {
+                        delay(200)
+                        HapticFeedback().triggerHapticFeedback(context, 100)
+                        delay(100)
+                        hasVibrated2 = true
+                    }
+                    if (!hasVibrated3) {
+                        delay(350)
+                        HapticFeedback().triggerHapticFeedback(context, 200)
+                        delay(200)
+                        hasVibrated3 = true
+                    }
                 }
                 delay(8)
                 if (jerryLocate.value == tomLocate.value) {
@@ -302,6 +310,10 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
         GameCanvas(modifier, context)
         if (collisionCount.value < 2) {
             Column {
+                Text(
+                    text = sizeDuringJump.value.toString(),
+                    color = Color.White
+                )
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Row(
@@ -360,6 +372,25 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
     if (moveTomLeft.value && moveTomRight.value){
         moveTomLeft.value = !moveTomLeft.value
         moveTomRight.value = !moveTomRight.value
+    }
+    if (jerryJump.value){
+        LaunchedEffect(Unit) {
+            delay((height.value * 200 * 30 * 1.6 / (12 * (height.value + width.value))).roundToLong())
+            jerryJump.value = false
+        }
+        LaunchedEffect(Unit){
+            while(sizeDuringJump.value <= 1.2f){
+                delay(4)
+                sizeDuringJump.value += 10 / ((height.value * 200 * 30 * 1.6f / (12 * (height.value + width.value))))
+            }
+        }
+        LaunchedEffect(Unit){
+            delay((height.value * 200 * 30 * 1.6 / (12 * 2 * (height.value + width.value))).roundToLong())
+            while(sizeDuringJump.value >= 1f){
+                delay(4)
+                sizeDuringJump.value -= 10 / ((height.value * 200 * 30 * 1.6f / (12 * (height.value + width.value))))
+            }
+        }
     }
 }
 
@@ -432,11 +463,28 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                 detectTapGestures(
                     onTap = {
                         if (collisionCount.value < 2 && !(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) {
-                            HapticFeedback().triggerHapticFeedback(context, 50)
+                            if (mode.value == 2 || mode.value == 3) {
+                                HapticFeedback().triggerHapticFeedback(context, 50)
+                            }
                             if (it.x < xLeft.value) {
                                 moveLeft.value = true
                             } else if (it.x > xRight.value) {
                                 moveRight.value = true
+                            }
+                        }
+                    }
+                )
+            }
+            .pointerInput(Unit){
+                detectDragGestures(
+                    onDrag = { change, dragAmount ->
+                        change.consume()
+                        if (dragAmount.y < 0 && !jerryJump.value){
+                            if (collisionCount.value < 2 && !(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) {
+                                if (mode.value == 2 || mode.value == 3) {
+                                    /*HapticFeedback().triggerHapticFeedback(context, 50)*/
+                                    jerryJump.value = true
+                                }
                             }
                         }
                     }
@@ -516,7 +564,7 @@ fun GameCanvas(modifier:Modifier, context: Context) {
 
         drawCircle(
             color = if (collisionCount.value == 1) colors else Color.Black,
-            radius = size.width/15f,
+            radius = size.width/15f * sizeDuringJump.value,
             center = Offset(movingJerry.value.centerX, size.height - y)
         )
 
