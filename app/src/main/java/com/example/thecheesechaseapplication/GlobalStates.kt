@@ -1,5 +1,6 @@
 package com.example.thecheesechaseapplication
 
+import android.media.MediaPlayer
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -35,6 +36,7 @@ var mode = mutableStateOf(0)
 var level = mutableStateOf(1)
 var jerryJump = mutableStateOf(false)
 var sizeDuringJump = mutableStateOf(1f)
+var mp: MediaPlayer? = null
 
 var movingJerry = mutableStateOf<Dimensions>(
     Dimensions(

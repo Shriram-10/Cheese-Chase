@@ -2,6 +2,7 @@ package com.example.thecheesechaseapplication
 
 import android.content.Context
 import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.animateColor
@@ -40,6 +41,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Modifier
@@ -68,17 +70,43 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
+
+@Composable
+fun AudioLoader() {
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    // Function to load audio asynchronously
+    LaunchedEffect(Unit) {
+        fun loadAudioAsync() {
+            coroutineScope.launch(Dispatchers.IO) {
+                try {
+                    val mediaPlayer = MediaPlayer()
+                    mediaPlayer.setDataSource(
+                        context,
+                        Uri.parse("android.resource://" + context.packageName + "/" + R.raw.jump)
+                    )
+                    mediaPlayer.prepare()
+                    mp = mediaPlayer
+                } catch (e: Exception) {
+                    // Handle any exceptions that occur during audio loading
+                    e.printStackTrace()
+                }
+            }
+        }
+        loadAudioAsync()
+    }
+}
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreManager, context: Context){
     var elapsedTime by remember { mutableStateOf(0f) }
-    /*val mp: MediaPlayer = MediaPlayer.create(context, R.raw.gamebgm)
-    var gameStarting = true*/
-
+    AudioLoader()
 
     LaunchedEffect(Unit){
         delay(1000)
@@ -88,9 +116,9 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
         }
     }
 
-    if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value) && !jerryJump.value){
+    if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value) || !jerryJump.value){
         LaunchedEffect(Unit){
-            while(!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value) && !jerryJump.value){
+            while(!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value) || !jerryJump.value){
                 delay(4)
                 checkCollision()
             }
@@ -373,24 +401,13 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
         moveTomLeft.value = !moveTomLeft.value
         moveTomRight.value = !moveTomRight.value
     }
+
     if (jerryJump.value){
-        LaunchedEffect(Unit) {
-            delay((height.value * 200 * 30 * 1.6 / (12 * (height.value + width.value))).roundToLong())
-            jerryJump.value = false
-        }
-        LaunchedEffect(Unit){
-            while(sizeDuringJump.value <= 1.2f){
-                delay(4)
-                sizeDuringJump.value += 10 / ((height.value * 200 * 30 * 1.6f / (12 * (height.value + width.value))))
-            }
-        }
-        LaunchedEffect(Unit){
-            delay((height.value * 200 * 30 * 1.6 / (12 * 2 * (height.value + width.value))).roundToLong())
-            while(sizeDuringJump.value >= 1f){
-                delay(4)
-                sizeDuringJump.value -= 10 / ((height.value * 200 * 30 * 1.6f / (12 * (height.value + width.value))))
-            }
-        }
+        mp?.start()
+    }
+
+    if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value) || !jerryJump.value){
+        sizeDuringJump.value = 1f
     }
 }
 
