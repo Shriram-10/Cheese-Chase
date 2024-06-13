@@ -402,12 +402,6 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
         moveTomRight.value = !moveTomRight.value
     }
 
-    if (jerryJump.value){
-        LaunchedEffect(Unit){
-
-        }
-    }
-
     if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value) || !jerryJump.value){
         sizeDuringJump.value = 1f
     }
