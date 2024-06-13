@@ -1,5 +1,8 @@
 package com.example.thecheesechaseapplication
 
+import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -49,8 +52,10 @@ import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
@@ -64,8 +69,9 @@ import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreManager){
+fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreManager, context: Context){
     var elapsedTime by remember { mutableStateOf(0f) }
 
     LaunchedEffect(Unit){
@@ -152,7 +158,12 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
 
     if (collisionCount.value == 1) {
         LaunchedEffect(Unit) {
+            var hasVibrated = false
             while (true) {
+                if (!hasVibrated) {
+                    HapticFeedback().triggerHapticFeedback(context, 250)
+                    hasVibrated = true
+                }
                 delay(4)
                 if (!sidewaysCollision.value) {
                     if (tomLocate.value == jerryLocate.value) {
@@ -227,7 +238,27 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
         }
     } else if (collisionCount.value == 2){
         LaunchedEffect(Unit){
+            var hasVibrated = false
+            var hasVibrated2 = false
+            var hasVibrated3 =  false
             while(movingTom.value.centerY >= height.value * 2 / 3 + movingJerry.value.height * 2 / 3) {
+                if (!hasVibrated) {
+                    HapticFeedback().triggerHapticFeedback(context, 150)
+                    delay(150)
+                    hasVibrated = true
+                }
+                if (!hasVibrated2){
+                    delay(200)
+                    HapticFeedback().triggerHapticFeedback(context, 100)
+                    delay(100)
+                    hasVibrated2 = true
+                }
+                if (!hasVibrated3){
+                    delay(350)
+                    HapticFeedback().triggerHapticFeedback(context, 200)
+                    delay(200)
+                    hasVibrated3 = true
+                }
                 delay(8)
                 if (jerryLocate.value == tomLocate.value) {
                     movingTom.value.centerY -= jerryVelocity.value
@@ -268,7 +299,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
     Box(
         modifier = modifier.fillMaxSize(),
     ){
-        GameCanvas(modifier)
+        GameCanvas(modifier, context)
         if (collisionCount.value < 2) {
             Column {
                 Spacer(modifier = Modifier.height(12.dp))
@@ -332,8 +363,9 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun GameCanvas(modifier:Modifier) {
+fun GameCanvas(modifier:Modifier, context: Context) {
     var y by remember { mutableStateOf(0f) }
     var velocity by remember { mutableStateOf((height.value + width.value)/200) }
     xRight.value = x.value + width.value/15f
@@ -346,7 +378,6 @@ fun GameCanvas(modifier:Modifier) {
             repeatMode = RepeatMode.Reverse
         )
     ).value
-
 
     if (collisionCount.value < 2){
         LaunchedEffect(Unit){
@@ -401,6 +432,7 @@ fun GameCanvas(modifier:Modifier) {
                 detectTapGestures(
                     onTap = {
                         if (collisionCount.value < 2 && !(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) {
+                            HapticFeedback().triggerHapticFeedback(context, 50)
                             if (it.x < xLeft.value) {
                                 moveLeft.value = true
                             } else if (it.x > xRight.value) {
@@ -653,8 +685,9 @@ fun MoveTomRight(){
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun GamePreview(){
-    Game(modifier = Modifier, navController = rememberNavController(), highScore = HighScoreManager(LocalContext.current))
+    Game(modifier = Modifier, navController = rememberNavController(), highScore = HighScoreManager(LocalContext.current), LocalContext.current)
 }

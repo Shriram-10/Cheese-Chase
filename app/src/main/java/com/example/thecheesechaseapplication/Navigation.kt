@@ -35,7 +35,7 @@ fun Navigation(modifier: Modifier){
             Settings(
                 modifier = modifier,
                 navController = navController,
-                highScore = HighScoreManager(LocalContext.current)
+                highScore = HighScoreManager(LocalContext.current),
             )
         }
         composable(
@@ -44,7 +44,8 @@ fun Navigation(modifier: Modifier){
             Game(
                 modifier = modifier,
                 navController = navController,
-                highScore = HighScoreManager(LocalContext.current)
+                highScore = HighScoreManager(LocalContext.current),
+                context = LocalContext.current
             )
         }
     }
