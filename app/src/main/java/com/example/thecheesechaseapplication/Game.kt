@@ -403,7 +403,9 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
     }
 
     if (jerryJump.value){
-        mp?.start()
+        LaunchedEffect(Unit){
+
+        }
     }
 
     if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value) || !jerryJump.value){
