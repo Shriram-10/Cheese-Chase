@@ -368,19 +368,6 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
         GameCanvas(modifier, context)
         if (collisionCount.value < 2) {
             Column {
-                Text(
-                    text = sizeDuringJump.value.toString(),
-                    color = Color.White
-                )
-                Text(
-                    text = jerryJump.value.toString(),
-                    color = Color.White
-                )
-                Text(
-                    text = velocity.value.toString(),
-                    color = Color.White
-                )
-
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Row(
@@ -477,13 +464,6 @@ fun GameCanvas(modifier:Modifier, context: Context) {
             repeatMode = RepeatMode.Reverse
         )
     ).value
-
-    LaunchedEffect(Unit){
-        while(collisionCount.value < 2){
-            delay(4)
-            velocity.value += acceleration.value
-        }
-    }
 
     if (collisionCount.value < 2){
         LaunchedEffect(Unit){
