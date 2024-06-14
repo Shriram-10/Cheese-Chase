@@ -73,6 +73,7 @@ import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.math.pow
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 
@@ -105,20 +106,19 @@ fun AudioLoader() {
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreManager, context: Context){
-    var elapsedTime by remember { mutableStateOf(0f) }
     AudioLoader()
 
     LaunchedEffect(Unit){
         delay(1000)
         val startTime = withFrameMillis { it }
         while(!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) {
-            elapsedTime = (withFrameMillis { it } - startTime) * 0.001f
+            time.value = (withFrameMillis { it } - startTime) * 0.001f
         }
     }
 
-    if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value) || !jerryJump.value){
+    if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value) && !jerryJump.value){
         LaunchedEffect(Unit){
-            while(!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value) || !jerryJump.value){
+            while(!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value) && !jerryJump.value){
                 delay(4)
                 checkCollision()
             }
@@ -199,7 +199,37 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
                     hasVibrated = true
                 }
                 delay(4)
-                if (!sidewaysCollision.value) {
+                if (jerryJump.value){
+                    if (tomLocate.value == jerryLocate.value){
+                        for (i in 0..9) {
+                            if (movingTom.value.centerX == movingBoxes[i].centerX && tomLocate.value != 1){
+                                if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
+                                    moveTomRight.value = true
+                                }
+                            } else if (movingTom.value.centerX == movingBoxes[i].centerX && tomLocate.value == 1){
+                                if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
+                                    moveTomLeft.value = true
+                                }
+                            }
+                        }
+                    } else if (tomLocate.value == jerryLocate.value + 1 || tomLocate.value == jerryLocate.value + 2){
+                        for (i in 0..9) {
+                            if (movingTom.value.centerX == movingBoxes[i].centerX){
+                                if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
+                                    moveTomLeft.value = true
+                                }
+                            }
+                        }
+                    } else if (tomLocate.value == jerryLocate.value - 1 || tomLocate.value == jerryLocate.value - 2){
+                        for (i in 0..9) {
+                            if (movingTom.value.centerX == movingBoxes[i].centerX){
+                                if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
+                                    moveTomRight.value = true
+                                }
+                            }
+                        }
+                    }
+                } else if (!sidewaysCollision.value) {
                     if (tomLocate.value == jerryLocate.value) {
                         if (moveLeft.value) {
                             delay((height.value * 200 * 30 / (12 * (height.value + width.value))).roundToLong())
@@ -342,6 +372,15 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
                     text = sizeDuringJump.value.toString(),
                     color = Color.White
                 )
+                Text(
+                    text = jerryJump.value.toString(),
+                    color = Color.White
+                )
+                Text(
+                    text = velocity.value.toString(),
+                    color = Color.White
+                )
+
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Row(
@@ -401,8 +440,25 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
         moveTomLeft.value = !moveTomLeft.value
         moveTomRight.value = !moveTomRight.value
     }
-
-    if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value) || !jerryJump.value){
+    if (jerryJump.value){
+        mp?.start()
+        LaunchedEffect(Unit){
+            delay((width.value * 1.8f * 30 / (7.5 * ((width.value + height.value) / 200))).roundToLong())
+            jerryJump.value = false
+        }
+        LaunchedEffect(Unit){
+            while(sizeDuringJump.value <= 1.3f) {
+                delay(4)
+                sizeDuringJump.value += 0.3f * 18 / (width.value * 30 / (7.5f * 2 * ((width.value + height.value) / 200)))
+            }
+            delay((width.value * 1.8 * 30 / (7.5 * 2 * ((width.value + height.value) / 200))).roundToLong())
+            while(sizeDuringJump.value > 1f){
+                delay(4)
+                sizeDuringJump.value -= 0.3f * 18 / (width.value * 30 / (7.5f * 2 * ((width.value + height.value) / 200)))
+            }
+        }
+    }
+    if (collided1.value || collided2.value || collided3.value || collided4.value || collided5.value){
         sizeDuringJump.value = 1f
     }
 }
@@ -411,7 +467,6 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
 @Composable
 fun GameCanvas(modifier:Modifier, context: Context) {
     var y by remember { mutableStateOf(0f) }
-    var velocity by remember { mutableStateOf((height.value + width.value)/200) }
     xRight.value = x.value + width.value/15f
     xLeft.value = x.value - width.value/15f
     val infiniteTransition = rememberInfiniteTransition()
@@ -422,6 +477,13 @@ fun GameCanvas(modifier:Modifier, context: Context) {
             repeatMode = RepeatMode.Reverse
         )
     ).value
+
+    LaunchedEffect(Unit){
+        while(collisionCount.value < 2){
+            delay(4)
+            velocity.value += acceleration.value
+        }
+    }
 
     if (collisionCount.value < 2){
         LaunchedEffect(Unit){
@@ -437,14 +499,14 @@ fun GameCanvas(modifier:Modifier, context: Context) {
 
         LaunchedEffect(Unit){
             yBox = mutableStateListOf<Float>(0f,0f, height.value/4,height.value/2,height.value/2,-height.value/4,-height.value/2,-height.value/2,- 3 * height.value / 4,0f,0f)
-            velocity = (height.value + width.value)/200
+            velocity.value = (height.value + width.value)/200
             delay(1250)
             while(true){
                 delay(16)
                 for(i in 0..9){
                     if (yBox[i] < height.value + width.value){
-                        yBox[i] += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) velocity else velocity / 3
-                        movingBoxes[i].centerY += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) velocity else velocity / 3
+                        yBox[i] += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) velocity.value else velocity.value / 3
+                        movingBoxes[i].centerY += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) velocity.value else velocity.value / 3
                     } else {
                         yBox[i] -= height.value + width.value
                         movingBoxes[i].centerY -= height.value + width.value
@@ -495,7 +557,6 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                         if (dragAmount.y < 0 && !jerryJump.value){
                             if (collisionCount.value < 2 && !(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) {
                                 if (mode.value == 2 || mode.value == 3) {
-                                    /*HapticFeedback().triggerHapticFeedback(context, 50)*/
                                     jerryJump.value = true
                                 }
                             }
@@ -573,6 +634,12 @@ fun GameCanvas(modifier:Modifier, context: Context) {
             topLeft = Offset(size.width/1.5f + size.width/15, yBox[4]),
             color = Color(128,56,42),
             size = Size(size.width/5, size.width/5)
+        )
+
+        drawCircle(
+            color = Color.Black.copy(alpha = 0.3f),
+            radius = size.width/15f * 1.1f * sizeDuringJump.value.pow(1.25f),
+            center = Offset(movingJerry.value.centerX + 2f, size.height - y + 2f)
         )
 
         drawCircle(
@@ -656,40 +723,42 @@ fun MoveJerryRight(){
 }
 
 fun checkCollision(){
-     for (i in 0..9){
-         if (movingJerry.value.centerX < movingBoxes[i].centerX){
-             if (movingJerry.value.centerY <= movingBoxes[i].centerY + movingBoxes[i].height / 2 && movingJerry.value.centerY >= movingBoxes[i].centerY - movingBoxes[i].height / 2){
-                 if (- movingJerry.value.centerX + movingBoxes[i].centerX <= movingBoxes[i].width / 2 + movingJerry.value.width / 2){
-                     if (movingBoxes[i].centerX == width.value / 2){
-                         collisionCount.value += 1
-                         sidewaysCollision.value = true
-                         collided4.value = true
-                     } else if (movingBoxes[i].centerX == width.value * 5 / 6){
-                         collisionCount.value += 1
-                         sidewaysCollision.value = true
-                         collided5.value = true
-                     }
-                 }
-             }
-         } else if (movingBoxes[i].centerX - movingJerry.value.centerX <= movingBoxes[i].width / 2 + movingJerry.value.width / 2 && movingBoxes[i].centerX - movingJerry.value.centerX >= 0){
-             if ((movingBoxes[i].centerY - movingBoxes[i].height / 2 <= movingJerry.value.centerY + movingJerry.value.height / 2) && (movingBoxes[i].centerY + movingBoxes[i].height / 2 >= movingJerry.value.centerY - movingJerry.value.height / 2)){
-                 collisionCount.value += 1
-                 collided1.value = true
-             }
-         } else if (movingBoxes[i].centerX == width.value / 6 && movingJerry.value.centerX - movingJerry.value.width / 2 <= movingBoxes[i].centerX + movingBoxes[i].width / 2){
-             if (movingBoxes[i].centerY - movingBoxes[i].height / 2 <= movingJerry.value.centerY + movingJerry.value.height / 2 && movingBoxes[i].centerY + movingBoxes[i].height / 2 >= movingJerry.value.centerY - movingJerry.value.height / 2){
-                 collisionCount.value += 1
-                 sidewaysCollision.value = true
-                 collided2.value = true
-             }
-         } else if (movingBoxes[i].centerX == width.value / 2 && movingJerry.value.centerX - movingJerry.value.width / 2 <= movingBoxes[i].centerX + movingBoxes[i].width / 2 && movingJerry.value.centerX + movingJerry.value.width / 2 >= movingBoxes[i].centerX - movingBoxes[i].width / 2){
-             if (movingBoxes[i].centerY - movingBoxes[i].height / 2 <= movingJerry.value.centerY + movingJerry.value.height / 2 && movingBoxes[i].centerY + movingBoxes[i].height / 2 >= movingJerry.value.centerY - movingJerry.value.height / 2){
-                 collisionCount.value += 1
-                 sidewaysCollision.value = true
-                 collided3.value = true
-             }
-         }
-     }
+    if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) {
+        for (i in 0..9) {
+            if (movingJerry.value.centerX < movingBoxes[i].centerX) {
+                if (movingJerry.value.centerY <= movingBoxes[i].centerY + movingBoxes[i].height / 2 && movingJerry.value.centerY >= movingBoxes[i].centerY - movingBoxes[i].height / 2) {
+                    if (-movingJerry.value.centerX + movingBoxes[i].centerX <= movingBoxes[i].width / 2 + movingJerry.value.width / 2) {
+                        if (movingBoxes[i].centerX == width.value / 2) {
+                            collisionCount.value += 1
+                            sidewaysCollision.value = true
+                            collided4.value = true
+                        } else if (movingBoxes[i].centerX == width.value * 5 / 6) {
+                            collisionCount.value += 1
+                            sidewaysCollision.value = true
+                            collided5.value = true
+                        }
+                    }
+                }
+            } else if (movingBoxes[i].centerX - movingJerry.value.centerX <= movingBoxes[i].width / 2 + movingJerry.value.width / 2 && movingBoxes[i].centerX - movingJerry.value.centerX >= 0) {
+                if ((movingBoxes[i].centerY - movingBoxes[i].height / 2 <= movingJerry.value.centerY + movingJerry.value.height / 2) && (movingBoxes[i].centerY + movingBoxes[i].height / 2 >= movingJerry.value.centerY - movingJerry.value.height / 2)) {
+                    collisionCount.value += 1
+                    collided1.value = true
+                }
+            } else if (movingBoxes[i].centerX == width.value / 6 && movingJerry.value.centerX - movingJerry.value.width / 2 <= movingBoxes[i].centerX + movingBoxes[i].width / 2) {
+                if (movingBoxes[i].centerY - movingBoxes[i].height / 2 <= movingJerry.value.centerY + movingJerry.value.height / 2 && movingBoxes[i].centerY + movingBoxes[i].height / 2 >= movingJerry.value.centerY - movingJerry.value.height / 2) {
+                    collisionCount.value += 1
+                    sidewaysCollision.value = true
+                    collided2.value = true
+                }
+            } else if (movingBoxes[i].centerX == width.value / 2 && movingJerry.value.centerX - movingJerry.value.width / 2 <= movingBoxes[i].centerX + movingBoxes[i].width / 2 && movingJerry.value.centerX + movingJerry.value.width / 2 >= movingBoxes[i].centerX - movingBoxes[i].width / 2) {
+                if (movingBoxes[i].centerY - movingBoxes[i].height / 2 <= movingJerry.value.centerY + movingJerry.value.height / 2 && movingBoxes[i].centerY + movingBoxes[i].height / 2 >= movingJerry.value.centerY - movingJerry.value.height / 2) {
+                    collisionCount.value += 1
+                    sidewaysCollision.value = true
+                    collided3.value = true
+                }
+            }
+        }
+    }
 }
 
 @Composable

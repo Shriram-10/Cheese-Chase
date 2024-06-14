@@ -248,6 +248,7 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                 collided5.value = false
                 sidewaysCollision.value = false
                 tomCatches.value = false
+                time.value = 0f
                 reset.value = true
                 if ((score.value / 20).roundToInt() >= 50 && HighScore.value < 50 && level.value == 1 || (score.value / 20).roundToInt() > 100 && HighScore.value < 100 && level.value == 2){
                     if ((score.value / 20).roundToInt() in 50..99){
@@ -368,6 +369,7 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                 collided5.value = false
                 sidewaysCollision.value = false
                 tomCatches.value = false
+                time.value = 0f
                 reset.value = true
                 if ((score.value / 20).roundToInt() >= 50 && HighScore.value < 50 && level.value == 1 || (score.value / 20).roundToInt() > 100 && HighScore.value < 100 && level.value == 2){
                     if ((score.value / 20).roundToInt() in 50..99){

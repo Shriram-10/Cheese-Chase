@@ -37,6 +37,9 @@ var level = mutableStateOf(1)
 var jerryJump = mutableStateOf(false)
 var sizeDuringJump = mutableStateOf(1f)
 var mp: MediaPlayer? = null
+var time = mutableStateOf(0f)
+var velocity = mutableStateOf((height.value + width.value)/200)
+var acceleration = mutableStateOf(0.1f)
 
 var movingJerry = mutableStateOf<Dimensions>(
     Dimensions(
