@@ -108,11 +108,13 @@ fun AudioLoader() {
 fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreManager, context: Context){
     AudioLoader()
 
-    LaunchedEffect(Unit){
-        delay(1000)
-        val startTime = withFrameMillis { it }
-        while(!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) {
-            time.value = (withFrameMillis { it } - startTime) * 0.001f
+    if (collisionCount.value < 2) {
+        LaunchedEffect(Unit) {
+            delay(1000)
+            val startTime = withFrameMillis { it }
+            while (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) {
+                time.value = (withFrameMillis { it } - startTime) * 0.001f
+            }
         }
     }
 
@@ -232,10 +234,10 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
                 } else if (!sidewaysCollision.value) {
                     if (tomLocate.value == jerryLocate.value) {
                         if (moveLeft.value) {
-                            delay((height.value * 200 * 30 / (12 * (height.value + width.value))).roundToLong())
+                            delay((height.value * 30 / (12 * ((height.value + width.value) / 200 + acceleration.value * time.value))).roundToLong())
                             moveTomLeft.value = true
                         } else if (moveRight.value) {
-                            delay((height.value * 200 * 30 / (12 * (height.value + width.value))).roundToLong())
+                            delay((height.value * 30 / (12 * ((height.value + width.value) / 200 + acceleration.value * time.value))).roundToLong())
                             moveTomRight.value = true
                         }
                     } else if (tomLocate.value == jerryLocate.value - 1 || tomLocate.value == jerryLocate.value - 2) {
@@ -247,7 +249,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
                             }
                         }
                         if (moveRight.value) {
-                            delay((height.value * 200 * 30 / (12 * (height.value + width.value))).roundToLong())
+                            delay((height.value * 30 / (12 * ((height.value + width.value) / 200 + acceleration.value * time.value))).roundToLong())
                             moveTomRight.value = true
                         }
                     } else if (tomLocate.value == jerryLocate.value + 1 || tomLocate.value == jerryLocate.value + 2) {
@@ -259,17 +261,17 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
                             }
                         }
                         if (moveLeft.value) {
-                            delay((height.value * 200 * 30 / (12 * (height.value + width.value))).roundToLong())
+                            delay((height.value * 30 / (12 * ((height.value + width.value) / 200 + acceleration.value * time.value))).roundToLong())
                             moveTomLeft.value = true
                         }
                     }
                 } else if (sidewaysCollision.value && movingTom.value.centerY <= height.value * 4 / 5){
                     if (tomLocate.value == jerryLocate.value) {
                         if (moveLeft.value) {
-                            delay((height.value * 200 * 30 / (12 * (height.value + width.value))).roundToLong())
+                            delay((height.value * 30 / (12 * ((height.value + width.value) / 200 + acceleration.value * time.value))).roundToLong())
                             moveTomLeft.value = true
                         } else if (moveRight.value) {
-                            delay((height.value * 200 * 30 / (12 * (height.value + width.value))).roundToLong())
+                            delay((height.value * 30 / (12 * ((height.value + width.value) / 200 + acceleration.value * time.value))).roundToLong())
                             moveTomRight.value = true
                         }
                     } else if (tomLocate.value == jerryLocate.value - 1 || tomLocate.value == jerryLocate.value - 2) {
@@ -281,7 +283,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
                             }
                         }
                         if (moveRight.value) {
-                            delay((height.value * 200 * 30 / (12 * (height.value + width.value))).roundToLong())
+                            delay((height.value * 30 / (12 * ((height.value + width.value) / 200 + acceleration.value * time.value))).roundToLong())
                             moveTomRight.value = true
                         }
                     } else if (tomLocate.value == jerryLocate.value + 1 || tomLocate.value == jerryLocate.value + 2) {
@@ -293,7 +295,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
                             }
                         }
                         if (moveLeft.value) {
-                            delay((height.value * 200 * 30 / (12 * (height.value + width.value))).roundToLong())
+                            delay((height.value * 30 / (12 * ((height.value + width.value) / 200 + acceleration.value * time.value))).roundToLong())
                             moveTomLeft.value = true
                         }
                     }
@@ -343,19 +345,19 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
         while(collisionCount.value == 0){
             delay(8)
             if (collided1.value){
-                delay(1500)
+                delay((width.value * 4.2f * 30 / (7.5 * ((width.value + height.value) / 200 + acceleration.value * time.value))).roundToLong())
                 collided1.value = false
             } else if (collided2.value){
-                delay(1500)
+                delay((width.value * 4.2f * 30 / (7.5 * ((width.value + height.value) / 200 + acceleration.value * time.value))).roundToLong())
                 collided2.value = false
             } else if (collided3.value){
-                delay(1500)
+                delay((width.value * 4.2f * 30 / (7.5 * ((width.value + height.value) / 200 + acceleration.value * time.value))).roundToLong())
                 collided3.value = false
             } else if (collided4.value){
-                delay(1500)
+                delay((width.value * 4.2f * 30 / (7.5 * ((width.value + height.value) / 200 + acceleration.value * time.value))).roundToLong())
                 collided4.value = false
             } else if (collided5.value){
-                delay(1500)
+                delay((width.value * 4.2f * 30 / (7.5 * ((width.value + height.value) / 200 + acceleration.value * time.value))).roundToLong())
                 collided5.value = false
             }
             reset.value = false
@@ -485,8 +487,8 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                 delay(16)
                 for(i in 0..9){
                     if (yBox[i] < height.value + width.value){
-                        yBox[i] += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) velocity.value else velocity.value / 3
-                        movingBoxes[i].centerY += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) velocity.value else velocity.value / 3
+                        yBox[i] += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) velocity.value + acceleration.value * time.value else (velocity.value + acceleration.value * time.value) / 3
+                        movingBoxes[i].centerY += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) velocity.value + acceleration.value * time.value else (velocity.value + acceleration.value * time.value) / 3
                     } else {
                         yBox[i] -= height.value + width.value
                         movingBoxes[i].centerY -= height.value + width.value
@@ -650,8 +652,8 @@ fun MoveJerryLeft(){
         LaunchedEffect(Unit){
             while(x.value > width.value/2){
                 delay(8)
-                x.value -= jerryVelocity.value
-                movingJerry.value.centerX -= jerryVelocity.value
+                x.value -= jerryVelocity.value + acceleration.value * time.value
+                movingJerry.value.centerX -= jerryVelocity.value + acceleration.value * time.value
             }
             if (x.value <= width.value/2){
                 jerryLocate.value = 0
@@ -662,8 +664,8 @@ fun MoveJerryLeft(){
         LaunchedEffect(Unit){
             while(x.value > width.value/6){
                 delay(8)
-                x.value -= jerryVelocity.value
-                movingJerry.value.centerX -= jerryVelocity.value
+                x.value -= jerryVelocity.value + acceleration.value * time.value
+                movingJerry.value.centerX -= jerryVelocity.value + acceleration.value * time.value
             }
             if (x.value <= width.value/6){
                 jerryLocate.value = -1
@@ -679,8 +681,8 @@ fun MoveJerryRight(){
         LaunchedEffect(Unit){
             while(x.value < width.value/2){
                 delay(8)
-                x.value += jerryVelocity.value
-                movingJerry.value.centerX += jerryVelocity.value
+                x.value += jerryVelocity.value + acceleration.value * time.value
+                movingJerry.value.centerX += jerryVelocity.value + acceleration.value * time.value
             }
             if (x.value >= width.value/2){
                 jerryLocate.value = 0
@@ -691,8 +693,8 @@ fun MoveJerryRight(){
         LaunchedEffect(Unit){
             while(x.value < width.value * 5/6){
                 delay(8)
-                x.value += jerryVelocity.value
-                movingJerry.value.centerX += jerryVelocity.value
+                x.value += jerryVelocity.value + acceleration.value * time.value
+                movingJerry.value.centerX += jerryVelocity.value + acceleration.value * time.value
             }
             if (x.value >= width.value * 5/6){
                 jerryLocate.value = 1
@@ -747,7 +749,7 @@ fun MoveTomLeft(){
         LaunchedEffect(Unit){
             while(movingTom.value.centerX > width.value/2){
                 delay(8)
-                movingTom.value.centerX -= jerryVelocity.value
+                movingTom.value.centerX -= jerryVelocity.value + acceleration.value * time.value
             }
             if (movingTom.value.centerX <= width.value/2){
                 tomLocate.value = 0
@@ -758,7 +760,7 @@ fun MoveTomLeft(){
         LaunchedEffect(Unit){
             while(movingTom.value.centerX > width.value/6){
                 delay(8)
-                movingTom.value.centerX -= jerryVelocity.value
+                movingTom.value.centerX -= jerryVelocity.value + acceleration.value * time.value
             }
             if (movingTom.value.centerX <= width.value/6){
                 tomLocate.value = -1
@@ -774,7 +776,7 @@ fun MoveTomRight(){
         LaunchedEffect(Unit){
             while(movingTom.value.centerX < width.value/2){
                 delay(8)
-                movingTom.value.centerX += jerryVelocity.value
+                movingTom.value.centerX += jerryVelocity.value + acceleration.value * time.value
             }
             if (movingTom.value.centerX >= width.value/2){
                 tomLocate.value = 0
@@ -785,7 +787,7 @@ fun MoveTomRight(){
         LaunchedEffect(Unit){
             while(movingTom.value.centerX < width.value * 5/6){
                 delay(8)
-                movingTom.value.centerX += jerryVelocity.value
+                movingTom.value.centerX += jerryVelocity.value + acceleration.value * time.value
             }
             if (movingTom.value.centerX >= width.value * 5/6){
                 tomLocate.value = 1
