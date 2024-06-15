@@ -118,6 +118,13 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
         }
     }
 
+    LaunchedEffect(Unit){
+        while(true) {
+            delay(500)
+            velocity.value += acceleration.value
+        }
+    }
+
     if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value) && !jerryJump.value){
         LaunchedEffect(Unit){
             while(!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value) && !jerryJump.value){
@@ -128,7 +135,12 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
     }
 
     LaunchedEffect(Unit){
+        var hasVibrated = false
         while(true){
+            if (!hasVibrated && (mode.value == 2 || mode.value == 3)) {
+                HapticFeedback().triggerHapticFeedback(context, 250)
+                hasVibrated = true
+            }
             delay(4)
             if (collisionCount.value == 1){
                 while(movingTom.value.centerY >= height.value * 4 / 5){
@@ -194,109 +206,106 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
 
     if (collisionCount.value == 1) {
         LaunchedEffect(Unit) {
-            var hasVibrated = false
             while (true) {
-                if (!hasVibrated && (mode.value == 2 || mode.value == 3)) {
-                    HapticFeedback().triggerHapticFeedback(context, 250)
-                    hasVibrated = true
-                }
                 delay(4)
-                if (jerryJump.value){
-                    if (tomLocate.value == jerryLocate.value){
-                        for (i in 0..9) {
-                            if (movingTom.value.centerX == movingBoxes[i].centerX && tomLocate.value != 1){
-                                if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
-                                    moveTomRight.value = true
+                if (movingTom.value.centerY < height.value * 4 / 5) {
+                    if (jerryJump.value) {
+                        if (tomLocate.value == jerryLocate.value) {
+                            for (i in 0..9) {
+                                if (movingTom.value.centerX == movingBoxes[i].centerX && tomLocate.value != 1) {
+                                    if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
+                                        moveTomRight.value = true
+                                    }
+                                } else if (movingTom.value.centerX == movingBoxes[i].centerX && tomLocate.value == 1) {
+                                    if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
+                                        moveTomLeft.value = true
+                                    }
                                 }
-                            } else if (movingTom.value.centerX == movingBoxes[i].centerX && tomLocate.value == 1){
-                                if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
-                                    moveTomLeft.value = true
+                            }
+                        } else if (tomLocate.value == jerryLocate.value + 1 || tomLocate.value == jerryLocate.value + 2) {
+                            for (i in 0..9) {
+                                if (movingTom.value.centerX == movingBoxes[i].centerX) {
+                                    if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
+                                        moveTomLeft.value = true
+                                    }
+                                }
+                            }
+                        } else if (tomLocate.value == jerryLocate.value - 1 || tomLocate.value == jerryLocate.value - 2) {
+                            for (i in 0..9) {
+                                if (movingTom.value.centerX == movingBoxes[i].centerX) {
+                                    if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
+                                        moveTomRight.value = true
+                                    }
                                 }
                             }
                         }
-                    } else if (tomLocate.value == jerryLocate.value + 1 || tomLocate.value == jerryLocate.value + 2){
-                        for (i in 0..9) {
-                            if (movingTom.value.centerX == movingBoxes[i].centerX){
-                                if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
-                                    moveTomLeft.value = true
+                    } else if (!sidewaysCollision.value) {
+                        if (tomLocate.value == jerryLocate.value) {
+                            if (moveLeft.value) {
+                                delay((height.value * 30 / (12 * (velocity.value))).roundToLong())
+                                moveTomLeft.value = true
+                            } else if (moveRight.value) {
+                                delay((height.value * 30 / (12 * (velocity.value))).roundToLong())
+                                moveTomRight.value = true
+                            }
+                        } else if (tomLocate.value == jerryLocate.value - 1 || tomLocate.value == jerryLocate.value - 2) {
+                            for (i in 0..9) {
+                                if (movingBoxes[i].centerX == movingTom.value.centerX) {
+                                    if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
+                                        moveTomRight.value = true
+                                    }
                                 }
                             }
-                        }
-                    } else if (tomLocate.value == jerryLocate.value - 1 || tomLocate.value == jerryLocate.value - 2){
-                        for (i in 0..9) {
-                            if (movingTom.value.centerX == movingBoxes[i].centerX){
-                                if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
-                                    moveTomRight.value = true
+                            if (moveRight.value) {
+                                delay((height.value * 30 / (12 * (velocity.value))).roundToLong())
+                                moveTomRight.value = true
+                            }
+                        } else if (tomLocate.value == jerryLocate.value + 1 || tomLocate.value == jerryLocate.value + 2) {
+                            for (i in 0..9) {
+                                if (movingBoxes[i].centerX == movingTom.value.centerX) {
+                                    if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
+                                        moveTomLeft.value = true
+                                    }
                                 }
                             }
-                        }
-                    }
-                } else if (!sidewaysCollision.value) {
-                    if (tomLocate.value == jerryLocate.value) {
-                        if (moveLeft.value) {
-                            delay((height.value * 30 / (12 * ((height.value + width.value) / 200 + acceleration.value * time.value))).roundToLong())
-                            moveTomLeft.value = true
-                        } else if (moveRight.value) {
-                            delay((height.value * 30 / (12 * ((height.value + width.value) / 200 + acceleration.value * time.value))).roundToLong())
-                            moveTomRight.value = true
-                        }
-                    } else if (tomLocate.value == jerryLocate.value - 1 || tomLocate.value == jerryLocate.value - 2) {
-                        for (i in 0..9) {
-                            if (movingBoxes[i].centerX == movingTom.value.centerX) {
-                                if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
-                                    moveTomRight.value = true
-                                }
+                            if (moveLeft.value) {
+                                delay((height.value * 30 / (12 * (velocity.value))).roundToLong())
+                                moveTomLeft.value = true
                             }
                         }
-                        if (moveRight.value) {
-                            delay((height.value * 30 / (12 * ((height.value + width.value) / 200 + acceleration.value * time.value))).roundToLong())
-                            moveTomRight.value = true
-                        }
-                    } else if (tomLocate.value == jerryLocate.value + 1 || tomLocate.value == jerryLocate.value + 2) {
-                        for (i in 0..9) {
-                            if (movingBoxes[i].centerX == movingTom.value.centerX) {
-                                if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
-                                    moveTomLeft.value = true
+                    } else if (sidewaysCollision.value && movingTom.value.centerY <= height.value * 4 / 5) {
+                        if (tomLocate.value == jerryLocate.value) {
+                            if (moveLeft.value) {
+                                delay((height.value * 30 / (12 * (velocity.value))).roundToLong())
+                                moveTomLeft.value = true
+                            } else if (moveRight.value) {
+                                delay((height.value * 30 / (12 * (velocity.value))).roundToLong())
+                                moveTomRight.value = true
+                            }
+                        } else if (tomLocate.value == jerryLocate.value - 1 || tomLocate.value == jerryLocate.value - 2) {
+                            for (i in 0..9) {
+                                if (movingBoxes[i].centerX == movingTom.value.centerX) {
+                                    if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
+                                        moveTomRight.value = true
+                                    }
                                 }
                             }
-                        }
-                        if (moveLeft.value) {
-                            delay((height.value * 30 / (12 * ((height.value + width.value) / 200 + acceleration.value * time.value))).roundToLong())
-                            moveTomLeft.value = true
-                        }
-                    }
-                } else if (sidewaysCollision.value && movingTom.value.centerY <= height.value * 4 / 5){
-                    if (tomLocate.value == jerryLocate.value) {
-                        if (moveLeft.value) {
-                            delay((height.value * 30 / (12 * ((height.value + width.value) / 200 + acceleration.value * time.value))).roundToLong())
-                            moveTomLeft.value = true
-                        } else if (moveRight.value) {
-                            delay((height.value * 30 / (12 * ((height.value + width.value) / 200 + acceleration.value * time.value))).roundToLong())
-                            moveTomRight.value = true
-                        }
-                    } else if (tomLocate.value == jerryLocate.value - 1 || tomLocate.value == jerryLocate.value - 2) {
-                        for (i in 0..9) {
-                            if (movingBoxes[i].centerX == movingTom.value.centerX) {
-                                if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
-                                    moveTomRight.value = true
+                            if (moveRight.value) {
+                                delay((height.value * 30 / (12 * (velocity.value))).roundToLong())
+                                moveTomRight.value = true
+                            }
+                        } else if (tomLocate.value == jerryLocate.value + 1 || tomLocate.value == jerryLocate.value + 2) {
+                            for (i in 0..9) {
+                                if (movingBoxes[i].centerX == movingTom.value.centerX) {
+                                    if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
+                                        moveTomLeft.value = true
+                                    }
                                 }
                             }
-                        }
-                        if (moveRight.value) {
-                            delay((height.value * 30 / (12 * ((height.value + width.value) / 200 + acceleration.value * time.value))).roundToLong())
-                            moveTomRight.value = true
-                        }
-                    } else if (tomLocate.value == jerryLocate.value + 1 || tomLocate.value == jerryLocate.value + 2) {
-                        for (i in 0..9) {
-                            if (movingBoxes[i].centerX == movingTom.value.centerX) {
-                                if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
-                                    moveTomLeft.value = true
-                                }
+                            if (moveLeft.value) {
+                                delay((height.value * 30 / (12 * (velocity.value))).roundToLong())
+                                moveTomLeft.value = true
                             }
-                        }
-                        if (moveLeft.value) {
-                            delay((height.value * 30 / (12 * ((height.value + width.value) / 200 + acceleration.value * time.value))).roundToLong())
-                            moveTomLeft.value = true
                         }
                     }
                 }
@@ -345,19 +354,19 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
         while(collisionCount.value == 0){
             delay(8)
             if (collided1.value){
-                delay((width.value * 4.2f * 30 / (7.5 * ((width.value + height.value) / 200 + acceleration.value * time.value))).roundToLong())
+                delay((width.value * 4.2f * 30 / (7.5 * (velocity.value))).roundToLong())
                 collided1.value = false
             } else if (collided2.value){
-                delay((width.value * 4.2f * 30 / (7.5 * ((width.value + height.value) / 200 + acceleration.value * time.value))).roundToLong())
+                delay((width.value * 4.2f * 30 / (7.5 * (velocity.value))).roundToLong())
                 collided2.value = false
             } else if (collided3.value){
-                delay((width.value * 4.2f * 30 / (7.5 * ((width.value + height.value) / 200 + acceleration.value * time.value))).roundToLong())
+                delay((width.value * 4.2f * 30 / (7.5 * (velocity.value))).roundToLong())
                 collided3.value = false
             } else if (collided4.value){
-                delay((width.value * 4.2f * 30 / (7.5 * ((width.value + height.value) / 200 + acceleration.value * time.value))).roundToLong())
+                delay((width.value * 4.2f * 30 / (7.5 * (velocity.value))).roundToLong())
                 collided4.value = false
             } else if (collided5.value){
-                delay((width.value * 4.2f * 30 / (7.5 * ((width.value + height.value) / 200 + acceleration.value * time.value))).roundToLong())
+                delay((width.value * 4.2f * 30 / (7.5 * (velocity.value))).roundToLong())
                 collided5.value = false
             }
             reset.value = false
@@ -370,6 +379,10 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
         GameCanvas(modifier, context)
         if (collisionCount.value < 2) {
             Column {
+                Text(
+                    text = velocity.value.toString(),
+                    color = Color.White
+                )
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Row(
@@ -432,18 +445,18 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
     if (jerryJump.value){
         mp?.start()
         LaunchedEffect(Unit){
-            delay((width.value * 1.8f * 30 / (7.5 * ((width.value + height.value) / 200))).roundToLong())
+            delay((width.value * 1.8f * 30 / (7.5 * (velocity.value))).roundToLong())
             jerryJump.value = false
         }
         LaunchedEffect(Unit){
             while(sizeDuringJump.value <= 1.3f) {
                 delay(4)
-                sizeDuringJump.value += 0.3f * 18 / (width.value * 30 / (7.5f * 2 * ((width.value + height.value) / 200)))
+                sizeDuringJump.value += 0.3f * 18 / (width.value * 30 / (7.5f * 2 * (velocity.value)))
             }
             delay((width.value * 1.8 * 30 / (7.5 * 2 * ((width.value + height.value) / 200))).roundToLong())
             while(sizeDuringJump.value > 1f){
                 delay(4)
-                sizeDuringJump.value -= 0.3f * 18 / (width.value * 30 / (7.5f * 2 * ((width.value + height.value) / 200)))
+                sizeDuringJump.value -= 0.3f * 18 / (width.value * 30 / (7.5f * 2 * (velocity.value)))
             }
         }
     }
@@ -487,8 +500,8 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                 delay(16)
                 for(i in 0..9){
                     if (yBox[i] < height.value + width.value){
-                        yBox[i] += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) velocity.value + acceleration.value * time.value else (velocity.value + acceleration.value * time.value) / 3
-                        movingBoxes[i].centerY += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) velocity.value + acceleration.value * time.value else (velocity.value + acceleration.value * time.value) / 3
+                        yBox[i] += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) velocity.value else (velocity.value) / 3
+                        movingBoxes[i].centerY += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) velocity.value else (velocity.value) / 3
                     } else {
                         yBox[i] -= height.value + width.value
                         movingBoxes[i].centerY -= height.value + width.value
@@ -652,8 +665,8 @@ fun MoveJerryLeft(){
         LaunchedEffect(Unit){
             while(x.value > width.value/2){
                 delay(8)
-                x.value -= jerryVelocity.value + acceleration.value * time.value
-                movingJerry.value.centerX -= jerryVelocity.value + acceleration.value * time.value
+                x.value -= jerryVelocity.value
+                movingJerry.value.centerX -= jerryVelocity.value
             }
             if (x.value <= width.value/2){
                 jerryLocate.value = 0
@@ -664,8 +677,8 @@ fun MoveJerryLeft(){
         LaunchedEffect(Unit){
             while(x.value > width.value/6){
                 delay(8)
-                x.value -= jerryVelocity.value + acceleration.value * time.value
-                movingJerry.value.centerX -= jerryVelocity.value + acceleration.value * time.value
+                x.value -= jerryVelocity.value
+                movingJerry.value.centerX -= jerryVelocity.value
             }
             if (x.value <= width.value/6){
                 jerryLocate.value = -1
@@ -681,8 +694,8 @@ fun MoveJerryRight(){
         LaunchedEffect(Unit){
             while(x.value < width.value/2){
                 delay(8)
-                x.value += jerryVelocity.value + acceleration.value * time.value
-                movingJerry.value.centerX += jerryVelocity.value + acceleration.value * time.value
+                x.value += jerryVelocity.value
+                movingJerry.value.centerX += jerryVelocity.value
             }
             if (x.value >= width.value/2){
                 jerryLocate.value = 0
@@ -693,8 +706,8 @@ fun MoveJerryRight(){
         LaunchedEffect(Unit){
             while(x.value < width.value * 5/6){
                 delay(8)
-                x.value += jerryVelocity.value + acceleration.value * time.value
-                movingJerry.value.centerX += jerryVelocity.value + acceleration.value * time.value
+                x.value += jerryVelocity.value
+                movingJerry.value.centerX += jerryVelocity.value
             }
             if (x.value >= width.value * 5/6){
                 jerryLocate.value = 1
@@ -749,7 +762,7 @@ fun MoveTomLeft(){
         LaunchedEffect(Unit){
             while(movingTom.value.centerX > width.value/2){
                 delay(8)
-                movingTom.value.centerX -= jerryVelocity.value + acceleration.value * time.value
+                movingTom.value.centerX -= jerryVelocity.value
             }
             if (movingTom.value.centerX <= width.value/2){
                 tomLocate.value = 0
@@ -760,7 +773,7 @@ fun MoveTomLeft(){
         LaunchedEffect(Unit){
             while(movingTom.value.centerX > width.value/6){
                 delay(8)
-                movingTom.value.centerX -= jerryVelocity.value + acceleration.value * time.value
+                movingTom.value.centerX -= jerryVelocity.value
             }
             if (movingTom.value.centerX <= width.value/6){
                 tomLocate.value = -1
@@ -776,7 +789,7 @@ fun MoveTomRight(){
         LaunchedEffect(Unit){
             while(movingTom.value.centerX < width.value/2){
                 delay(8)
-                movingTom.value.centerX += jerryVelocity.value + acceleration.value * time.value
+                movingTom.value.centerX += jerryVelocity.value
             }
             if (movingTom.value.centerX >= width.value/2){
                 tomLocate.value = 0
@@ -787,7 +800,7 @@ fun MoveTomRight(){
         LaunchedEffect(Unit){
             while(movingTom.value.centerX < width.value * 5/6){
                 delay(8)
-                movingTom.value.centerX += jerryVelocity.value + acceleration.value * time.value
+                movingTom.value.centerX += jerryVelocity.value
             }
             if (movingTom.value.centerX >= width.value * 5/6){
                 tomLocate.value = 1
