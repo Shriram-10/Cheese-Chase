@@ -135,12 +135,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
     }
 
     LaunchedEffect(Unit){
-        var hasVibrated = false
         while(true){
-            if (!hasVibrated && (mode.value == 2 || mode.value == 3)) {
-                HapticFeedback().triggerHapticFeedback(context, 250)
-                hasVibrated = true
-            }
             delay(4)
             if (collisionCount.value == 1){
                 while(movingTom.value.centerY >= height.value * 4 / 5){
@@ -205,7 +200,12 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
     }
 
     if (collisionCount.value == 1) {
+        var hasVibrated = false
         LaunchedEffect(Unit) {
+            if (!hasVibrated && (mode.value == 2 || mode.value == 3)) {
+                HapticFeedback().triggerHapticFeedback(context, 250)
+                hasVibrated = true
+            }
             while (true) {
                 delay(4)
                 if (movingTom.value.centerY < height.value * 4 / 5) {
