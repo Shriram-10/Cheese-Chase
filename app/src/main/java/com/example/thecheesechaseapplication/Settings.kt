@@ -41,6 +41,8 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
     ){
         Button(
             onClick = {
+                mode.value = 1
+                acceleration.value = 0f
                 movingJerry.value.centerX = width.value / 2
                 movingJerry.value.centerY = height.value
                 movingJerry.value.width = width.value / 7.5f
@@ -161,6 +163,7 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
         Button(
             onClick = {
                 mode.value = 2
+                acceleration.value = 0.02f
                 movingJerry.value.centerX = width.value / 2
                 movingJerry.value.centerY = height.value
                 movingJerry.value.width = width.value / 7.5f
@@ -282,6 +285,7 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
         Button(
             onClick = {
                 mode.value = 3
+                acceleration.value = 0.02f
                 movingJerry.value.centerX = width.value / 2
                 movingJerry.value.centerY = height.value
                 movingJerry.value.width = width.value / 7.5f

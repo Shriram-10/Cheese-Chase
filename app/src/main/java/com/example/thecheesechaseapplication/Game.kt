@@ -335,6 +335,8 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
                         delay(200)
                         hasVibrated3 = true
                     }
+                } else if (mode.value == 1){
+                    HapticFeedback().triggerHapticFeedback(context, 200)
                 }
                 delay(8)
                 if (jerryLocate.value == tomLocate.value) {
