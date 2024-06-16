@@ -15,6 +15,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Canvas
@@ -59,67 +60,61 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                 moveTomLeft.value = false
                 moveTomRight.value = false
 
-                movingBoxes[0] = Dimensions(
-                    width.value / 5,
-                    width.value / 5,
-                    width.value / 6,
-                    width.value/10
-                )
-
-                movingBoxes[1] = Dimensions(
-                    width.value / 5,
-                    width.value / 5,
-                    width.value / 1.2f,
-                    width.value / 10
-                )
-
-                movingBoxes[2] = Dimensions(
-                    width.value / 5,
-                    width.value / 5,
-                    width.value / 2,
-                    height.value / 4 + width.value / 10
-                )
-
-                movingBoxes[3] = Dimensions(
-                    width.value / 5,
-                    width.value / 5,
-                    width.value / 6,
-                    height.value/ 2 + width.value / 10
-                )
-
-                movingBoxes[4] = Dimensions(
-                    width.value / 5,
-                    width.value / 5,
-                    width.value / 1.2f,
-                    height.value/ 2 + width.value / 10
-                )
-
-                movingBoxes[5] = Dimensions(
-                    width.value / 5,
-                    width.value / 5,
-                    width.value / 2,
-                    - height.value / 4 + width.value / 10
-                )
-
-                movingBoxes[6] = Dimensions(
-                    width.value / 5,
-                    width.value / 5,
-                    width.value / 6,
-                    - height.value / 2 + width.value/10
-                )
-
-                movingBoxes[7] = Dimensions(
-                    width.value / 5,
-                    width.value / 5,
-                    width.value / 1.2f,
-                    - height.value / 2 + width.value/10
-                )
-
-                movingBoxes[8] = Dimensions(
-                    width.value / 5,
-                    width.value / 5,
-                    width.value / 2,
-                    - 3 * height.value / 4 + width.value / 10
+                movingBoxes = mutableStateListOf(
+                    Dimensions(
+                        width.value / 5,
+                        width.value / 5,
+                        width.value / 2,
+                        - 3 * height.value / 4 + width.value / 10
+                    ),
+                    Dimensions(
+                        width.value / 5,
+                        width.value / 5,
+                        width.value / 6,
+                        - height.value / 2 + width.value/10
+                    ),
+                    Dimensions(
+                        width.value / 5,
+                        width.value / 5,
+                        width.value / 1.2f,
+                        - height.value / 2 + width.value/10
+                    ),
+                    Dimensions(
+                        width.value / 5,
+                        width.value / 5,
+                        width.value / 2,
+                        - height.value / 4 + width.value / 10
+                    ),
+                    Dimensions(
+                        width.value / 5,
+                        width.value / 5,
+                        width.value / 6,
+                        width.value/10
+                    ),
+                    Dimensions(
+                        width.value / 5,
+                        width.value / 5,
+                        width.value / 1.2f,
+                        width.value / 10
+                    ),
+                    Dimensions(
+                        width.value / 5,
+                        width.value / 5,
+                        width.value / 2,
+                        height.value / 4 + width.value / 10
+                    ),
+                    Dimensions(
+                        width.value / 5,
+                        width.value / 5,
+                        width.value / 6,
+                        height.value/ 2 + width.value / 10
+                    ),
+                    Dimensions(
+                        width.value / 5,
+                        width.value / 5,
+                        width.value / 1.2f,
+                        height.value/ 2 + width.value / 10
+                    )
                 )
 
                 collisionCount.value = 3
@@ -180,67 +175,61 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                 moveTomLeft.value = false
                 moveTomRight.value = false
 
-                movingBoxes[0] = Dimensions(
-                    width.value / 5,
-                    width.value / 5,
-                    width.value / 6,
-                    width.value/10
-                )
-
-                movingBoxes[1] = Dimensions(
-                    width.value / 5,
-                    width.value / 5,
-                    width.value / 1.2f,
-                    width.value / 10
-                )
-
-                movingBoxes[2] = Dimensions(
-                    width.value / 5,
-                    width.value / 5,
-                    width.value / 2,
-                    height.value / 4 + width.value / 10
-                )
-
-                movingBoxes[3] = Dimensions(
-                    width.value / 5,
-                    width.value / 5,
-                    width.value / 6,
-                    height.value/ 2 + width.value / 10
-                )
-
-                movingBoxes[4] = Dimensions(
-                    width.value / 5,
-                    width.value / 5,
-                    width.value / 1.2f,
-                    height.value/ 2 + width.value / 10
-                )
-
-                movingBoxes[5] = Dimensions(
-                    width.value / 5,
-                    width.value / 5,
-                    width.value / 2,
-                    - height.value / 4 + width.value / 10
-                )
-
-                movingBoxes[6] = Dimensions(
-                    width.value / 5,
-                    width.value / 5,
-                    width.value / 6,
-                    - height.value / 2 + width.value/10
-                )
-
-                movingBoxes[7] = Dimensions(
-                    width.value / 5,
-                    width.value / 5,
-                    width.value / 1.2f,
-                    - height.value / 2 + width.value/10
-                )
-
-                movingBoxes[8] = Dimensions(
-                    width.value / 5,
-                    width.value / 5,
-                    width.value / 2,
-                    - 3 * height.value / 4 + width.value / 10
+                movingBoxes = mutableStateListOf(
+                    Dimensions(
+                        width.value / 5,
+                        width.value / 5,
+                        width.value / 2,
+                        - 3 * height.value / 4 + width.value / 10
+                    ),
+                    Dimensions(
+                        width.value / 5,
+                        width.value / 5,
+                        width.value / 6,
+                        - height.value / 2 + width.value/10
+                    ),
+                    Dimensions(
+                        width.value / 5,
+                        width.value / 5,
+                        width.value / 1.2f,
+                        - height.value / 2 + width.value/10
+                    ),
+                    Dimensions(
+                        width.value / 5,
+                        width.value / 5,
+                        width.value / 2,
+                        - height.value / 4 + width.value / 10
+                    ),
+                    Dimensions(
+                        width.value / 5,
+                        width.value / 5,
+                        width.value / 6,
+                        width.value/10
+                    ),
+                    Dimensions(
+                        width.value / 5,
+                        width.value / 5,
+                        width.value / 1.2f,
+                        width.value / 10
+                    ),
+                    Dimensions(
+                        width.value / 5,
+                        width.value / 5,
+                        width.value / 2,
+                        height.value / 4 + width.value / 10
+                    ),
+                    Dimensions(
+                        width.value / 5,
+                        width.value / 5,
+                        width.value / 6,
+                        height.value/ 2 + width.value / 10
+                    ),
+                    Dimensions(
+                        width.value / 5,
+                        width.value / 5,
+                        width.value / 1.2f,
+                        height.value/ 2 + width.value / 10
+                    )
                 )
 
                 collisionCount.value = 3
@@ -302,67 +291,61 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                 moveTomLeft.value = false
                 moveTomRight.value = false
 
-                movingBoxes[0] = Dimensions(
-                    width.value / 5,
-                    width.value / 5,
-                    width.value / 6,
-                    width.value/10
-                )
-
-                movingBoxes[1] = Dimensions(
-                    width.value / 5,
-                    width.value / 5,
-                    width.value / 1.2f,
-                    width.value / 10
-                )
-
-                movingBoxes[2] = Dimensions(
-                    width.value / 5,
-                    width.value / 5,
-                    width.value / 2,
-                    height.value / 4 + width.value / 10
-                )
-
-                movingBoxes[3] = Dimensions(
-                    width.value / 5,
-                    width.value / 5,
-                    width.value / 6,
-                    height.value/ 2 + width.value / 10
-                )
-
-                movingBoxes[4] = Dimensions(
-                    width.value / 5,
-                    width.value / 5,
-                    width.value / 1.2f,
-                    height.value/ 2 + width.value / 10
-                )
-
-                movingBoxes[5] = Dimensions(
-                    width.value / 5,
-                    width.value / 5,
-                    width.value / 2,
-                    - height.value / 4 + width.value / 10
-                )
-
-                movingBoxes[6] = Dimensions(
-                    width.value / 5,
-                    width.value / 5,
-                    width.value / 6,
-                    - height.value / 2 + width.value/10
-                )
-
-                movingBoxes[7] = Dimensions(
-                    width.value / 5,
-                    width.value / 5,
-                    width.value / 1.2f,
-                    - height.value / 2 + width.value/10
-                )
-
-                movingBoxes[8] = Dimensions(
-                    width.value / 5,
-                    width.value / 5,
-                    width.value / 2,
-                    - 3 * height.value / 4 + width.value / 10
+                movingBoxes = mutableStateListOf(
+                    Dimensions(
+                        width.value / 5,
+                        width.value / 5,
+                        width.value / 2,
+                        - 3 * height.value / 4 + width.value / 10
+                    ),
+                    Dimensions(
+                        width.value / 5,
+                        width.value / 5,
+                        width.value / 6,
+                        - height.value / 2 + width.value/10
+                    ),
+                    Dimensions(
+                        width.value / 5,
+                        width.value / 5,
+                        width.value / 1.2f,
+                        - height.value / 2 + width.value/10
+                    ),
+                    Dimensions(
+                        width.value / 5,
+                        width.value / 5,
+                        width.value / 2,
+                        - height.value / 4 + width.value / 10
+                    ),
+                    Dimensions(
+                        width.value / 5,
+                        width.value / 5,
+                        width.value / 6,
+                        width.value/10
+                    ),
+                    Dimensions(
+                        width.value / 5,
+                        width.value / 5,
+                        width.value / 1.2f,
+                        width.value / 10
+                    ),
+                    Dimensions(
+                        width.value / 5,
+                        width.value / 5,
+                        width.value / 2,
+                        height.value / 4 + width.value / 10
+                    ),
+                    Dimensions(
+                        width.value / 5,
+                        width.value / 5,
+                        width.value / 6,
+                        height.value/ 2 + width.value / 10
+                    ),
+                    Dimensions(
+                        width.value / 5,
+                        width.value / 5,
+                        width.value / 1.2f,
+                        height.value/ 2 + width.value / 10
+                    )
                 )
 
                 collisionCount.value = 3

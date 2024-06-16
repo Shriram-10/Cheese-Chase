@@ -9,7 +9,9 @@ import androidx.compose.runtime.setValue
 
 var height = mutableStateOf(0f)
 var width = mutableStateOf(0f)
-var yBox = mutableStateListOf<Float>(0f,0f, height.value/4,height.value/2,height.value/2,0f,0f,0f,0f,0f)
+var yBox = mutableStateListOf<Float>(0f,0f,0f,0f,0f,0f,0f,0f,0f)
+var yBoxLocate = mutableStateListOf(-1,1,0,-1,1,0,-1,1,0)
+var yBoxOffset = mutableStateListOf(0f,0f,0f,0f,0f,0f,0f,0f,0f)
 var x = mutableStateOf(0f)
 var jerryLocate = mutableStateOf(0)
 var tomLocate = mutableStateOf(0)
@@ -64,7 +66,31 @@ var movingBoxes = mutableStateListOf<Dimensions>(
     Dimensions(
         width.value / 5,
         width.value / 5,
-        width.value/10,
+        width.value / 2,
+        - 3 * height.value / 4 + width.value / 10
+    ),
+    Dimensions(
+        width.value / 5,
+        width.value / 5,
+        width.value / 6,
+        - height.value / 2 + width.value/10
+    ),
+    Dimensions(
+        width.value / 5,
+        width.value / 5,
+        width.value / 1.2f,
+        - height.value / 2 + width.value/10
+    ),
+    Dimensions(
+        width.value / 5,
+        width.value / 5,
+        width.value / 2,
+        - height.value / 4 + width.value / 10
+    ),
+    Dimensions(
+        width.value / 5,
+        width.value / 5,
+        width.value / 6,
         width.value/10
     ),
     Dimensions(
@@ -82,7 +108,7 @@ var movingBoxes = mutableStateListOf<Dimensions>(
     Dimensions(
         width.value / 5,
         width.value / 5,
-        width.value/10,
+        width.value / 6,
         height.value/ 2 + width.value / 10
     ),
     Dimensions(
@@ -90,41 +116,5 @@ var movingBoxes = mutableStateListOf<Dimensions>(
         width.value / 5,
         width.value / 1.2f,
         height.value/ 2 + width.value / 10
-    ),
-    Dimensions(
-        width.value / 5,
-        width.value / 5,
-        width.value / 2,
-        - height.value / 4 + width.value / 10
-    ),
-    Dimensions(
-        width.value / 5,
-        width.value / 5,
-        width.value/10,
-        - height.value / 2 + width.value/10
-    ),
-    Dimensions(
-        width.value / 5,
-        width.value / 5,
-        width.value / 1.2f,
-        - height.value / 2 + width.value/10
-    ),
-    Dimensions(
-        width.value / 5,
-        width.value / 5,
-        width.value / 2,
-        - 3 * height.value / 4 + width.value / 10
-    ),
-    Dimensions(
-        width.value / 5,
-        width.value / 5,
-        width.value/10,
-        width.value/10
-    ),
-    Dimensions(
-        width.value / 5,
-        width.value / 5,
-        width.value / 1.2f,
-        width.value / 10
     )
 )

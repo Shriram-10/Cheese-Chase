@@ -143,7 +143,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
                     movingTom.value.centerY -= jerryVelocity.value / 4
                     if (!sidewaysCollision.value) {
                         if (jerryLocate.value == 0) {
-                            for (i in 0..9) {
+                            for (i in 0..8) {
                                 if (movingBoxes[i].centerX == movingTom.value.centerX) {
                                     if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
                                         moveTomLeft.value = true
@@ -151,7 +151,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
                                 }
                             }
                         } else if (tomLocate.value == 1) {
-                            for (i in 0..9) {
+                            for (i in 0..8) {
                                 if (movingBoxes[i].centerX == movingTom.value.centerX) {
                                     if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
                                         moveTomLeft.value = true
@@ -159,7 +159,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
                                 }
                             }
                         } else if (tomLocate.value == -1) {
-                            for (i in 0..9) {
+                            for (i in 0..8) {
                                 if (movingBoxes[i].centerX == movingTom.value.centerX) {
                                     if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
                                         moveTomRight.value = true
@@ -169,7 +169,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
                         }
                     } else if (sidewaysCollision.value){
                         if (tomLocate.value == jerryLocate.value){
-                            for (i in 0..9) {
+                            for (i in 0..8) {
                                 if (movingTom.value.centerX == movingBoxes[i].centerX){
                                     if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
                                         moveTomRight.value = true
@@ -177,7 +177,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
                                 }
                             }
                         } else if (tomLocate.value == jerryLocate.value + 1 || tomLocate.value == jerryLocate.value + 2){
-                            for (i in 0..9) {
+                            for (i in 0..8) {
                                 if (movingTom.value.centerX == movingBoxes[i].centerX){
                                     if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
                                         moveTomLeft.value = true
@@ -185,7 +185,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
                                 }
                             }
                         } else if (tomLocate.value == jerryLocate.value - 1 || tomLocate.value == jerryLocate.value - 2){
-                            for (i in 0..9) {
+                            for (i in 0..8) {
                                 if (movingTom.value.centerX == movingBoxes[i].centerX){
                                     if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
                                         moveTomRight.value = true
@@ -211,7 +211,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
                 if (movingTom.value.centerY < height.value * 4 / 5) {
                     if (jerryJump.value) {
                         if (tomLocate.value == jerryLocate.value) {
-                            for (i in 0..9) {
+                            for (i in 0..8) {
                                 if (movingTom.value.centerX == movingBoxes[i].centerX && tomLocate.value != 1) {
                                     if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
                                         moveTomRight.value = true
@@ -223,7 +223,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
                                 }
                             }
                         } else if (tomLocate.value == jerryLocate.value + 1 || tomLocate.value == jerryLocate.value + 2) {
-                            for (i in 0..9) {
+                            for (i in 0..8) {
                                 if (movingTom.value.centerX == movingBoxes[i].centerX) {
                                     if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
                                         moveTomLeft.value = true
@@ -231,7 +231,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
                                 }
                             }
                         } else if (tomLocate.value == jerryLocate.value - 1 || tomLocate.value == jerryLocate.value - 2) {
-                            for (i in 0..9) {
+                            for (i in 0..8) {
                                 if (movingTom.value.centerX == movingBoxes[i].centerX) {
                                     if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
                                         moveTomRight.value = true
@@ -249,7 +249,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
                                 moveTomRight.value = true
                             }
                         } else if (tomLocate.value == jerryLocate.value - 1 || tomLocate.value == jerryLocate.value - 2) {
-                            for (i in 0..9) {
+                            for (i in 0..8) {
                                 if (movingBoxes[i].centerX == movingTom.value.centerX) {
                                     if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
                                         moveTomRight.value = true
@@ -261,7 +261,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
                                 moveTomRight.value = true
                             }
                         } else if (tomLocate.value == jerryLocate.value + 1 || tomLocate.value == jerryLocate.value + 2) {
-                            for (i in 0..9) {
+                            for (i in 0..8) {
                                 if (movingBoxes[i].centerX == movingTom.value.centerX) {
                                     if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
                                         moveTomLeft.value = true
@@ -283,7 +283,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
                                 moveTomRight.value = true
                             }
                         } else if (tomLocate.value == jerryLocate.value - 1 || tomLocate.value == jerryLocate.value - 2) {
-                            for (i in 0..9) {
+                            for (i in 0..8) {
                                 if (movingBoxes[i].centerX == movingTom.value.centerX) {
                                     if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
                                         moveTomRight.value = true
@@ -295,7 +295,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
                                 moveTomRight.value = true
                             }
                         } else if (tomLocate.value == jerryLocate.value + 1 || tomLocate.value == jerryLocate.value + 2) {
-                            for (i in 0..9) {
+                            for (i in 0..8) {
                                 if (movingBoxes[i].centerX == movingTom.value.centerX) {
                                     if (movingBoxes[i].centerY < movingTom.value.centerY && movingTom.value.centerY - movingBoxes[i].centerY < movingTom.value.height * 3 / 2 + movingBoxes[i].height / 2) {
                                         moveTomLeft.value = true
@@ -495,16 +495,17 @@ fun GameCanvas(modifier:Modifier, context: Context) {
         }
 
         LaunchedEffect(Unit){
-            yBox = mutableStateListOf<Float>(0f,0f, height.value/4,height.value/2,height.value/2,-height.value/4,-height.value/2,-height.value/2,- 3 * height.value / 4,0f,0f)
+            yBox = mutableStateListOf<Float>(- height.value * 3 / 4, - height.value / 2, - height.value / 2, - height.value  / 4, 0f, 0f, height.value / 4, height.value / 2, height.value / 2)
             velocity.value = (height.value + width.value)/200
             delay(1250)
             while(true){
                 delay(16)
-                for(i in 0..9){
+                for(i in 0..8){
                     if (yBox[i] < height.value + width.value){
                         yBox[i] += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) velocity.value else (velocity.value) / 3
                         movingBoxes[i].centerY += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) velocity.value else (velocity.value) / 3
                     } else {
+
                         yBox[i] -= height.value + width.value
                         movingBoxes[i].centerY -= height.value + width.value
                     }
@@ -514,16 +515,15 @@ fun GameCanvas(modifier:Modifier, context: Context) {
         }
     } else if (collisionCount.value == 3){
         y = 0f
-        yBox[0] = 0f
-        yBox[1] = 0f
-        yBox[2] = height.value / 4
-        yBox[3] = height.value / 2
-        yBox[4] = height.value / 2
-        yBox[5] = - height.value / 4
-        yBox[6] = - height.value / 2
-        yBox[7] = - height.value / 2
-        yBox[8] = - height.value * 3 / 4
-        yBox[9] = 0f
+        yBox[0] = - height.value * 3 / 4
+        yBox[1] = - height.value / 2
+        yBox[2] = - height.value / 2
+        yBox[3] = - height.value / 4
+        yBox[4] = 0f
+        yBox[5] = 0f
+        yBox[6] = height.value / 4
+        yBox[7] = height.value / 2
+        yBox[8] = height.value / 2
         collisionCount.value = 0
     }
 
@@ -580,55 +580,55 @@ fun GameCanvas(modifier:Modifier, context: Context) {
         )
 
         drawRect(
-            topLeft = Offset(size.width/3f + size.width/15, yBox[8]),
+            topLeft = Offset(movingBoxes[0].centerX - size.width/10, yBox[0]),
             color = Color(128,56,42),
             size = Size(size.width/5, size.width/5)
         )
 
         drawRect(
-            topLeft = Offset(size.width/2.5f - size.width/3, yBox[6]),
+            topLeft = Offset(movingBoxes[1].centerX - size.width/10, yBox[1]),
             color = Color(128,56,42),
             size = Size(size.width/5, size.width/5)
         )
 
         drawRect(
-            topLeft = Offset(size.width/1.5f + size.width/15, yBox[7]),
+            topLeft = Offset(movingBoxes[2].centerX - size.width/10, yBox[2]),
             color = Color(128,56,42),
             size = Size(size.width/5, size.width/5)
         )
 
         drawRect(
-            topLeft = Offset(size.width/3f + size.width/15, yBox[5]),
+            topLeft = Offset(movingBoxes[3].centerX - size.width/10, yBox[3]),
             color = Color(128,56,42),
             size = Size(size.width/5, size.width/5)
         )
 
         drawRect(
-            topLeft = Offset(size.width/2.5f - size.width/3, yBox[0]),
+            topLeft = Offset(movingBoxes[4].centerX - size.width/10, yBox[4]),
             color = Color(128,56,42),
             size = Size(size.width/5, size.width/5)
         )
 
         drawRect(
-            topLeft = Offset(size.width/1.5f + size.width/15, yBox[1]),
+            topLeft = Offset(movingBoxes[5].centerX - size.width/10, yBox[5]),
             color = Color(128,56,42),
             size = Size(size.width/5, size.width/5)
         )
 
         drawRect(
-            topLeft = Offset(size.width/3f + size.width/15, yBox[2]),
+            topLeft = Offset(movingBoxes[6].centerX - size.width/10, yBox[6]),
             color = Color(128,56,42),
             size = Size(size.width/5, size.width/5)
         )
 
         drawRect(
-            topLeft = Offset(size.width/2.5f - size.width/3, yBox[3]),
+            topLeft = Offset(movingBoxes[7].centerX - size.width/10, yBox[7]),
             color = Color(128,56,42),
             size = Size(size.width/5, size.width/5)
         )
 
         drawRect(
-            topLeft = Offset(size.width/1.5f + size.width/15, yBox[4]),
+            topLeft = Offset(movingBoxes[8].centerX - size.width/10, yBox[8]),
             color = Color(128,56,42),
             size = Size(size.width/5, size.width/5)
         )
@@ -721,7 +721,7 @@ fun MoveJerryRight(){
 
 fun checkCollision(){
     if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) {
-        for (i in 0..9) {
+        for (i in 0..8) {
             if (movingJerry.value.centerX < movingBoxes[i].centerX) {
                 if (movingJerry.value.centerY <= movingBoxes[i].centerY + movingBoxes[i].height / 2 && movingJerry.value.centerY >= movingBoxes[i].centerY - movingBoxes[i].height / 2) {
                     if (-movingJerry.value.centerX + movingBoxes[i].centerX <= movingBoxes[i].width / 2 + movingJerry.value.width / 2) {
