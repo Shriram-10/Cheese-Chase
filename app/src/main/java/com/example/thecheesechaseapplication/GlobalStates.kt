@@ -37,6 +37,7 @@ var HighScore = mutableStateOf(0)
 var mode = mutableStateOf(0)
 var level = mutableStateOf(1)
 var jerryJump = mutableStateOf(false)
+var tomJump = mutableStateOf(false)
 var sizeDuringJump = mutableStateOf(1f)
 var mp: MediaPlayer? = null
 var time = mutableStateOf(0f)

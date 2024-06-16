@@ -509,12 +509,15 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                         yBoxLocate[i] = Random.nextInt(-1, 2)
                         if (yBoxLocate[i] == -1){
                             movingBoxes[i].centerX = width.value / 6
+                            yBoxLocate[i] = -1
                         } else if (yBoxLocate[i] == 0){
                             movingBoxes[i].centerX = width.value / 2
+                            yBoxLocate[i] = 0
                         } else if (yBoxLocate[i] == 1){
                             movingBoxes[i].centerX = width.value * 5 / 6
+                            yBoxLocate[i] = 1
                         }
-                        yBoxOffset[i] = Random.nextFloat() * width.value / 5f
+                        yBoxOffset[i] = Random.nextFloat() * width.value / 10f
                         yBox[i] -= height.value + width.value + yBoxOffset[i]
                         movingBoxes[i].centerY -= height.value + width.value + yBoxOffset[i]
                     }
@@ -539,7 +542,7 @@ fun GameCanvas(modifier:Modifier, context: Context) {
     Canvas(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(210,163,118))
+            .background(Color(210, 163, 118))
             .pointerInput(Unit) {
                 detectTapGestures(
                     onTap = {
@@ -556,11 +559,11 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                     }
                 )
             }
-            .pointerInput(Unit){
+            .pointerInput(Unit) {
                 detectDragGestures(
                     onDrag = { change, dragAmount ->
                         change.consume()
-                        if (dragAmount.y < 0 && !jerryJump.value){
+                        if (dragAmount.y < 0 && !jerryJump.value) {
                             if (collisionCount.value < 2 && !(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) {
                                 if (mode.value == 2 || mode.value == 3) {
                                     jerryJump.value = true
