@@ -76,6 +76,7 @@ import kotlinx.coroutines.launch
 import kotlin.math.pow
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
+import kotlin.random.Random
 
 @Composable
 fun AudioLoader() {
@@ -125,9 +126,9 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
         }
     }
 
-    if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value) && !jerryJump.value){
+    if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value) && !jerryJump.value && collisionCount.value < 2){
         LaunchedEffect(Unit){
-            while(!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value) && !jerryJump.value){
+            while(!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value) && !jerryJump.value && collisionCount.value < 2){
                 delay(4)
                 checkCollision()
             }
@@ -495,7 +496,7 @@ fun GameCanvas(modifier:Modifier, context: Context) {
         }
 
         LaunchedEffect(Unit){
-            yBox = mutableStateListOf<Float>(- height.value * 3 / 4, - height.value / 2, - height.value / 2, - height.value  / 4, 0f, 0f, height.value / 4, height.value / 2, height.value / 2)
+            yBox = mutableStateListOf<Float>(height.value / 2, height.value / 2, height.value / 4, 0f, 0f, -height.value / 4, -height.value / 2, -height.value / 2, -height.value * 3 / 4)
             velocity.value = (height.value + width.value)/200
             delay(1250)
             while(true){
@@ -505,9 +506,17 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                         yBox[i] += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) velocity.value else (velocity.value) / 3
                         movingBoxes[i].centerY += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) velocity.value else (velocity.value) / 3
                     } else {
-
-                        yBox[i] -= height.value + width.value
-                        movingBoxes[i].centerY -= height.value + width.value
+                        yBoxLocate[i] = Random.nextInt(-1, 2)
+                        if (yBoxLocate[i] == -1){
+                            movingBoxes[i].centerX = width.value / 6
+                        } else if (yBoxLocate[i] == 0){
+                            movingBoxes[i].centerX = width.value / 2
+                        } else if (yBoxLocate[i] == 1){
+                            movingBoxes[i].centerX = width.value * 5 / 6
+                        }
+                        yBoxOffset[i] = Random.nextFloat() * width.value / 5f
+                        yBox[i] -= height.value + width.value + yBoxOffset[i]
+                        movingBoxes[i].centerY -= height.value + width.value + yBoxOffset[i]
                     }
                 }
                 score.value += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) ((height.value + width.value) / 2000) else ((height.value + width.value) / 6000)
@@ -515,15 +524,15 @@ fun GameCanvas(modifier:Modifier, context: Context) {
         }
     } else if (collisionCount.value == 3){
         y = 0f
-        yBox[0] = - height.value * 3 / 4
-        yBox[1] = - height.value / 2
-        yBox[2] = - height.value / 2
-        yBox[3] = - height.value / 4
+        yBox[0] = height.value / 2
+        yBox[1] = height.value / 2
+        yBox[2] = height.value / 4
+        yBox[3] = 0f
         yBox[4] = 0f
-        yBox[5] = 0f
-        yBox[6] = height.value / 4
-        yBox[7] = height.value / 2
-        yBox[8] = height.value / 2
+        yBox[5] = - height.value / 4
+        yBox[6] = - height.value / 2
+        yBox[7] = - height.value / 2
+        yBox[8] = height.value * 3 / 4
         collisionCount.value = 0
     }
 

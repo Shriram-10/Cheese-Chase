@@ -66,55 +66,63 @@ var movingBoxes = mutableStateListOf<Dimensions>(
     Dimensions(
         width.value / 5,
         width.value / 5,
-        width.value / 2,
-        - 3 * height.value / 4 + width.value / 10
-    ),
-    Dimensions(
-        width.value / 5,
-        width.value / 5,
         width.value / 6,
-        - height.value / 2 + width.value/10
+        height.value/ 2 + width.value / 10
     ),
+
     Dimensions(
         width.value / 5,
         width.value / 5,
         width.value / 1.2f,
-        - height.value / 2 + width.value/10
+        height.value/ 2 + width.value / 10
     ),
-    Dimensions(
-        width.value / 5,
-        width.value / 5,
-        width.value / 2,
-        - height.value / 4 + width.value / 10
-    ),
-    Dimensions(
-        width.value / 5,
-        width.value / 5,
-        width.value / 6,
-        width.value/10
-    ),
-    Dimensions(
-        width.value / 5,
-        width.value / 5,
-        width.value / 1.2f,
-        width.value / 10
-    ),
+
     Dimensions(
         width.value / 5,
         width.value / 5,
         width.value / 2,
         height.value / 4 + width.value / 10
     ),
+
     Dimensions(
         width.value / 5,
         width.value / 5,
         width.value / 6,
-        height.value/ 2 + width.value / 10
+        width.value/10
     ),
+
     Dimensions(
         width.value / 5,
         width.value / 5,
         width.value / 1.2f,
-        height.value/ 2 + width.value / 10
+        width.value / 10
+    ),
+
+    Dimensions(
+        width.value / 5,
+        width.value / 5,
+        width.value / 2,
+        - height.value / 4 + width.value / 10
+    ),
+
+    Dimensions(
+        width.value / 5,
+        width.value / 5,
+        width.value / 6,
+        - height.value / 2 + width.value/10
+    ),
+
+    Dimensions(
+        width.value / 5,
+        width.value / 5,
+        width.value / 1.2f,
+        - height.value / 2 + width.value/10
+    ),
+
+    Dimensions(
+        width.value / 5,
+        width.value / 5,
+        width.value / 2,
+        - 3 * height.value / 4 + width.value / 10
     )
 )
