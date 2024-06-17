@@ -48,10 +48,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.drawscope.DrawStyle
+import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.painter.Painter
@@ -73,9 +76,11 @@ import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
+import kotlin.math.sin
 import kotlin.random.Random
 
 @Composable
@@ -483,6 +488,11 @@ fun GameCanvas(modifier:Modifier, context: Context) {
         )
     ).value
 
+    val powerUpColors = listOf(
+        Color.White.copy(0.3f),
+        Color(234,51,128).copy(alpha = 0.5f)
+    )
+
     if (collisionCount.value < 2){
         LaunchedEffect(Unit){
             delay(500)
@@ -520,6 +530,18 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                         yBoxOffset[i] = Random.nextFloat() * width.value / 10f
                         yBox[i] -= height.value + width.value + yBoxOffset[i]
                         movingBoxes[i].centerY -= height.value + width.value + yBoxOffset[i]
+                    }
+                }
+                for(j in 0..2){
+                    if (powerUp[j].centerY < height.value + width.value){
+                        powerUp[j].centerY += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) velocity.value else (velocity.value) / 3
+                    }
+                    if (powerUp[j].centerY > height.value + width.value) {
+                        powerUpDisplay[j] = Random.nextBoolean()
+
+                        if (powerUpDisplay[j]) {
+                            powerUp[j].centerY = Random.nextFloat() * height.value
+                        }
                     }
                 }
                 score.value += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) ((height.value + width.value) / 2000) else ((height.value + width.value) / 6000)
@@ -670,6 +692,117 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                 style = Stroke(width = 8f)
             )
         }
+
+        drawCircle(
+            brush = Brush.radialGradient(
+                colors = powerUpColors,
+                center = Offset(powerUp[0].centerX, powerUp[0].centerY),
+                radius = size.width / 18f
+            ),
+            radius = size.width/12f,
+            center = Offset(powerUp[0].centerX, powerUp[0].centerY)
+        )
+
+        drawCircle(
+            brush = Brush.radialGradient(
+                colors = powerUpColors,
+                center = Offset(powerUp[1].centerX, powerUp[1].centerY),
+                radius = size.width / 18f
+            ),
+            radius = size.width/12f,
+            center = Offset(powerUp[1].centerX, powerUp[1].centerY)
+        )
+
+        drawCircle(
+            brush = Brush.radialGradient(
+                colors = powerUpColors,
+                center = Offset(powerUp[2].centerX, powerUp[2].centerY),
+                radius = size.width / 18f
+            ),
+            radius = size.width/12f,
+            center = Offset(powerUp[2].centerX, powerUp[2].centerY)
+        )
+
+        val path1 = Path()
+
+        // Move to the initial point of the star
+        path1.moveTo(
+            x = powerUp[0].centerX + size.width / 24 * cos(0f),
+            y = powerUp[0].centerY + size.width / 48 * sin(0f)
+        )
+
+        // Draw the lines between the points of the star
+        for (i in 1 until 5 * 2) {
+            val radius = if (i % 2 == 0) size.width / 24 else size.width / 48
+            val pointAngle = i * 72 * Math.PI / 180f
+
+            path1.lineTo(
+                x = (powerUp[0].centerX + radius * cos(pointAngle)).toFloat(),
+                y = (powerUp[0].centerY + radius * sin(pointAngle)).toFloat()
+            )
+        }
+
+        path1.close()
+
+        drawPath(
+            path = path1,
+            color = Color(253,247,82).copy(alpha = 0.5f),
+            style = Fill
+        )
+
+        val path2 = Path()
+
+        // Move to the initial point of the star
+        path2.moveTo(
+            x = powerUp[1].centerX + size.width / 24 * cos(0f),
+            y = powerUp[1].centerY + size.width / 48 * sin(0f)
+        )
+
+        // Draw the lines between the points of the star
+        for (i in 1 until 5 * 2) {
+            val radius = if (i % 2 == 0) size.width / 24 else size.width / 48
+            val pointAngle = i * 72 * Math.PI / 180f
+
+            path2.lineTo(
+                x = (powerUp[1].centerX + radius * cos(pointAngle)).toFloat(),
+                y = (powerUp[1].centerY + radius * sin(pointAngle)).toFloat()
+            )
+        }
+
+        path2.close()
+
+        drawPath(
+            path = path2,
+            color = Color(253,247,82).copy(alpha = 0.5f),
+            style = Fill
+        )
+
+        val path3 = Path()
+
+        // Move to the initial point of the star
+        path3.moveTo(
+            x = powerUp[2].centerX + size.width / 24 * cos(0f),
+            y = powerUp[2].centerY + size.width / 48 * sin(0f)
+        )
+
+        // Draw the lines between the points of the star
+        for (i in 1 until 5 * 2) {
+            val radius = if (i % 2 == 0) size.width / 24 else size.width / 48
+            val pointAngle = i * 72 * Math.PI / 180f
+
+            path3.lineTo(
+                x = (powerUp[2].centerX + radius * cos(pointAngle)).toFloat(),
+                y = (powerUp[2].centerY + radius * sin(pointAngle)).toFloat()
+            )
+        }
+
+        path3.close()
+
+        drawPath(
+            path = path3,
+            color = Color(253,247,82).copy(alpha = 0.5f),
+            style = Fill
+        )
     }
 }
 

@@ -63,6 +63,29 @@ var movingTom = mutableStateOf<Dimensions>(
 )
 var tomStarts = mutableStateOf(false)
 
+var powerUp = mutableStateListOf(
+    Dimensions(
+        0f,
+        0f,
+        0f,
+        0f
+    ),
+    Dimensions(
+        0f,
+        0f,
+        0f,
+        0f
+    ),
+    Dimensions(
+        0f,
+        0f,
+        0f,
+        0f
+    )
+)
+
+var powerUpDisplay = mutableStateListOf(false, false, false)
+
 var movingBoxes = mutableStateListOf<Dimensions>(
     Dimensions(
         width.value / 5,

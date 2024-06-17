@@ -16,6 +16,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Canvas
@@ -246,6 +247,27 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                         width.value / 2,
                         - 3 * height.value / 4 + width.value / 10
                     )
+                )
+
+                powerUp[0] = Dimensions(
+                    width.value / 12,
+                    width.value / 12,
+                    width.value / 6,
+                    height.value + width.value * 6 / 5
+                )
+
+                powerUp[1] = Dimensions(
+                    width.value / 12,
+                    width.value / 12,
+                    width.value / 2,
+                    height.value + width.value * 6 / 5
+                )
+
+                powerUp[2] = Dimensions(
+                    width.value / 12,
+                    width.value / 12,
+                    width.value * 5 / 6,
+                    height.value + width.value * 6 / 5
                 )
 
                 collisionCount.value = 3
