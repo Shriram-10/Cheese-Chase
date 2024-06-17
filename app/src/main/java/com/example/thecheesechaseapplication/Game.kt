@@ -124,6 +124,15 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
         }
     }
 
+    if (!makeDelay.value) {
+        LaunchedEffect(Unit) {
+            while (!makeDelay.value) {
+                delay(4)
+                powerUpCollection()
+            }
+        }
+    }
+
     LaunchedEffect(Unit){
         while(true) {
             delay(500)
@@ -359,10 +368,10 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
     }
 
     LaunchedEffect(key1 = reset.value){
-        while(collisionCount.value == 0){
+        while(collisionCount.value < 2){
             delay(8)
             if (collided1.value){
-                delay((width.value * 4.2f * 30 / (7.5 * (velocity.value))).roundToLong())
+                delay((width.value * 4.5f * 30 / (7.5 * (velocity.value))).roundToLong())
                 collided1.value = false
             } else if (collided2.value){
                 delay((width.value * 4.2f * 30 / (7.5 * (velocity.value))).roundToLong())
@@ -385,12 +394,20 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
         modifier = modifier.fillMaxSize(),
     ){
         GameCanvas(modifier, context)
+        Column{
+            Text(powerUpDisplay[0].toString())
+            Text(powerUpDisplay[1].toString())
+            Text(powerUpDisplay[2].toString())
+            Text(collisionCount.value.toString())
+            Text(powerUpsCollected.value.toString())
+            Text(collided1.value.toString())
+            Text(collided2.value.toString())
+            Text(collided3.value.toString())
+            Text(collided4.value.toString())
+            Text(collided5.value.toString())
+        }
         if (collisionCount.value < 2) {
             Column {
-                Text(
-                    text = velocity.value.toString(),
-                    color = Color.White
-                )
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Row(
@@ -453,7 +470,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
     if (jerryJump.value){
         mp?.start()
         LaunchedEffect(Unit){
-            delay((width.value * 1.8f * 30 / (7.5 * (velocity.value))).roundToLong())
+            delay((width.value * 2.2f * 30 / (7.5 * (velocity.value))).roundToLong())
             jerryJump.value = false
         }
         LaunchedEffect(Unit){
@@ -470,6 +487,13 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
     }
     if (collided1.value || collided2.value || collided3.value || collided4.value || collided5.value){
         sizeDuringJump.value = 1f
+    }
+
+    if (makeDelay.value){
+        LaunchedEffect(Unit){
+            delay(1000)
+            makeDelay.value = false
+        }
     }
 }
 
@@ -527,20 +551,23 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                             movingBoxes[i].centerX = width.value * 5 / 6
                             yBoxLocate[i] = 1
                         }
-                        yBoxOffset[i] = Random.nextFloat() * width.value / 10f
+                        yBoxOffset[i] = Random.nextFloat() * width.value / 5f
                         yBox[i] -= height.value + width.value + yBoxOffset[i]
                         movingBoxes[i].centerY -= height.value + width.value + yBoxOffset[i]
                     }
                 }
-                for(j in 0..2){
-                    if (powerUp[j].centerY < height.value + width.value){
-                        powerUp[j].centerY += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) velocity.value else (velocity.value) / 3
+                for (i in 0..2){
+                    if (powerUp[i].centerY <= 2.5f * (height.value + width.value)){
+                        powerUp[i].centerY += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) velocity.value else (velocity.value) / 3
+                    } else if (powerUp[i].centerY > 2.5f * (height.value + width.value)){
+                        powerUpDisplay[i] = Random.nextBoolean()
+                        powerUp[i].centerY = - Random.nextFloat() * (height.value + width.value)
                     }
-                    if (powerUp[j].centerY > height.value + width.value) {
-                        powerUpDisplay[j] = Random.nextBoolean()
-
-                        if (powerUpDisplay[j]) {
-                            powerUp[j].centerY = Random.nextFloat() * height.value
+                    for(j in 0..8) {
+                        if (powerUp[i].centerX == movingBoxes[j].centerX) {
+                            if (powerUp[i].centerY >= movingBoxes[j].centerY - movingBoxes[j].height / 2 - powerUp[i].height / 2 && powerUp[i].centerY <= movingBoxes[j].centerY + movingBoxes[j].height / 2 + powerUp[i].height / 2){
+                                powerUpDisplay[i] = false
+                            }
                         }
                     }
                 }
@@ -693,116 +720,128 @@ fun GameCanvas(modifier:Modifier, context: Context) {
             )
         }
 
-        drawCircle(
-            brush = Brush.radialGradient(
-                colors = powerUpColors,
-                center = Offset(powerUp[0].centerX, powerUp[0].centerY),
-                radius = size.width / 18f
-            ),
-            radius = size.width/12f,
-            center = Offset(powerUp[0].centerX, powerUp[0].centerY)
-        )
+        if (powerUpDisplay[0]) {
 
-        drawCircle(
-            brush = Brush.radialGradient(
-                colors = powerUpColors,
-                center = Offset(powerUp[1].centerX, powerUp[1].centerY),
-                radius = size.width / 18f
-            ),
-            radius = size.width/12f,
-            center = Offset(powerUp[1].centerX, powerUp[1].centerY)
-        )
-
-        drawCircle(
-            brush = Brush.radialGradient(
-                colors = powerUpColors,
-                center = Offset(powerUp[2].centerX, powerUp[2].centerY),
-                radius = size.width / 18f
-            ),
-            radius = size.width/12f,
-            center = Offset(powerUp[2].centerX, powerUp[2].centerY)
-        )
-
-        val path1 = Path()
-
-        // Move to the initial point of the star
-        path1.moveTo(
-            x = powerUp[0].centerX + size.width / 24 * cos(0f),
-            y = powerUp[0].centerY + size.width / 48 * sin(0f)
-        )
-
-        // Draw the lines between the points of the star
-        for (i in 1 until 5 * 2) {
-            val radius = if (i % 2 == 0) size.width / 24 else size.width / 48
-            val pointAngle = i * 72 * Math.PI / 180f
-
-            path1.lineTo(
-                x = (powerUp[0].centerX + radius * cos(pointAngle)).toFloat(),
-                y = (powerUp[0].centerY + radius * sin(pointAngle)).toFloat()
+            drawCircle(
+                brush = Brush.radialGradient(
+                    colors = powerUpColors,
+                    center = Offset(powerUp[0].centerX, powerUp[0].centerY),
+                    radius = size.width / 18f
+                ),
+                radius = size.width / 12f,
+                center = Offset(powerUp[0].centerX, powerUp[0].centerY)
             )
+
+            val path1 = Path()
+
+            // Move to the initial point of the star
+            path1.moveTo(
+                x = powerUp[0].centerX + size.width / 24 * cos(0f),
+                y = powerUp[0].centerY + size.width / 48 * sin(0f)
+            )
+
+            // Draw the lines between the points of the star
+            for (i in 1 until 5 * 2) {
+                val radius = if (i % 2 == 0) size.width / 24 else size.width / 48
+                val pointAngle = i * 72 * Math.PI / 180f
+
+                path1.lineTo(
+                    x = (powerUp[0].centerX + radius * cos(pointAngle)).toFloat(),
+                    y = (powerUp[0].centerY + radius * sin(pointAngle)).toFloat()
+                )
+            }
+
+            path1.close()
+
+            drawPath(
+                path = path1,
+                color = Color(253, 247, 82).copy(alpha = 0.5f),
+                style = Fill
+            )
+
         }
 
-        path1.close()
+        if (powerUpDisplay[1]) {
 
-        drawPath(
-            path = path1,
-            color = Color(253,247,82).copy(alpha = 0.5f),
-            style = Fill
-        )
-
-        val path2 = Path()
-
-        // Move to the initial point of the star
-        path2.moveTo(
-            x = powerUp[1].centerX + size.width / 24 * cos(0f),
-            y = powerUp[1].centerY + size.width / 48 * sin(0f)
-        )
-
-        // Draw the lines between the points of the star
-        for (i in 1 until 5 * 2) {
-            val radius = if (i % 2 == 0) size.width / 24 else size.width / 48
-            val pointAngle = i * 72 * Math.PI / 180f
-
-            path2.lineTo(
-                x = (powerUp[1].centerX + radius * cos(pointAngle)).toFloat(),
-                y = (powerUp[1].centerY + radius * sin(pointAngle)).toFloat()
+            drawCircle(
+                brush = Brush.radialGradient(
+                    colors = powerUpColors,
+                    center = Offset(powerUp[1].centerX, powerUp[1].centerY),
+                    radius = size.width / 18f
+                ),
+                radius = size.width / 12f,
+                center = Offset(powerUp[1].centerX, powerUp[1].centerY)
             )
+
+            val path2 = Path()
+
+            // Move to the initial point of the star
+            path2.moveTo(
+                x = powerUp[1].centerX + size.width / 24 * cos(0f),
+                y = powerUp[1].centerY + size.width / 48 * sin(0f)
+            )
+
+            // Draw the lines between the points of the star
+            for (i in 1 until 5 * 2) {
+                val radius = if (i % 2 == 0) size.width / 24 else size.width / 48
+                val pointAngle = i * 72 * Math.PI / 180f
+
+                path2.lineTo(
+                    x = (powerUp[1].centerX + radius * cos(pointAngle)).toFloat(),
+                    y = (powerUp[1].centerY + radius * sin(pointAngle)).toFloat()
+                )
+            }
+
+            path2.close()
+
+            drawPath(
+                path = path2,
+                color = Color(253, 247, 82).copy(alpha = 0.5f),
+                style = Fill
+            )
+
         }
 
-        path2.close()
+        if (powerUpDisplay[2]) {
 
-        drawPath(
-            path = path2,
-            color = Color(253,247,82).copy(alpha = 0.5f),
-            style = Fill
-        )
-
-        val path3 = Path()
-
-        // Move to the initial point of the star
-        path3.moveTo(
-            x = powerUp[2].centerX + size.width / 24 * cos(0f),
-            y = powerUp[2].centerY + size.width / 48 * sin(0f)
-        )
-
-        // Draw the lines between the points of the star
-        for (i in 1 until 5 * 2) {
-            val radius = if (i % 2 == 0) size.width / 24 else size.width / 48
-            val pointAngle = i * 72 * Math.PI / 180f
-
-            path3.lineTo(
-                x = (powerUp[2].centerX + radius * cos(pointAngle)).toFloat(),
-                y = (powerUp[2].centerY + radius * sin(pointAngle)).toFloat()
+            drawCircle(
+                brush = Brush.radialGradient(
+                    colors = powerUpColors,
+                    center = Offset(powerUp[2].centerX, powerUp[2].centerY),
+                    radius = size.width / 18f
+                ),
+                radius = size.width / 12f,
+                center = Offset(powerUp[2].centerX, powerUp[2].centerY)
             )
+
+            val path3 = Path()
+
+            // Move to the initial point of the star
+            path3.moveTo(
+                x = powerUp[2].centerX + size.width / 24 * cos(0f),
+                y = powerUp[2].centerY + size.width / 48 * sin(0f)
+            )
+
+            // Draw the lines between the points of the star
+            for (i in 1 until 5 * 2) {
+                val radius = if (i % 2 == 0) size.width / 24 else size.width / 48
+                val pointAngle = i * 72 * Math.PI / 180f
+
+                path3.lineTo(
+                    x = (powerUp[2].centerX + radius * cos(pointAngle)).toFloat(),
+                    y = (powerUp[2].centerY + radius * sin(pointAngle)).toFloat()
+                )
+            }
+
+            path3.close()
+
+            drawPath(
+                path = path3,
+                color = Color(253, 247, 82).copy(alpha = 0.5f),
+                style = Fill
+            )
+
         }
-
-        path3.close()
-
-        drawPath(
-            path = path3,
-            color = Color(253,247,82).copy(alpha = 0.5f),
-            style = Fill
-        )
     }
 }
 
@@ -897,6 +936,46 @@ fun checkCollision(){
                     collisionCount.value += 1
                     sidewaysCollision.value = true
                     collided3.value = true
+                }
+            }
+        }
+    }
+}
+
+fun powerUpCollection(){
+    if (powerUpsCollected.value < 2) {
+        for (i in 0..2) {
+            if (movingJerry.value.centerX < powerUp[i].centerX) {
+                if (movingJerry.value.centerY <= powerUp[i].centerY + powerUp[i].height / 2 && movingJerry.value.centerY >= powerUp[i].centerY - powerUp[i].height / 2) {
+                    if (-movingJerry.value.centerX + powerUp[i].centerX <= powerUp[i].width / 2 + movingJerry.value.width / 2) {
+                        if (powerUp[i].centerX == width.value / 2) {
+                            powerUpsCollected.value += 1
+                            powerUpDisplay[i] = false
+                            makeDelay.value = true
+                        } else if (powerUp[i].centerX == width.value * 5 / 6) {
+                            collisionCount.value += 1
+                            powerUpDisplay[i] = false
+                            makeDelay.value = true
+                        }
+                    }
+                }
+            } else if (powerUp[i].centerX - movingJerry.value.centerX <= powerUp[i].width / 2 + movingJerry.value.width / 2 && powerUp[i].centerX - movingJerry.value.centerX >= 0) {
+                if ((powerUp[i].centerY - powerUp[i].height / 2 <= movingJerry.value.centerY + movingJerry.value.height / 2) && (powerUp[i].centerY + powerUp[i].height / 2 >= movingJerry.value.centerY - movingJerry.value.height / 2)) {
+                    powerUpsCollected.value += 1
+                    powerUpDisplay[i] = false
+                    makeDelay.value = true
+                }
+            } else if (powerUp[i].centerX == width.value / 6 && movingJerry.value.centerX - movingJerry.value.width / 2 <= powerUp[i].centerX + powerUp[i].width / 2) {
+                if (powerUp[i].centerY - powerUp[i].height / 2 <= movingJerry.value.centerY + movingJerry.value.height / 2 && powerUp[i].centerY + powerUp[i].height / 2 >= movingJerry.value.centerY - movingJerry.value.height / 2) {
+                    powerUpsCollected.value += 1
+                    powerUpDisplay[i] = false
+                    makeDelay.value = true
+                }
+            } else if (powerUp[i].centerX == width.value / 2 && movingJerry.value.centerX - movingJerry.value.width / 2 <= powerUp[i].centerX + powerUp[i].width / 2 && movingJerry.value.centerX + movingJerry.value.width / 2 >= powerUp[i].centerX - powerUp[i].width / 2) {
+                if (powerUp[i].centerY - powerUp[i].height / 2 <= movingJerry.value.centerY + movingJerry.value.height / 2 && powerUp[i].centerY + powerUp[i].height / 2 >= movingJerry.value.centerY - movingJerry.value.height / 2) {
+                    powerUpsCollected.value += 1
+                    powerUpDisplay[i] = false
+                    makeDelay.value = true
                 }
             }
         }

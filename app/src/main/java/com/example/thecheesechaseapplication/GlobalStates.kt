@@ -84,7 +84,9 @@ var powerUp = mutableStateListOf(
     )
 )
 
-var powerUpDisplay = mutableStateListOf(false, false, false)
+var powerUpDisplay = mutableStateListOf(true, true, true)
+var powerUpsCollected = mutableStateOf(0)
+var makeDelay = mutableStateOf(false)
 
 var movingBoxes = mutableStateListOf<Dimensions>(
     Dimensions(
