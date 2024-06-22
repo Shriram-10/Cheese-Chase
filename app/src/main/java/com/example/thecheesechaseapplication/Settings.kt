@@ -293,6 +293,12 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                 }
                 score.value = 0f
                 showWinnerPage.value = false
+
+                powerUpDisplay[0] = true
+                powerUpDisplay[1] = true
+                powerUpDisplay[2] = true
+                makeDelay.value = false
+                powerUpsCollected.value = 0
                 navController.navigate(Screen.Game.route)
             },
             modifier = modifier.height(64.dp),
@@ -417,6 +423,12 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                 }
                 score.value = 0f
                 showWinnerPage.value = false
+
+                powerUpDisplay[0] = true
+                powerUpDisplay[1] = true
+                powerUpDisplay[2] = true
+                makeDelay.value = false
+                powerUpsCollected.value = 0
                 navController.navigate(Screen.Game.route)
             },
             modifier = modifier.height(64.dp),

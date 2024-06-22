@@ -87,7 +87,6 @@ import kotlin.random.Random
 fun AudioLoader() {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    // Function to load audio asynchronously
     LaunchedEffect(Unit) {
         fun loadAudioAsync() {
             coroutineScope.launch(Dispatchers.IO) {
@@ -100,7 +99,6 @@ fun AudioLoader() {
                     mediaPlayer.prepare()
                     mp = mediaPlayer
                 } catch (e: Exception) {
-                    // Handle any exceptions that occur during audio loading
                     e.printStackTrace()
                 }
             }
@@ -948,11 +946,11 @@ fun powerUpCollection(){
             if (movingJerry.value.centerX < powerUp[i].centerX) {
                 if (movingJerry.value.centerY <= powerUp[i].centerY + powerUp[i].height / 2 && movingJerry.value.centerY >= powerUp[i].centerY - powerUp[i].height / 2) {
                     if (-movingJerry.value.centerX + powerUp[i].centerX <= powerUp[i].width / 2 + movingJerry.value.width / 2) {
-                        if (powerUp[i].centerX == width.value / 2) {
+                        if (powerUp[i].centerX == width.value / 2 && powerUpDisplay[i]) {
                             powerUpsCollected.value += 1
                             powerUpDisplay[i] = false
                             makeDelay.value = true
-                        } else if (powerUp[i].centerX == width.value * 5 / 6) {
+                        } else if (powerUp[i].centerX == width.value * 5 / 6 && powerUpDisplay[i]) {
                             collisionCount.value += 1
                             powerUpDisplay[i] = false
                             makeDelay.value = true
@@ -961,21 +959,27 @@ fun powerUpCollection(){
                 }
             } else if (powerUp[i].centerX - movingJerry.value.centerX <= powerUp[i].width / 2 + movingJerry.value.width / 2 && powerUp[i].centerX - movingJerry.value.centerX >= 0) {
                 if ((powerUp[i].centerY - powerUp[i].height / 2 <= movingJerry.value.centerY + movingJerry.value.height / 2) && (powerUp[i].centerY + powerUp[i].height / 2 >= movingJerry.value.centerY - movingJerry.value.height / 2)) {
-                    powerUpsCollected.value += 1
-                    powerUpDisplay[i] = false
-                    makeDelay.value = true
+                    if (powerUpDisplay[i]) {
+                        powerUpsCollected.value += 1
+                        powerUpDisplay[i] = false
+                        makeDelay.value = true
+                    }
                 }
             } else if (powerUp[i].centerX == width.value / 6 && movingJerry.value.centerX - movingJerry.value.width / 2 <= powerUp[i].centerX + powerUp[i].width / 2) {
                 if (powerUp[i].centerY - powerUp[i].height / 2 <= movingJerry.value.centerY + movingJerry.value.height / 2 && powerUp[i].centerY + powerUp[i].height / 2 >= movingJerry.value.centerY - movingJerry.value.height / 2) {
-                    powerUpsCollected.value += 1
-                    powerUpDisplay[i] = false
-                    makeDelay.value = true
+                    if (powerUpDisplay[i]) {
+                        powerUpsCollected.value += 1
+                        powerUpDisplay[i] = false
+                        makeDelay.value = true
+                    }
                 }
             } else if (powerUp[i].centerX == width.value / 2 && movingJerry.value.centerX - movingJerry.value.width / 2 <= powerUp[i].centerX + powerUp[i].width / 2 && movingJerry.value.centerX + movingJerry.value.width / 2 >= powerUp[i].centerX - powerUp[i].width / 2) {
                 if (powerUp[i].centerY - powerUp[i].height / 2 <= movingJerry.value.centerY + movingJerry.value.height / 2 && powerUp[i].centerY + powerUp[i].height / 2 >= movingJerry.value.centerY - movingJerry.value.height / 2) {
-                    powerUpsCollected.value += 1
-                    powerUpDisplay[i] = false
-                    makeDelay.value = true
+                    if (powerUpDisplay[i]) {
+                        powerUpsCollected.value += 1
+                        powerUpDisplay[i] = false
+                        makeDelay.value = true
+                    }
                 }
             }
         }

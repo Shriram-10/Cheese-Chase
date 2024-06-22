@@ -260,6 +260,12 @@ fun WinnerPage(modifier: Modifier, highScore: HighScoreManager, navController: N
                             }
                             score.value = 0f
                             showWinnerPage.value = false
+
+                            powerUpDisplay[0] = true
+                            powerUpDisplay[1] = true
+                            powerUpDisplay[2] = true
+                            makeDelay.value = false
+                            powerUpsCollected.value = 0
                             navController.popBackStack(Screen.Settings.route, false)
                         },
                         modifier = Modifier.height(40.dp),
@@ -382,6 +388,13 @@ fun WinnerPage(modifier: Modifier, highScore: HighScoreManager, navController: N
                             HighScore.value = (score.value / 20).roundToInt()
                             highScore.saveData("HS", HighScore.value.toString())
                         }
+
+                        powerUpDisplay[0] = true
+                        powerUpDisplay[1] = true
+                        powerUpDisplay[2] = true
+                        makeDelay.value = false
+                        powerUpsCollected.value = 0
+
                         score.value = 0f
                         showWinnerPage.value = false
                     },
