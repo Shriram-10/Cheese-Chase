@@ -37,7 +37,6 @@ var HighScore = mutableStateOf(0)
 var mode = mutableStateOf(0)
 var level = mutableStateOf(1)
 var jerryJump = mutableStateOf(false)
-var tomJump = mutableStateOf(false)
 var sizeDuringJump = mutableStateOf(1f)
 var mp: MediaPlayer? = null
 var time = mutableStateOf(0f)
@@ -87,6 +86,12 @@ var powerUp = mutableStateListOf(
 var powerUpDisplay = mutableStateListOf(true, true, true)
 var powerUpsCollected = mutableStateOf(0)
 var makeDelay = mutableStateOf(false)
+
+var circularTimer1 = mutableStateOf(0f)
+var circularTimer2 = mutableStateOf(0f)
+
+var activatePowerUp1 = mutableStateOf(false)
+var activatePowerUp2 = mutableStateOf(false)
 
 var movingBoxes = mutableStateListOf<Dimensions>(
     Dimensions(

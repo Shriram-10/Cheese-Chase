@@ -299,6 +299,10 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                 powerUpDisplay[2] = true
                 makeDelay.value = false
                 powerUpsCollected.value = 0
+                activatePowerUp1.value = false
+                activatePowerUp2.value = false
+                circularTimer1.value = 0f
+                circularTimer2.value = 0f
                 navController.navigate(Screen.Game.route)
             },
             modifier = modifier.height(64.dp),
@@ -429,6 +433,10 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                 powerUpDisplay[2] = true
                 makeDelay.value = false
                 powerUpsCollected.value = 0
+                activatePowerUp1.value = false
+                activatePowerUp2.value = false
+                circularTimer1.value = 0f
+                circularTimer2.value = 0f
                 navController.navigate(Screen.Game.route)
             },
             modifier = modifier.height(64.dp),

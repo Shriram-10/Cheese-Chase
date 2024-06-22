@@ -30,6 +30,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -44,7 +45,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameMillis
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -403,6 +406,8 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
             Text(collided3.value.toString())
             Text(collided4.value.toString())
             Text(collided5.value.toString())
+            Text(circularTimer1.value.toString())
+            Text(circularTimer2.value.toString())
         }
         if (collisionCount.value < 2) {
             Column {
@@ -491,6 +496,35 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
         LaunchedEffect(Unit){
             delay(1000)
             makeDelay.value = false
+        }
+    }
+
+    if (powerUpsCollected.value == 1 && !activatePowerUp1.value){
+        UpdateTimer()
+    }
+    if (powerUpsCollected.value == 2 && !activatePowerUp2.value){
+        UpdateTimer()
+    }
+}
+
+@Composable
+fun UpdateTimer(){
+    if (powerUpsCollected.value == 2 && collisionCount.value < 2){
+        LaunchedEffect(Unit) {
+            while (circularTimer2.value < 360) {
+                delay(8)
+                circularTimer2.value += (360f/375f)
+            }
+            activatePowerUp2.value = true
+        }
+    }
+    if (powerUpsCollected.value >= 1 && collisionCount.value < 2){
+        LaunchedEffect(Unit) {
+            while (circularTimer1.value < 360) {
+                delay(8)
+                circularTimer1.value += (360f/375f)
+            }
+            activatePowerUp1.value = true
         }
     }
 }
@@ -586,259 +620,341 @@ fun GameCanvas(modifier:Modifier, context: Context) {
         collisionCount.value = 0
     }
 
-    Canvas(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(210, 163, 118))
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onTap = {
-                        if (collisionCount.value < 2 && !(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) {
-                            if (mode.value == 2 || mode.value == 3) {
-                                HapticFeedback().triggerHapticFeedback(context, 50)
-                            }
-                            if (it.x < xLeft.value) {
-                                moveLeft.value = true
-                            } else if (it.x > xRight.value) {
-                                moveRight.value = true
-                            }
-                        }
-                    }
-                )
-            }
-            .pointerInput(Unit) {
-                detectDragGestures(
-                    onDrag = { change, dragAmount ->
-                        change.consume()
-                        if (dragAmount.y < 0 && !jerryJump.value) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        Canvas(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(210, 163, 118))
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onTap = {
                             if (collisionCount.value < 2 && !(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) {
                                 if (mode.value == 2 || mode.value == 3) {
-                                    jerryJump.value = true
+                                    HapticFeedback().triggerHapticFeedback(context, 50)
+                                }
+                                if (it.x < xLeft.value) {
+                                    moveLeft.value = true
+                                } else if (it.x > xRight.value) {
+                                    moveRight.value = true
                                 }
                             }
                         }
+                    )
+                }
+                .pointerInput(Unit) {
+                    detectDragGestures(
+                        onDrag = { change, dragAmount ->
+                            change.consume()
+                            if (dragAmount.y < 0 && !jerryJump.value) {
+                                if (collisionCount.value < 2 && !(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) {
+                                    if (mode.value == 2 || mode.value == 3) {
+                                        jerryJump.value = true
+                                    }
+                                }
+                            }
+                        }
+                    )
+                }
+        ) {
+            height.value = size.height
+            width.value = size.width
+
+            drawLine(
+                color = Color(71, 61, 52),
+                start = Offset(size.width / 3, 0f),
+                end = Offset(size.width / 3, size.height),
+                strokeWidth = 4f
+            )
+
+            drawLine(
+                color = Color(71, 61, 52),
+                start = Offset(size.width / 1.5f, 0f),
+                end = Offset(size.width / 1.5f, size.height),
+                strokeWidth = 4f
+            )
+
+            drawRect(
+                topLeft = Offset(movingBoxes[0].centerX - size.width / 10, yBox[0]),
+                color = Color(128, 56, 42),
+                size = Size(size.width / 5, size.width / 5)
+            )
+
+            drawRect(
+                topLeft = Offset(movingBoxes[1].centerX - size.width / 10, yBox[1]),
+                color = Color(128, 56, 42),
+                size = Size(size.width / 5, size.width / 5)
+            )
+
+            drawRect(
+                topLeft = Offset(movingBoxes[2].centerX - size.width / 10, yBox[2]),
+                color = Color(128, 56, 42),
+                size = Size(size.width / 5, size.width / 5)
+            )
+
+            drawRect(
+                topLeft = Offset(movingBoxes[3].centerX - size.width / 10, yBox[3]),
+                color = Color(128, 56, 42),
+                size = Size(size.width / 5, size.width / 5)
+            )
+
+            drawRect(
+                topLeft = Offset(movingBoxes[4].centerX - size.width / 10, yBox[4]),
+                color = Color(128, 56, 42),
+                size = Size(size.width / 5, size.width / 5)
+            )
+
+            drawRect(
+                topLeft = Offset(movingBoxes[5].centerX - size.width / 10, yBox[5]),
+                color = Color(128, 56, 42),
+                size = Size(size.width / 5, size.width / 5)
+            )
+
+            drawRect(
+                topLeft = Offset(movingBoxes[6].centerX - size.width / 10, yBox[6]),
+                color = Color(128, 56, 42),
+                size = Size(size.width / 5, size.width / 5)
+            )
+
+            drawRect(
+                topLeft = Offset(movingBoxes[7].centerX - size.width / 10, yBox[7]),
+                color = Color(128, 56, 42),
+                size = Size(size.width / 5, size.width / 5)
+            )
+
+            drawRect(
+                topLeft = Offset(movingBoxes[8].centerX - size.width / 10, yBox[8]),
+                color = Color(128, 56, 42),
+                size = Size(size.width / 5, size.width / 5)
+            )
+
+            drawCircle(
+                color = Color.Black.copy(alpha = 0.3f),
+                radius = size.width / 15f * 1.1f * sizeDuringJump.value.pow(1.25f),
+                center = Offset(movingJerry.value.centerX + 2f, size.height - y + 2f)
+            )
+
+            drawCircle(
+                color = if (collisionCount.value == 1) colors else Color.Black,
+                radius = size.width / 15f * sizeDuringJump.value,
+                center = Offset(movingJerry.value.centerX, size.height - y)
+            )
+
+            if (collisionCount.value >= 1) {
+                drawCircle(
+                    color = Color.Gray,
+                    radius = size.width / 15f,
+                    center = Offset(movingTom.value.centerX, movingTom.value.centerY)
+                )
+                drawCircle(
+                    color = Color.DarkGray,
+                    radius = size.width / 12f,
+                    center = Offset(movingTom.value.centerX, movingTom.value.centerY),
+                    style = Stroke(width = 8f)
+                )
+            }
+
+            if (powerUpDisplay[0]) {
+
+                drawCircle(
+                    brush = Brush.radialGradient(
+                        colors = powerUpColors,
+                        center = Offset(powerUp[0].centerX, powerUp[0].centerY),
+                        radius = size.width / 18f
+                    ),
+                    radius = size.width / 12f,
+                    center = Offset(powerUp[0].centerX, powerUp[0].centerY)
+                )
+
+                val path1 = Path()
+
+                // Move to the initial point of the star
+                path1.moveTo(
+                    x = powerUp[0].centerX + size.width / 24 * cos(0f),
+                    y = powerUp[0].centerY + size.width / 48 * sin(0f)
+                )
+
+                // Draw the lines between the points of the star
+                for (i in 1 until 5 * 2) {
+                    val radius = if (i % 2 == 0) size.width / 24 else size.width / 48
+                    val pointAngle = i * 72 * Math.PI / 180f
+
+                    path1.lineTo(
+                        x = (powerUp[0].centerX + radius * cos(pointAngle)).toFloat(),
+                        y = (powerUp[0].centerY + radius * sin(pointAngle)).toFloat()
+                    )
+                }
+
+                path1.close()
+
+                drawPath(
+                    path = path1,
+                    color = Color(253, 247, 82).copy(alpha = 0.5f),
+                    style = Fill
+                )
+
+            }
+
+            if (powerUpDisplay[1]) {
+
+                drawCircle(
+                    brush = Brush.radialGradient(
+                        colors = powerUpColors,
+                        center = Offset(powerUp[1].centerX, powerUp[1].centerY),
+                        radius = size.width / 18f
+                    ),
+                    radius = size.width / 12f,
+                    center = Offset(powerUp[1].centerX, powerUp[1].centerY)
+                )
+
+                val path2 = Path()
+
+                // Move to the initial point of the star
+                path2.moveTo(
+                    x = powerUp[1].centerX + size.width / 24 * cos(0f),
+                    y = powerUp[1].centerY + size.width / 48 * sin(0f)
+                )
+
+                // Draw the lines between the points of the star
+                for (i in 1 until 5 * 2) {
+                    val radius = if (i % 2 == 0) size.width / 24 else size.width / 48
+                    val pointAngle = i * 72 * Math.PI / 180f
+
+                    path2.lineTo(
+                        x = (powerUp[1].centerX + radius * cos(pointAngle)).toFloat(),
+                        y = (powerUp[1].centerY + radius * sin(pointAngle)).toFloat()
+                    )
+                }
+
+                path2.close()
+
+                drawPath(
+                    path = path2,
+                    color = Color(253, 247, 82).copy(alpha = 0.5f),
+                    style = Fill
+                )
+
+            }
+
+            if (powerUpDisplay[2]) {
+
+                drawCircle(
+                    brush = Brush.radialGradient(
+                        colors = powerUpColors,
+                        center = Offset(powerUp[2].centerX, powerUp[2].centerY),
+                        radius = size.width / 18f
+                    ),
+                    radius = size.width / 12f,
+                    center = Offset(powerUp[2].centerX, powerUp[2].centerY)
+                )
+
+                val path3 = Path()
+
+                // Move to the initial point of the star
+                path3.moveTo(
+                    x = powerUp[2].centerX + size.width / 24 * cos(0f),
+                    y = powerUp[2].centerY + size.width / 48 * sin(0f)
+                )
+
+                // Draw the lines between the points of the star
+                for (i in 1 until 5 * 2) {
+                    val radius = if (i % 2 == 0) size.width / 24 else size.width / 48
+                    val pointAngle = i * 72 * Math.PI / 180f
+
+                    path3.lineTo(
+                        x = (powerUp[2].centerX + radius * cos(pointAngle)).toFloat(),
+                        y = (powerUp[2].centerY + radius * sin(pointAngle)).toFloat()
+                    )
+                }
+
+                path3.close()
+
+                drawPath(
+                    path = path3,
+                    color = Color(253, 247, 82).copy(alpha = 0.5f),
+                    style = Fill
+                )
+            }
+        }
+        Column {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                Column {
+                    Canvas(
+                        modifier = Modifier
+                            .size(80.dp)
+                            .clip(RoundedCornerShape(50))
+                            .background(Color.White.copy(alpha = 0.4f))
+                    ) {
+                        if (!activatePowerUp2.value) {
+                            drawCircle(
+                                color = Color.Black,
+                                radius = size.width / 2,
+                                center = Offset(size.width / 2, size.height / 2),
+                                style = Stroke(width = 16f)
+                            )
+
+                            drawArc(
+                                color = Color.Gray,
+                                startAngle = -90f,
+                                sweepAngle = circularTimer2.value,
+                                useCenter = false,
+                                style = Stroke(width = 16f)
+                            )
+                        } else {
+                            drawCircle(
+                                brush = Brush.radialGradient(
+                                    colors = powerUpColors,
+                                    radius = size.width / 2,
+                                    center = Offset(size.width / 2, size.height / 2),
+                                )
+                            )
+                        }
                     }
-                )
-            }
-    ){
-        height.value = size.height
-        width.value = size.width
 
-        drawLine(
-            color = Color(71,61,52),
-            start = Offset(size.width/3, 0f),
-            end = Offset(size.width/3, size.height),
-            strokeWidth = 4f
-        )
+                    Spacer(modifier = Modifier.height(12.dp))
 
-        drawLine(
-            color = Color(71,61,52),
-            start = Offset(size.width/1.5f, 0f),
-            end = Offset(size.width/1.5f, size.height),
-            strokeWidth = 4f
-        )
+                    Canvas(
+                        modifier = Modifier
+                            .size(80.dp)
+                            .clip(RoundedCornerShape(50))
+                            .background(Color.White.copy(alpha = 0.4f))
+                    ) {
+                        if (!activatePowerUp1.value) {
+                            drawCircle(
+                                color = Color.Black,
+                                radius = size.width / 2,
+                                center = Offset(size.width / 2, size.height / 2),
+                                style = Stroke(width = 16f)
+                            )
 
-        drawRect(
-            topLeft = Offset(movingBoxes[0].centerX - size.width/10, yBox[0]),
-            color = Color(128,56,42),
-            size = Size(size.width/5, size.width/5)
-        )
+                            drawArc(
+                                color = Color.Gray,
+                                startAngle = -90f,
+                                sweepAngle = circularTimer1.value,
+                                useCenter = false,
+                                style = Stroke(width = 16f)
+                            )
+                        } else {
+                            drawCircle(
+                                brush = Brush.radialGradient(
+                                    colors = powerUpColors,
+                                    radius = size.width / 2,
+                                    center = Offset(size.width / 2, size.height / 2),
+                                )
+                            )
+                        }
+                    }
+                }
 
-        drawRect(
-            topLeft = Offset(movingBoxes[1].centerX - size.width/10, yBox[1]),
-            color = Color(128,56,42),
-            size = Size(size.width/5, size.width/5)
-        )
-
-        drawRect(
-            topLeft = Offset(movingBoxes[2].centerX - size.width/10, yBox[2]),
-            color = Color(128,56,42),
-            size = Size(size.width/5, size.width/5)
-        )
-
-        drawRect(
-            topLeft = Offset(movingBoxes[3].centerX - size.width/10, yBox[3]),
-            color = Color(128,56,42),
-            size = Size(size.width/5, size.width/5)
-        )
-
-        drawRect(
-            topLeft = Offset(movingBoxes[4].centerX - size.width/10, yBox[4]),
-            color = Color(128,56,42),
-            size = Size(size.width/5, size.width/5)
-        )
-
-        drawRect(
-            topLeft = Offset(movingBoxes[5].centerX - size.width/10, yBox[5]),
-            color = Color(128,56,42),
-            size = Size(size.width/5, size.width/5)
-        )
-
-        drawRect(
-            topLeft = Offset(movingBoxes[6].centerX - size.width/10, yBox[6]),
-            color = Color(128,56,42),
-            size = Size(size.width/5, size.width/5)
-        )
-
-        drawRect(
-            topLeft = Offset(movingBoxes[7].centerX - size.width/10, yBox[7]),
-            color = Color(128,56,42),
-            size = Size(size.width/5, size.width/5)
-        )
-
-        drawRect(
-            topLeft = Offset(movingBoxes[8].centerX - size.width/10, yBox[8]),
-            color = Color(128,56,42),
-            size = Size(size.width/5, size.width/5)
-        )
-
-        drawCircle(
-            color = Color.Black.copy(alpha = 0.3f),
-            radius = size.width/15f * 1.1f * sizeDuringJump.value.pow(1.25f),
-            center = Offset(movingJerry.value.centerX + 2f, size.height - y + 2f)
-        )
-
-        drawCircle(
-            color = if (collisionCount.value == 1) colors else Color.Black,
-            radius = size.width/15f * sizeDuringJump.value,
-            center = Offset(movingJerry.value.centerX, size.height - y)
-        )
-
-        if (collisionCount.value >= 1){
-            drawCircle(
-                color = Color.Gray,
-                radius = size.width/15f,
-                center = Offset(movingTom.value.centerX, movingTom.value.centerY)
-            )
-            drawCircle(
-                color = Color.DarkGray,
-                radius = size.width/12f,
-                center = Offset(movingTom.value.centerX, movingTom.value.centerY),
-                style = Stroke(width = 8f)
-            )
-        }
-
-        if (powerUpDisplay[0]) {
-
-            drawCircle(
-                brush = Brush.radialGradient(
-                    colors = powerUpColors,
-                    center = Offset(powerUp[0].centerX, powerUp[0].centerY),
-                    radius = size.width / 18f
-                ),
-                radius = size.width / 12f,
-                center = Offset(powerUp[0].centerX, powerUp[0].centerY)
-            )
-
-            val path1 = Path()
-
-            // Move to the initial point of the star
-            path1.moveTo(
-                x = powerUp[0].centerX + size.width / 24 * cos(0f),
-                y = powerUp[0].centerY + size.width / 48 * sin(0f)
-            )
-
-            // Draw the lines between the points of the star
-            for (i in 1 until 5 * 2) {
-                val radius = if (i % 2 == 0) size.width / 24 else size.width / 48
-                val pointAngle = i * 72 * Math.PI / 180f
-
-                path1.lineTo(
-                    x = (powerUp[0].centerX + radius * cos(pointAngle)).toFloat(),
-                    y = (powerUp[0].centerY + radius * sin(pointAngle)).toFloat()
-                )
+                Spacer(modifier = Modifier.width(12.dp))
             }
 
-            path1.close()
-
-            drawPath(
-                path = path1,
-                color = Color(253, 247, 82).copy(alpha = 0.5f),
-                style = Fill
-            )
-
-        }
-
-        if (powerUpDisplay[1]) {
-
-            drawCircle(
-                brush = Brush.radialGradient(
-                    colors = powerUpColors,
-                    center = Offset(powerUp[1].centerX, powerUp[1].centerY),
-                    radius = size.width / 18f
-                ),
-                radius = size.width / 12f,
-                center = Offset(powerUp[1].centerX, powerUp[1].centerY)
-            )
-
-            val path2 = Path()
-
-            // Move to the initial point of the star
-            path2.moveTo(
-                x = powerUp[1].centerX + size.width / 24 * cos(0f),
-                y = powerUp[1].centerY + size.width / 48 * sin(0f)
-            )
-
-            // Draw the lines between the points of the star
-            for (i in 1 until 5 * 2) {
-                val radius = if (i % 2 == 0) size.width / 24 else size.width / 48
-                val pointAngle = i * 72 * Math.PI / 180f
-
-                path2.lineTo(
-                    x = (powerUp[1].centerX + radius * cos(pointAngle)).toFloat(),
-                    y = (powerUp[1].centerY + radius * sin(pointAngle)).toFloat()
-                )
-            }
-
-            path2.close()
-
-            drawPath(
-                path = path2,
-                color = Color(253, 247, 82).copy(alpha = 0.5f),
-                style = Fill
-            )
-
-        }
-
-        if (powerUpDisplay[2]) {
-
-            drawCircle(
-                brush = Brush.radialGradient(
-                    colors = powerUpColors,
-                    center = Offset(powerUp[2].centerX, powerUp[2].centerY),
-                    radius = size.width / 18f
-                ),
-                radius = size.width / 12f,
-                center = Offset(powerUp[2].centerX, powerUp[2].centerY)
-            )
-
-            val path3 = Path()
-
-            // Move to the initial point of the star
-            path3.moveTo(
-                x = powerUp[2].centerX + size.width / 24 * cos(0f),
-                y = powerUp[2].centerY + size.width / 48 * sin(0f)
-            )
-
-            // Draw the lines between the points of the star
-            for (i in 1 until 5 * 2) {
-                val radius = if (i % 2 == 0) size.width / 24 else size.width / 48
-                val pointAngle = i * 72 * Math.PI / 180f
-
-                path3.lineTo(
-                    x = (powerUp[2].centerX + radius * cos(pointAngle)).toFloat(),
-                    y = (powerUp[2].centerY + radius * sin(pointAngle)).toFloat()
-                )
-            }
-
-            path3.close()
-
-            drawPath(
-                path = path3,
-                color = Color(253, 247, 82).copy(alpha = 0.5f),
-                style = Fill
-            )
-
+            Spacer(modifier = Modifier.height(12.dp))
         }
     }
 }
