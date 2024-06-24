@@ -274,6 +274,11 @@ fun WinnerPage(modifier: Modifier, highScore: HighScoreManager, navController: N
                             powerUp2Value.value = 0
                             powerUpInit1.value = 0
                             powerUpInit2.value = 0
+                            shatterBlocks.value = false
+                            resetBoxes.value = 0
+                            scoreSpeeding.value = false
+                            reverseTom.value = false
+                            fadeTom.value = 1f
                             navController.popBackStack(Screen.Settings.route, false)
                         },
                         modifier = Modifier.height(40.dp),
@@ -411,6 +416,11 @@ fun WinnerPage(modifier: Modifier, highScore: HighScoreManager, navController: N
                         powerUpInit1.value = 0
                         powerUpInit2.value = 0
                         score.value = 0f
+                        shatterBlocks.value = false
+                        resetBoxes.value = 0
+                        scoreSpeeding.value = false
+                        reverseTom.value = false
+                        fadeTom.value = 1f
                         showWinnerPage.value = false
                     },
                     modifier = Modifier

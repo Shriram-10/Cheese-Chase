@@ -307,6 +307,11 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                 powerUp2Value.value = 0
                 powerUpInit1.value = 0
                 powerUpInit2.value = 0
+                shatterBlocks.value = false
+                resetBoxes.value = 0
+                scoreSpeeding.value = false
+                reverseTom.value = false
+                fadeTom.value = 1f
                 navController.navigate(Screen.Game.route)
             },
             modifier = modifier.height(64.dp),
@@ -445,6 +450,11 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                 powerUp2Value.value = 0
                 powerUpInit1.value = 0
                 powerUpInit2.value = 0
+                shatterBlocks.value = false
+                resetBoxes.value = 0
+                scoreSpeeding.value = false
+                reverseTom.value = false
+                fadeTom.value = 1f
                 navController.navigate(Screen.Game.route)
             },
             modifier = modifier.height(64.dp),
