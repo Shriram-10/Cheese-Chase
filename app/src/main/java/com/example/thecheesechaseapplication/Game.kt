@@ -406,6 +406,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
             Text(collided5.value.toString())
             Text(collisionCount.value.toString())
             Text(powerUpsCollected.value.toString())
+            Text(shatterBlocks.value.toString())
         }
         if (collisionCount.value < 2) {
             Column {
@@ -522,6 +523,14 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
         fadeTom.value = 1f
         reverseTom.value = false
     }
+
+    if (shatterBlocks.value){
+        LaunchedEffect(Unit){
+            delay((2.5f * height.value / velocity.value * 15).toLong())
+            resetBoxes.value = 0
+            shatterBlocks.value = false
+        }
+    }
 }
 
 @Composable
@@ -588,48 +597,80 @@ fun GameCanvas(modifier:Modifier, context: Context) {
             }
         }
 
-        LaunchedEffect(Unit){
-            yBox = mutableStateListOf<Float>(height.value / 2, height.value / 2, height.value / 4, 0f, 0f, -height.value / 4, -height.value / 2, -height.value / 2, -height.value * 3 / 4)
-            velocity.value = (height.value + width.value)/200
+        LaunchedEffect(Unit) {
+            yBox = mutableStateListOf<Float>(
+                height.value / 2,
+                height.value / 2,
+                height.value / 4,
+                0f,
+                0f,
+                -height.value / 4,
+                -height.value / 2,
+                -height.value / 2,
+                -height.value * 3 / 4
+            )
+            velocity.value = (height.value + width.value) / 200
             delay(1250)
-            while(true){
+            while (true) {
                 delay(16)
-                for(i in 0..8){
-                    if (yBox[i] < height.value + width.value){
-                        yBox[i] += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) velocity.value else (velocity.value) / 3
-                        movingBoxes[i].centerY += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) velocity.value else (velocity.value) / 3
-                    } else {
-                        yBoxLocate[i] = Random.nextInt(-1, 2)
-                        if (yBoxLocate[i] == -1){
-                            movingBoxes[i].centerX = width.value / 6
-                            yBoxLocate[i] = -1
-                        } else if (yBoxLocate[i] == 0){
-                            movingBoxes[i].centerX = width.value / 2
-                            yBoxLocate[i] = 0
-                        } else if (yBoxLocate[i] == 1){
-                            movingBoxes[i].centerX = width.value * 5 / 6
-                            yBoxLocate[i] = 1
+                if (!shatterBlocks.value) {
+                    for (i in 0..8) {
+                        if (yBox[i] < height.value + width.value) {
+                            yBox[i] += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) velocity.value else (velocity.value) / 3
+                            movingBoxes[i].centerY += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) velocity.value else (velocity.value) / 3
+                        } else {
+                            yBoxLocate[i] = Random.nextInt(-1, 2)
+                            if (yBoxLocate[i] == -1) {
+                                movingBoxes[i].centerX = width.value / 6
+                                yBoxLocate[i] = -1
+                            } else if (yBoxLocate[i] == 0) {
+                                movingBoxes[i].centerX = width.value / 2
+                                yBoxLocate[i] = 0
+                            } else if (yBoxLocate[i] == 1) {
+                                movingBoxes[i].centerX = width.value * 5 / 6
+                                yBoxLocate[i] = 1
+                            }
+                            yBoxOffset[i] = Random.nextFloat() * width.value / 5f
+                            yBox[i] -= height.value + width.value + yBoxOffset[i]
+                            movingBoxes[i].centerY -= height.value + width.value + yBoxOffset[i]
                         }
-                        yBoxOffset[i] = Random.nextFloat() * width.value / 5f
-                        yBox[i] -= height.value + width.value + yBoxOffset[i]
-                        movingBoxes[i].centerY -= height.value + width.value + yBoxOffset[i]
                     }
+                } else if (shatterBlocks.value && resetBoxes.value == 0){
+                    yBox = mutableStateListOf<Float>(
+                        height.value / 2 - height.value,
+                        height.value / 2 - height.value,
+                        height.value / 4 - height.value,
+                        0f - height.value,
+                        0f - height.value,
+                        -height.value / 4 - height.value,
+                        -height.value / 2 - height.value,
+                        -height.value / 2 - height.value,
+                        -height.value * 3 / 4 - height.value
+                    )
+                    for (i in 0..8){
+                        movingBoxes[i].centerY = yBox[i] + movingBoxes[i].height/2
+                    }
+                    resetBoxes.value = 1
                 }
-                for (i in 0..2){
-                    if (powerUp[i].centerY <= 2.5f * (height.value + width.value)){
+
+                for (i in 0..2) {
+                    if (powerUp[i].centerY <= 2.5f * (height.value + width.value)) {
                         powerUp[i].centerY += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) velocity.value else (velocity.value) / 3
-                    } else if (powerUp[i].centerY > 2.5f * (height.value + width.value)){
+                    } else if (powerUp[i].centerY > 2.5f * (height.value + width.value)) {
                         powerUpDisplay[i] = Random.nextBoolean()
-                        powerUp[i].centerY = - Random.nextFloat() * (height.value + width.value)
+                        powerUp[i].centerY = -Random.nextFloat() * (height.value + width.value)
                     }
-                    for(j in 0..8) {
-                        if (powerUp[i].centerX == movingBoxes[j].centerX) {
-                            if (powerUp[i].centerY >= movingBoxes[j].centerY - movingBoxes[j].height / 2 - powerUp[i].height / 2 && powerUp[i].centerY <= movingBoxes[j].centerY + movingBoxes[j].height / 2 + powerUp[i].height / 2){
-                                powerUpDisplay[i] = false
+                    if (!shatterBlocks.value) {
+                        for (j in 0..8) {
+                            if (powerUp[i].centerX == movingBoxes[j].centerX) {
+                                if (powerUp[i].centerY >= movingBoxes[j].centerY - movingBoxes[j].height / 2 - powerUp[i].height / 2 && powerUp[i].centerY <= movingBoxes[j].centerY + movingBoxes[j].height / 2 + powerUp[i].height / 2) {
+                                    powerUpDisplay[i] = false
+                                }
                             }
                         }
                     }
                 }
+
                 score.value += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) ((height.value + width.value) / 2000) else ((height.value + width.value) / 6000)
             }
         }
@@ -703,59 +744,61 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                 strokeWidth = 4f
             )
 
-            drawRect(
-                topLeft = Offset(movingBoxes[0].centerX - size.width / 10, yBox[0]),
-                color = Color(128, 56, 42),
-                size = Size(size.width / 5, size.width / 5)
-            )
+            if (!shatterBlocks.value) {
+                drawRect(
+                    topLeft = Offset(movingBoxes[0].centerX - size.width / 10, yBox[0]),
+                    color = Color(128, 56, 42),
+                    size = Size(size.width / 5, size.width / 5)
+                )
 
-            drawRect(
-                topLeft = Offset(movingBoxes[1].centerX - size.width / 10, yBox[1]),
-                color = Color(128, 56, 42),
-                size = Size(size.width / 5, size.width / 5)
-            )
+                drawRect(
+                    topLeft = Offset(movingBoxes[1].centerX - size.width / 10, yBox[1]),
+                    color = Color(128, 56, 42),
+                    size = Size(size.width / 5, size.width / 5)
+                )
 
-            drawRect(
-                topLeft = Offset(movingBoxes[2].centerX - size.width / 10, yBox[2]),
-                color = Color(128, 56, 42),
-                size = Size(size.width / 5, size.width / 5)
-            )
+                drawRect(
+                    topLeft = Offset(movingBoxes[2].centerX - size.width / 10, yBox[2]),
+                    color = Color(128, 56, 42),
+                    size = Size(size.width / 5, size.width / 5)
+                )
 
-            drawRect(
-                topLeft = Offset(movingBoxes[3].centerX - size.width / 10, yBox[3]),
-                color = Color(128, 56, 42),
-                size = Size(size.width / 5, size.width / 5)
-            )
+                drawRect(
+                    topLeft = Offset(movingBoxes[3].centerX - size.width / 10, yBox[3]),
+                    color = Color(128, 56, 42),
+                    size = Size(size.width / 5, size.width / 5)
+                )
 
-            drawRect(
-                topLeft = Offset(movingBoxes[4].centerX - size.width / 10, yBox[4]),
-                color = Color(128, 56, 42),
-                size = Size(size.width / 5, size.width / 5)
-            )
+                drawRect(
+                    topLeft = Offset(movingBoxes[4].centerX - size.width / 10, yBox[4]),
+                    color = Color(128, 56, 42),
+                    size = Size(size.width / 5, size.width / 5)
+                )
 
-            drawRect(
-                topLeft = Offset(movingBoxes[5].centerX - size.width / 10, yBox[5]),
-                color = Color(128, 56, 42),
-                size = Size(size.width / 5, size.width / 5)
-            )
+                drawRect(
+                    topLeft = Offset(movingBoxes[5].centerX - size.width / 10, yBox[5]),
+                    color = Color(128, 56, 42),
+                    size = Size(size.width / 5, size.width / 5)
+                )
 
-            drawRect(
-                topLeft = Offset(movingBoxes[6].centerX - size.width / 10, yBox[6]),
-                color = Color(128, 56, 42),
-                size = Size(size.width / 5, size.width / 5)
-            )
+                drawRect(
+                    topLeft = Offset(movingBoxes[6].centerX - size.width / 10, yBox[6]),
+                    color = Color(128, 56, 42),
+                    size = Size(size.width / 5, size.width / 5)
+                )
 
-            drawRect(
-                topLeft = Offset(movingBoxes[7].centerX - size.width / 10, yBox[7]),
-                color = Color(128, 56, 42),
-                size = Size(size.width / 5, size.width / 5)
-            )
+                drawRect(
+                    topLeft = Offset(movingBoxes[7].centerX - size.width / 10, yBox[7]),
+                    color = Color(128, 56, 42),
+                    size = Size(size.width / 5, size.width / 5)
+                )
 
-            drawRect(
-                topLeft = Offset(movingBoxes[8].centerX - size.width / 10, yBox[8]),
-                color = Color(128, 56, 42),
-                size = Size(size.width / 5, size.width / 5)
-            )
+                drawRect(
+                    topLeft = Offset(movingBoxes[8].centerX - size.width / 10, yBox[8]),
+                    color = Color(128, 56, 42),
+                    size = Size(size.width / 5, size.width / 5)
+                )
+            }
 
             drawCircle(
                 Brush.radialGradient(
@@ -1255,7 +1298,7 @@ fun MoveJerryRight(){
 }
 
 fun checkCollision(){
-    if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) {
+    if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value) && !shatterBlocks.value) {
         for (i in 0..8) {
             if (movingJerry.value.centerX < movingBoxes[i].centerX) {
                 if (movingJerry.value.centerY <= movingBoxes[i].centerY + movingBoxes[i].height / 2 && movingJerry.value.centerY >= movingBoxes[i].centerY - movingBoxes[i].height / 2) {

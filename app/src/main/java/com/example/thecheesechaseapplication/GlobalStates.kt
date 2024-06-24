@@ -103,6 +103,7 @@ var reverseTom = mutableStateOf(false)
 var fadeTom = mutableStateOf(1f)
 
 var shatterBlocks = mutableStateOf(false)
+var resetBoxes = mutableStateOf(0)
 var scoreSpeeding = mutableStateOf(false)
 
 var movingBoxes = mutableStateListOf<Dimensions>(
