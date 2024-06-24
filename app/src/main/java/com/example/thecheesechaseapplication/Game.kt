@@ -531,6 +531,19 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
             shatterBlocks.value = false
         }
     }
+
+    if (scoreSpeeding.value == 1){
+        LaunchedEffect(Unit){
+            delay((2.5 * height.value / velocity.value * 15).toLong())
+            scoreSpeeding.value -= 1
+        }
+    }
+    if (scoreSpeeding.value == 2) {
+        LaunchedEffect(Unit) {
+            delay((2.5 * height.value / velocity.value * 15).toLong())
+            scoreSpeeding.value -= 2
+        }
+    }
 }
 
 @Composable
@@ -670,8 +683,13 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                         }
                     }
                 }
-
-                score.value += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) ((height.value + width.value) / 2000) else ((height.value + width.value) / 6000)
+                if (scoreSpeeding.value == 1) {
+                    score.value += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) 3 * ((height.value + width.value) / 2000) else 3 * ((height.value + width.value) / 6000)
+                } else if (scoreSpeeding.value == 2) {
+                    score.value += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) 6 * ((height.value + width.value) / 2000) else 6 * ((height.value + width.value) / 6000)
+                } else {
+                    score.value += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) ((height.value + width.value) / 2000) else ((height.value + width.value) / 6000)
+                }
             }
         }
     } else if (collisionCount.value == 3){
@@ -974,7 +992,7 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                                             } else if (powerUp2Value.value == 2){
                                                 shatterBlocks.value = true
                                             } else if (powerUp2Value.value == 3){
-                                                scoreSpeeding.value = true
+                                                scoreSpeeding.value += 1
                                             }
                                             powerUp2Value.value = 0
                                             if (powerUpsCollected.value == 2 || powerUpsCollected.value == 1) {
@@ -1106,7 +1124,7 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                                             } else if (powerUp1Value.value == 2){
                                                 shatterBlocks.value = true
                                             } else if (powerUp1Value.value == 3){
-                                                scoreSpeeding.value = true
+                                                scoreSpeeding.value += 1
                                             }
                                             powerUp1Value.value = 0
                                             if (powerUpsCollected.value == 1) {

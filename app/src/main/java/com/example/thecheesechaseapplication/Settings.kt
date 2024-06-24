@@ -309,7 +309,7 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                 powerUpInit2.value = 0
                 shatterBlocks.value = false
                 resetBoxes.value = 0
-                scoreSpeeding.value = false
+                scoreSpeeding.value = 0
                 reverseTom.value = false
                 fadeTom.value = 1f
                 navController.navigate(Screen.Game.route)
@@ -452,7 +452,7 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                 powerUpInit2.value = 0
                 shatterBlocks.value = false
                 resetBoxes.value = 0
-                scoreSpeeding.value = false
+                scoreSpeeding.value = 0
                 reverseTom.value = false
                 fadeTom.value = 1f
                 navController.navigate(Screen.Game.route)
