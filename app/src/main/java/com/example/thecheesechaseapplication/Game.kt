@@ -157,7 +157,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
         while(true){
             delay(4)
             if (collisionCount.value == 1){
-                while(movingTom.value.centerY >= height.value * 4 / 5){
+                while(movingTom.value.centerY >= height.value * 4 / 5 && !reverseTom.value){
                     delay(8)
                     movingTom.value.centerY -= jerryVelocity.value / 4
                     if (!sidewaysCollision.value) {
@@ -399,15 +399,13 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
     ){
         GameCanvas(modifier, context)
         Column{
-            Text(collisionCount.value.toString())
-            Text(powerUpsCollected.value.toString())
             Text(collided1.value.toString())
             Text(collided2.value.toString())
             Text(collided3.value.toString())
             Text(collided4.value.toString())
             Text(collided5.value.toString())
-            Text(powerUp1Value.value.toString())
-            Text(powerUp2Value.value.toString())
+            Text(collisionCount.value.toString())
+            Text(powerUpsCollected.value.toString())
         }
         if (collisionCount.value < 2) {
             Column {
@@ -504,6 +502,25 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
     }
     if (powerUpsCollected.value == 2 && !activatePowerUp2.value){
         UpdateTimer()
+    }
+
+    if (reverseTom.value){
+        LaunchedEffect(Unit) {
+            while (movingTom.value.centerY <= height.value + width.value && fadeTom.value >= 0.01f) {
+                delay(4)
+                movingTom.value.centerY += velocity.value / 10
+                fadeTom.value -= 0.005f
+                if (collided1.value || collided2.value || collided3.value || collided4.value || collided5.value){
+                    reverseTom.value = false
+                }
+            }
+        }
+    }
+
+    if (movingTom.value.centerY >= height.value + width.value || fadeTom.value < 0.01f){
+        collisionCount.value -= 1
+        fadeTom.value = 1f
+        reverseTom.value = false
     }
 }
 
@@ -758,12 +775,12 @@ fun GameCanvas(modifier:Modifier, context: Context) {
 
             if (collisionCount.value >= 1) {
                 drawCircle(
-                    color = Color.Gray,
+                    color = if (!reverseTom.value) Color.Gray else Color.Gray.copy(alpha = fadeTom.value),
                     radius = size.width / 15f,
                     center = Offset(movingTom.value.centerX, movingTom.value.centerY)
                 )
                 drawCircle(
-                    color = Color.DarkGray,
+                    color = if (!reverseTom.value) Color.DarkGray else Color.DarkGray.copy(alpha = fadeTom.value),
                     radius = size.width / 12f,
                     center = Offset(movingTom.value.centerX, movingTom.value.centerY),
                     style = Stroke(width = 8f)
@@ -903,6 +920,28 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                             .size(80.dp)
                             .clip(RoundedCornerShape(50))
                             .background(Color.White.copy(alpha = 0.4f))
+                            .pointerInput(Unit){
+                                detectTapGestures(
+                                    onTap = {
+                                        if (collisionCount.value < 2){
+                                            activatePowerUp2.value = false
+                                            powerUpInit2.value = 0
+                                            if (powerUp2Value.value == 1 && collisionCount.value == 1){
+                                                reverseTom.value = true
+                                            } else if (powerUp2Value.value == 2){
+                                                shatterBlocks.value = true
+                                            } else if (powerUp2Value.value == 3){
+                                                scoreSpeeding.value = true
+                                            }
+                                            powerUp2Value.value = 0
+                                            if (powerUpsCollected.value == 2 || powerUpsCollected.value == 1) {
+                                                powerUpsCollected.value -= 1
+                                            }
+                                            circularTimer2.value = 0f
+                                        }
+                                    }
+                                )
+                            }
                     ) {
                         if (!activatePowerUp2.value) {
                             drawCircle(
@@ -1013,6 +1052,30 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                             .size(80.dp)
                             .clip(RoundedCornerShape(50))
                             .background(Color.White.copy(alpha = 0.4f))
+                            .pointerInput(Unit){
+                                detectTapGestures(
+                                    onTap = {
+                                        if (collisionCount.value < 2){
+                                            activatePowerUp1.value = false
+                                            powerUpInit1.value = 0
+                                            if (powerUp1Value.value == 1 && collisionCount.value == 1){
+                                                reverseTom.value = true
+                                            } else if (powerUp1Value.value == 2){
+                                                shatterBlocks.value = true
+                                            } else if (powerUp1Value.value == 3){
+                                                scoreSpeeding.value = true
+                                            }
+                                            powerUp1Value.value = 0
+                                            if (powerUpsCollected.value == 1) {
+                                                powerUpsCollected.value -= 1
+                                            } else if (powerUpsCollected.value == 2){
+                                                powerUpsCollected.value -= 2
+                                            }
+                                            circularTimer1.value = 0f
+                                        }
+                                    }
+                                )
+                            }
                     ) {
                         if (!activatePowerUp1.value) {
                             drawCircle(

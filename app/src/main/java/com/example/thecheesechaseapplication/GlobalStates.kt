@@ -99,6 +99,12 @@ var powerUp2Value = mutableStateOf(0)
 var powerUpInit1 = mutableStateOf(0)
 var powerUpInit2 = mutableStateOf(0)
 
+var reverseTom = mutableStateOf(false)
+var fadeTom = mutableStateOf(1f)
+
+var shatterBlocks = mutableStateOf(false)
+var scoreSpeeding = mutableStateOf(false)
+
 var movingBoxes = mutableStateListOf<Dimensions>(
     Dimensions(
         width.value / 5,
