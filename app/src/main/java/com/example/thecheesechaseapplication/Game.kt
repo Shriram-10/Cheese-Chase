@@ -1365,7 +1365,7 @@ fun powerUpCollection(){
                             powerUpDisplay[i] = false
                             makeDelay.value = true
                         } else if (powerUp[i].centerX == width.value * 5 / 6 && powerUpDisplay[i]) {
-                            collisionCount.value += 1
+                            powerUpsCollected.value += 1
                             powerUpDisplay[i] = false
                             makeDelay.value = true
                         }
