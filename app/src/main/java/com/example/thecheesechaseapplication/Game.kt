@@ -1,6 +1,7 @@
 package com.example.thecheesechaseapplication
 
 import android.content.Context
+import android.graphics.drawable.Icon
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
@@ -33,6 +34,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -396,9 +399,6 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
     ){
         GameCanvas(modifier, context)
         Column{
-            Text(powerUpDisplay[0].toString())
-            Text(powerUpDisplay[1].toString())
-            Text(powerUpDisplay[2].toString())
             Text(collisionCount.value.toString())
             Text(powerUpsCollected.value.toString())
             Text(collided1.value.toString())
@@ -406,8 +406,8 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
             Text(collided3.value.toString())
             Text(collided4.value.toString())
             Text(collided5.value.toString())
-            Text(circularTimer1.value.toString())
-            Text(circularTimer2.value.toString())
+            Text(powerUp1Value.value.toString())
+            Text(powerUp2Value.value.toString())
         }
         if (collisionCount.value < 2) {
             Column {
@@ -547,6 +547,16 @@ fun GameCanvas(modifier:Modifier, context: Context) {
     val powerUpColors = listOf(
         Color.White.copy(0.3f),
         Color(234,51,128).copy(alpha = 0.5f)
+    )
+
+    val shadowColors = listOf(
+        Color.Black.copy(0.3f),
+        Color.DarkGray.copy(alpha = 0.2f)
+    )
+
+    val yellowColors = listOf(
+        Color(253,198,37).copy(0.5f),
+        Color(252,242,152).copy(0.25f)
     )
 
     if (collisionCount.value < 2){
@@ -731,7 +741,11 @@ fun GameCanvas(modifier:Modifier, context: Context) {
             )
 
             drawCircle(
-                color = Color.Black.copy(alpha = 0.3f),
+                Brush.radialGradient(
+                    colors = shadowColors,
+                    center = Offset(size.width / 2, size.height / 2),
+                    radius = size.width / 15f * 1.1f * sizeDuringJump.value.pow(1.25f)
+                ),
                 radius = size.width / 15f * 1.1f * sizeDuringJump.value.pow(1.25f),
                 center = Offset(movingJerry.value.centerX + 2f, size.height - y + 2f)
             )
@@ -913,6 +927,82 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                                     center = Offset(size.width / 2, size.height / 2),
                                 )
                             )
+
+                            if (powerUp2Value.value == 1){
+                                drawCircle(
+                                    color = Color.Gray,
+                                    radius = size.width / 4,
+                                    center = Offset(size.width / 2, size.height / 2),
+                                    style = Fill
+                                )
+
+                                drawCircle(
+                                    color = Color.DarkGray,
+                                    radius = size.width / 3.6f,
+                                    center = Offset(size.width / 2, size.height / 2),
+                                    style = Stroke(width = 3f)
+                                )
+
+                                drawLine(
+                                    color = Color(202,60,70),
+                                    start = Offset(size.width / 5, size.height / 5),
+                                    end = Offset(size.width * 4 / 5f, size.height * 4 / 5f),
+                                    strokeWidth = 10f
+                                )
+
+                                drawLine(
+                                    color = Color(202,60,70),
+                                    start = Offset(size.width * 4 / 5, size.height / 5),
+                                    end = Offset(size.width / 5f, size.height * 4 / 5f),
+                                    strokeWidth = 10f
+                                )
+                            }
+                            if (powerUp2Value.value == 2){
+                                drawRect(
+                                    color = Color(128, 56, 42),
+                                    topLeft = Offset(size.width / 4, size.height / 4),
+                                    size = Size(size.width / 2, size.height / 2)
+                                )
+
+                                drawLine(
+                                    color = Color(202,60,70),
+                                    start = Offset(size.width / 5, size.height / 5),
+                                    end = Offset(size.width * 4 / 5f, size.height * 4 / 5f),
+                                    strokeWidth = 10f
+                                )
+
+                                drawLine(
+                                    color = Color(202,60,70),
+                                    start = Offset(size.width * 4 / 5, size.height / 5),
+                                    end = Offset(size.width / 5f, size.height * 4 / 5f),
+                                    strokeWidth = 10f
+                                )
+                            }
+                            if (powerUp2Value.value == 3){
+                                drawCircle(
+                                    brush = Brush.radialGradient(
+                                        colors = yellowColors,
+                                        radius = size.width / 3,
+                                        center = Offset(size.width / 2, size.height / 2)
+                                    ),
+                                    radius = size.width / 3,
+                                    center = Offset(size.width / 2, size.height / 2)
+                                )
+
+                                drawLine(
+                                    start = Offset(size.width / 2, size.height / 4),
+                                    end = Offset(size.width / 2, size.height * 3 / 4),
+                                    color = Color(202,60,70),
+                                    strokeWidth = 10f
+                                )
+
+                                drawLine(
+                                    start = Offset(size.width / 4, size.height / 2),
+                                    end = Offset(size.width * 3 / 4, size.height / 2),
+                                    color = Color(202,60,70),
+                                    strokeWidth = 10f
+                                )
+                            }
                         }
                     }
 
@@ -947,6 +1037,82 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                                     center = Offset(size.width / 2, size.height / 2),
                                 )
                             )
+
+                            if (powerUp1Value.value == 1) {
+                                drawCircle(
+                                    color = Color.Gray,
+                                    radius = size.width / 4,
+                                    center = Offset(size.width / 2, size.height / 2),
+                                    style = Fill
+                                )
+
+                                drawCircle(
+                                    color = Color.DarkGray,
+                                    radius = size.width / 3.6f,
+                                    center = Offset(size.width / 2, size.height / 2),
+                                    style = Stroke(width = 3f)
+                                )
+
+                                drawLine(
+                                    color = Color(202,60,70),
+                                    start = Offset(size.width / 5, size.height / 5),
+                                    end = Offset(size.width * 4 / 5f, size.height * 4 / 5f),
+                                    strokeWidth = 10f
+                                )
+
+                                drawLine(
+                                    color = Color(202,60,70),
+                                    start = Offset(size.width * 4 / 5, size.height / 5),
+                                    end = Offset(size.width / 5f, size.height * 4 / 5f),
+                                    strokeWidth = 10f
+                                )
+                            }
+                            if (powerUp1Value.value == 2) {
+                                drawRect(
+                                    color = Color(128, 56, 42),
+                                    topLeft = Offset(size.width / 4, size.height / 4),
+                                    size = Size(size.width / 2, size.height / 2)
+                                )
+
+                                drawLine(
+                                    color = Color(202,60,70),
+                                    start = Offset(size.width / 5, size.height / 5),
+                                    end = Offset(size.width * 4 / 5f, size.height * 4 / 5f),
+                                    strokeWidth = 10f
+                                )
+
+                                drawLine(
+                                    color = Color(202,60,70),
+                                    start = Offset(size.width * 4 / 5, size.height / 5),
+                                    end = Offset(size.width / 5f, size.height * 4 / 5f),
+                                    strokeWidth = 10f
+                                )
+                            }
+                            if (powerUp1Value.value == 3){
+                                drawCircle(
+                                    brush = Brush.radialGradient(
+                                        colors = yellowColors,
+                                        radius = size.width / 3,
+                                        center = Offset(size.width / 2, size.height / 2)
+                                    ),
+                                    radius = size.width / 3,
+                                    center = Offset(size.width / 2, size.height / 2)
+                                )
+
+                                drawLine(
+                                    start = Offset(size.width / 2, size.height / 4),
+                                    end = Offset(size.width / 2, size.height * 3 / 4),
+                                    color = Color(202,60,70),
+                                    strokeWidth = 10f
+                                )
+
+                                drawLine(
+                                    start = Offset(size.width / 4, size.height / 2),
+                                    end = Offset(size.width * 3 / 4, size.height / 2),
+                                    color = Color(202,60,70),
+                                    strokeWidth = 10f
+                                )
+                            }
                         }
                     }
                 }
@@ -956,6 +1122,14 @@ fun GameCanvas(modifier:Modifier, context: Context) {
 
             Spacer(modifier = Modifier.height(12.dp))
         }
+    }
+    if (activatePowerUp1.value && powerUpInit1.value == 0){
+        powerUp1Value.value = Random.nextInt(1,4)
+        powerUpInit1.value = 1
+    }
+    if (activatePowerUp2.value && powerUpInit2.value == 0){
+        powerUp2Value.value = Random.nextInt(1,4)
+        powerUpInit2.value = 1
     }
 }
 

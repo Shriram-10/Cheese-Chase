@@ -93,6 +93,12 @@ var circularTimer2 = mutableStateOf(0f)
 var activatePowerUp1 = mutableStateOf(false)
 var activatePowerUp2 = mutableStateOf(false)
 
+var powerUp1Value = mutableStateOf(0)
+var powerUp2Value = mutableStateOf(0)
+
+var powerUpInit1 = mutableStateOf(0)
+var powerUpInit2 = mutableStateOf(0)
+
 var movingBoxes = mutableStateListOf<Dimensions>(
     Dimensions(
         width.value / 5,
