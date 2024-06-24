@@ -303,6 +303,8 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                 activatePowerUp2.value = false
                 circularTimer1.value = 0f
                 circularTimer2.value = 0f
+                startTimer1.value = false
+                startTimer2.value = false
                 powerUp1Value.value = 0
                 powerUp2Value.value = 0
                 powerUpInit1.value = 0
@@ -446,6 +448,8 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                 activatePowerUp2.value = false
                 circularTimer1.value = 0f
                 circularTimer2.value = 0f
+                startTimer1.value = false
+                startTimer2.value = false
                 powerUp1Value.value = 0
                 powerUp2Value.value = 0
                 powerUpInit1.value = 0

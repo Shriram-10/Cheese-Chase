@@ -89,6 +89,8 @@ var makeDelay = mutableStateOf(false)
 
 var circularTimer1 = mutableStateOf(0f)
 var circularTimer2 = mutableStateOf(0f)
+var startTimer1 = mutableStateOf(false)
+var startTimer2 = mutableStateOf(false)
 
 var activatePowerUp1 = mutableStateOf(false)
 var activatePowerUp2 = mutableStateOf(false)

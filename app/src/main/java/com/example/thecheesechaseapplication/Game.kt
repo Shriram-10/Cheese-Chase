@@ -405,8 +405,8 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
             Text(collided4.value.toString())
             Text(collided5.value.toString())
             Text(collisionCount.value.toString())
-            Text(powerUpsCollected.value.toString())
-            Text(shatterBlocks.value.toString())
+            Text(startTimer1.value.toString())
+            Text(startTimer2.value.toString())
         }
         if (collisionCount.value < 2) {
             Column {
@@ -493,16 +493,16 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
 
     if (makeDelay.value){
         LaunchedEffect(Unit){
-            delay(1000)
+            delay(100)
             makeDelay.value = false
         }
     }
 
     if (powerUpsCollected.value == 1 && !activatePowerUp1.value){
-        UpdateTimer()
+        startTimer1.value = true
     }
     if (powerUpsCollected.value == 2 && !activatePowerUp2.value){
-        UpdateTimer()
+        startTimer2.value = true
     }
 
     if (reverseTom.value){
@@ -544,26 +544,34 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
             scoreSpeeding.value -= 2
         }
     }
+    if (startTimer1.value){
+        UpdateTimer()
+    }
+    if (startTimer2.value) {
+        UpdateTimer()
+    }
 }
 
 @Composable
 fun UpdateTimer(){
-    if (powerUpsCollected.value == 2 && collisionCount.value < 2){
+    if (powerUpsCollected.value == 2 && collisionCount.value < 2 || startTimer2.value){
         LaunchedEffect(Unit) {
             while (circularTimer2.value < 360) {
                 delay(8)
                 circularTimer2.value += (360f/375f)
             }
             activatePowerUp2.value = true
+            startTimer2.value = false
         }
     }
-    if (powerUpsCollected.value >= 1 && collisionCount.value < 2){
+    if (powerUpsCollected.value >= 1 && collisionCount.value < 2 || startTimer1.value){
         LaunchedEffect(Unit) {
             while (circularTimer1.value < 360) {
                 delay(8)
                 circularTimer1.value += (360f/375f)
             }
             activatePowerUp1.value = true
+            startTimer1.value = false
         }
     }
 }
@@ -981,17 +989,17 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                             .size(80.dp)
                             .clip(RoundedCornerShape(50))
                             .background(Color.White.copy(alpha = 0.4f))
-                            .pointerInput(Unit){
+                            .pointerInput(Unit) {
                                 detectTapGestures(
                                     onTap = {
-                                        if (collisionCount.value < 2){
+                                        if (collisionCount.value < 2) {
                                             activatePowerUp2.value = false
                                             powerUpInit2.value = 0
-                                            if (powerUp2Value.value == 1 && collisionCount.value == 1){
+                                            if (powerUp2Value.value == 1 && collisionCount.value == 1) {
                                                 reverseTom.value = true
-                                            } else if (powerUp2Value.value == 2){
+                                            } else if (powerUp2Value.value == 2) {
                                                 shatterBlocks.value = true
-                                            } else if (powerUp2Value.value == 3){
+                                            } else if (powerUp2Value.value == 3) {
                                                 scoreSpeeding.value += 1
                                             }
                                             powerUp2Value.value = 0
@@ -1113,23 +1121,23 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                             .size(80.dp)
                             .clip(RoundedCornerShape(50))
                             .background(Color.White.copy(alpha = 0.4f))
-                            .pointerInput(Unit){
+                            .pointerInput(Unit) {
                                 detectTapGestures(
                                     onTap = {
-                                        if (collisionCount.value < 2){
+                                        if (collisionCount.value < 2) {
                                             activatePowerUp1.value = false
                                             powerUpInit1.value = 0
-                                            if (powerUp1Value.value == 1 && collisionCount.value == 1){
+                                            if (powerUp1Value.value == 1 && collisionCount.value == 1) {
                                                 reverseTom.value = true
-                                            } else if (powerUp1Value.value == 2){
+                                            } else if (powerUp1Value.value == 2) {
                                                 shatterBlocks.value = true
-                                            } else if (powerUp1Value.value == 3){
+                                            } else if (powerUp1Value.value == 3) {
                                                 scoreSpeeding.value += 1
                                             }
                                             powerUp1Value.value = 0
                                             if (powerUpsCollected.value == 1) {
                                                 powerUpsCollected.value -= 1
-                                            } else if (powerUpsCollected.value == 2){
+                                            } else if (powerUpsCollected.value == 2) {
                                                 powerUpsCollected.value -= 2
                                             }
                                             circularTimer1.value = 0f
@@ -1361,11 +1369,19 @@ fun powerUpCollection(){
                 if (movingJerry.value.centerY <= powerUp[i].centerY + powerUp[i].height / 2 && movingJerry.value.centerY >= powerUp[i].centerY - powerUp[i].height / 2) {
                     if (-movingJerry.value.centerX + powerUp[i].centerX <= powerUp[i].width / 2 + movingJerry.value.width / 2) {
                         if (powerUp[i].centerX == width.value / 2 && powerUpDisplay[i]) {
-                            powerUpsCollected.value += 1
+                            if (powerUpsCollected.value == 0 && powerUpInit1.value == 1){
+                                powerUpsCollected.value += 2
+                            } else {
+                                powerUpsCollected.value += 1
+                            }
                             powerUpDisplay[i] = false
                             makeDelay.value = true
                         } else if (powerUp[i].centerX == width.value * 5 / 6 && powerUpDisplay[i]) {
-                            powerUpsCollected.value += 1
+                            if (powerUpsCollected.value == 0 && powerUpInit1.value == 1){
+                                powerUpsCollected.value += 2
+                            } else {
+                                powerUpsCollected.value += 1
+                            }
                             powerUpDisplay[i] = false
                             makeDelay.value = true
                         }
@@ -1374,7 +1390,11 @@ fun powerUpCollection(){
             } else if (powerUp[i].centerX - movingJerry.value.centerX <= powerUp[i].width / 2 + movingJerry.value.width / 2 && powerUp[i].centerX - movingJerry.value.centerX >= 0) {
                 if ((powerUp[i].centerY - powerUp[i].height / 2 <= movingJerry.value.centerY + movingJerry.value.height / 2) && (powerUp[i].centerY + powerUp[i].height / 2 >= movingJerry.value.centerY - movingJerry.value.height / 2)) {
                     if (powerUpDisplay[i]) {
-                        powerUpsCollected.value += 1
+                        if (powerUpsCollected.value == 0 && powerUpInit1.value == 1){
+                            powerUpsCollected.value += 2
+                        } else {
+                            powerUpsCollected.value += 1
+                        }
                         powerUpDisplay[i] = false
                         makeDelay.value = true
                     }
@@ -1382,7 +1402,11 @@ fun powerUpCollection(){
             } else if (powerUp[i].centerX == width.value / 6 && movingJerry.value.centerX - movingJerry.value.width / 2 <= powerUp[i].centerX + powerUp[i].width / 2) {
                 if (powerUp[i].centerY - powerUp[i].height / 2 <= movingJerry.value.centerY + movingJerry.value.height / 2 && powerUp[i].centerY + powerUp[i].height / 2 >= movingJerry.value.centerY - movingJerry.value.height / 2) {
                     if (powerUpDisplay[i]) {
-                        powerUpsCollected.value += 1
+                        if (powerUpsCollected.value == 0 && powerUpInit1.value == 1){
+                            powerUpsCollected.value += 2
+                        } else {
+                            powerUpsCollected.value += 1
+                        }
                         powerUpDisplay[i] = false
                         makeDelay.value = true
                     }
@@ -1390,7 +1414,11 @@ fun powerUpCollection(){
             } else if (powerUp[i].centerX == width.value / 2 && movingJerry.value.centerX - movingJerry.value.width / 2 <= powerUp[i].centerX + powerUp[i].width / 2 && movingJerry.value.centerX + movingJerry.value.width / 2 >= powerUp[i].centerX - powerUp[i].width / 2) {
                 if (powerUp[i].centerY - powerUp[i].height / 2 <= movingJerry.value.centerY + movingJerry.value.height / 2 && powerUp[i].centerY + powerUp[i].height / 2 >= movingJerry.value.centerY - movingJerry.value.height / 2) {
                     if (powerUpDisplay[i]) {
-                        powerUpsCollected.value += 1
+                        if (powerUpsCollected.value == 0 && powerUpInit1.value == 1){
+                            powerUpsCollected.value += 2
+                        } else {
+                            powerUpsCollected.value += 1
+                        }
                         powerUpDisplay[i] = false
                         makeDelay.value = true
                     }
