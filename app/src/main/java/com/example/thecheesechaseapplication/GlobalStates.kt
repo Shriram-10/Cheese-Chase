@@ -111,6 +111,9 @@ var scoreSpeeding = mutableStateOf(0)
 var showManeuverOptions = mutableStateOf(false)
 var chooseGyro = mutableStateOf(false)
 
+var orientation = mutableStateOf(0)
+var fixPosition = mutableStateOf(false)
+
 var movingBoxes = mutableStateListOf<Dimensions>(
     Dimensions(
         width.value / 5,

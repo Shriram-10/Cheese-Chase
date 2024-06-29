@@ -2,9 +2,11 @@ package com.example.thecheesechaseapplication
 
 import android.content.Context
 import android.graphics.drawable.Icon
+import android.hardware.SensorManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
+import android.view.OrientationEventListener
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.LinearEasing
@@ -40,6 +42,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -79,6 +82,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -579,6 +583,40 @@ fun UpdateTimer(){
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun GameCanvas(modifier:Modifier, context: Context) {
+
+
+    DisposableEffect(context) {
+        val orientationListener = object : OrientationEventListener(context, SensorManager.SENSOR_DELAY_GAME) {
+            override fun onOrientationChanged(orientationDegrees: Int) {
+                orientation.value = orientationDegrees
+                if (!fixPosition.value && !(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value) && collisionCount.value < 2) {
+                    when (orientationDegrees) {
+                        in 15..30 ->{
+                            moveRight.value = true;
+                            fixPosition.value = true
+                        }
+                        in 330..345 ->{
+                            moveLeft.value = true  // Move left
+                            fixPosition.value = true
+                        }
+                    }
+                } else {
+                    if (orientation.value < 15 || orientation.value > 345){
+                        fixPosition.value = false
+                    }
+                }
+            }
+        }
+
+        if (orientationListener.canDetectOrientation()) {
+            orientationListener.enable()
+        }
+
+        onDispose {
+            orientationListener.disable()
+        }
+    }
+
     var y by remember { mutableStateOf(0f) }
     xRight.value = x.value + width.value/15f
     xLeft.value = x.value - width.value/15f
