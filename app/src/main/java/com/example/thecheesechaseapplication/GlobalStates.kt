@@ -110,6 +110,7 @@ var scoreSpeeding = mutableStateOf(0)
 
 var showManeuverOptions = mutableStateOf(false)
 var chooseGyro = mutableStateOf(false)
+var showNote = mutableStateOf(false)
 
 var orientation = mutableStateOf(0)
 var fixPosition = mutableStateOf(false)

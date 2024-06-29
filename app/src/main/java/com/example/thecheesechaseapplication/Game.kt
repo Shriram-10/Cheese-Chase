@@ -584,36 +584,39 @@ fun UpdateTimer(){
 @Composable
 fun GameCanvas(modifier:Modifier, context: Context) {
 
+    if (chooseGyro.value && mode.value == 3) {
+        DisposableEffect(context) {
+            val orientationListener =
+                object : OrientationEventListener(context, SensorManager.SENSOR_DELAY_GAME) {
+                    override fun onOrientationChanged(orientationDegrees: Int) {
+                        orientation.value = orientationDegrees
+                        if (!fixPosition.value && !(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value) && collisionCount.value < 2) {
+                            when (orientationDegrees) {
+                                in 15..30 -> {
+                                    moveRight.value = true;
+                                    fixPosition.value = true
+                                }
 
-    DisposableEffect(context) {
-        val orientationListener = object : OrientationEventListener(context, SensorManager.SENSOR_DELAY_GAME) {
-            override fun onOrientationChanged(orientationDegrees: Int) {
-                orientation.value = orientationDegrees
-                if (!fixPosition.value && !(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value) && collisionCount.value < 2) {
-                    when (orientationDegrees) {
-                        in 15..30 ->{
-                            moveRight.value = true;
-                            fixPosition.value = true
+                                in 330..345 -> {
+                                    moveLeft.value = true  // Move left
+                                    fixPosition.value = true
+                                }
+                            }
+                        } else {
+                            if (orientation.value < 15 || orientation.value > 345) {
+                                fixPosition.value = false
+                            }
                         }
-                        in 330..345 ->{
-                            moveLeft.value = true  // Move left
-                            fixPosition.value = true
-                        }
-                    }
-                } else {
-                    if (orientation.value < 15 || orientation.value > 345){
-                        fixPosition.value = false
                     }
                 }
+
+            if (orientationListener.canDetectOrientation()) {
+                orientationListener.enable()
             }
-        }
 
-        if (orientationListener.canDetectOrientation()) {
-            orientationListener.enable()
-        }
-
-        onDispose {
-            orientationListener.disable()
+            onDispose {
+                orientationListener.disable()
+            }
         }
     }
 

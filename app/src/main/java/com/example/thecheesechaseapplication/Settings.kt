@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.twotone.Info
 import androidx.compose.material.icons.twotone.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -526,6 +527,12 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                     .clip(RoundedCornerShape(25))
                     .background(Color(19, 93, 113, 255).copy(0.5f))
             ) {
+                Text(
+                    text = "Maneuver Options",
+                    fontSize = 24.sp,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
@@ -537,7 +544,31 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                         fontWeight = FontWeight.Bold
                     )
 
-                    Spacer(modifier = Modifier.width((width.value / 10).dp))
+                    Box {
+                        Button(
+                            onClick = {
+                                showNote.value = !showNote.value
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.Transparent
+                            ),
+                            shape = RoundedCornerShape(50),
+                            modifier = Modifier.height(32.dp).width(32.dp)
+                        ) {
+
+                        }
+                        Icon(
+                            Icons.TwoTone.Info,
+                            contentDescription = null,
+                            tint = Color.Cyan,
+                            modifier = Modifier
+                                .height(32.dp)
+                                .width(32.dp)
+                                .scale(0.5f)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.width((width.value / 15).dp))
 
                     Switch(
                         modifier = Modifier
@@ -562,6 +593,17 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                     )
                 }
 
+                AnimatedVisibility(
+                    visible = showNote.value
+                ) {
+                    Text(
+                        text = "Note : Gyro is available in HackerMode++ only.",
+                        fontSize = 16.sp,
+                        color = Color.LightGray,
+                        fontWeight = FontWeight.Light
+                    )
+                }
+
                 androidx.compose.foundation.Canvas(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -579,6 +621,7 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
 
                 Button(
                     onClick = {
+                        showNote.value = false
                         showManeuverOptions.value = false
                     },
                     colors = ButtonDefaults.buttonColors(
