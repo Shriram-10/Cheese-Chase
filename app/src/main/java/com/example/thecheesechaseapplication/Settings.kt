@@ -1,24 +1,39 @@
 package com.example.thecheesechaseapplication
 
 import android.content.Context
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.twotone.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -473,6 +488,114 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
+        }
+
+        AnimatedVisibility(
+            visible = !showManeuverOptions.value,
+            exit = fadeOut()
+        ){
+            Button(
+                onClick = {
+                    showManeuverOptions.value = true
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent
+                )
+            ) {
+                Icon(
+                    Icons.TwoTone.Settings,
+                    contentDescription = "Settings",
+                    tint = Color.Cyan,
+                    modifier = Modifier
+                        .height(64.dp)
+                        .scale(1.8f)
+                )
+            }
+        }
+
+        AnimatedVisibility(
+            visible = showManeuverOptions.value,
+            enter = slideInVertically { it } + fadeIn(),
+            exit = slideOutVertically { it } + fadeOut()
+        ){
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth(0.9f)
+                    .clip(RoundedCornerShape(25))
+                    .background(Color(19, 93, 113, 255).copy(0.5f))
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = "GyroScope Maneuver",
+                        fontSize = 18.sp,
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Spacer(modifier = Modifier.width((width.value / 10).dp))
+
+                    Switch(
+                        modifier = Modifier
+                            .height(80.dp)
+                            .width(80.dp)
+                            .scale(1.8f),
+                        checked = chooseGyro.value,
+                        onCheckedChange = {
+                            chooseGyro.value = !chooseGyro.value
+                        },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = Color(126, 219, 225),
+                            checkedTrackColor = Color(62, 83, 86),
+                            uncheckedThumbColor = Color(49, 119, 120),
+                            uncheckedTrackColor = Color(215, 234, 238),
+                            disabledCheckedThumbColor = Color.DarkGray,
+                            disabledCheckedTrackColor = Color.Black,
+                            disabledUncheckedThumbColor = Color.Yellow,
+                            disabledUncheckedTrackColor = Color.LightGray
+                        ),
+                        thumbContent = {}
+                    )
+                }
+
+                androidx.compose.foundation.Canvas(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(10.dp)
+                ) {
+                    drawLine(
+                        start = Offset(size.width / 20, size.height / 2),
+                        end = Offset(size.width * 19 / 20, size.height / 2),
+                        color = Color.White,
+                        strokeWidth = 4f
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Button(
+                    onClick = {
+                        showManeuverOptions.value = false
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.White
+                    ),
+                    modifier = Modifier.height(50.dp),
+                    shape = RoundedCornerShape(20)
+                ){
+                    Text(
+                        text = "OK",
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 16.sp
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+            }
         }
     }
 }

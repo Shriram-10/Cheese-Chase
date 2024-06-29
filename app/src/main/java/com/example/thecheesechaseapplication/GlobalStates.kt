@@ -108,6 +108,9 @@ var shatterBlocks = mutableStateOf(false)
 var resetBoxes = mutableStateOf(0)
 var scoreSpeeding = mutableStateOf(0)
 
+var showManeuverOptions = mutableStateOf(false)
+var chooseGyro = mutableStateOf(false)
+
 var movingBoxes = mutableStateListOf<Dimensions>(
     Dimensions(
         width.value / 5,
