@@ -80,6 +80,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.CoroutineScope
@@ -409,8 +410,10 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
             Text(collided4.value.toString())
             Text(collided5.value.toString())
             Text(collisionCount.value.toString())
+            Text(collisionCountLimit.value.toString())
             Text(startTimer1.value.toString())
             Text(startTimer2.value.toString())
+            Text(displayText.value)
         }
         if (collisionCount.value < 2) {
             Column {

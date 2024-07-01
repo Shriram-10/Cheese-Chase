@@ -28,6 +28,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
@@ -40,6 +41,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import kotlin.math.roundToInt
 
@@ -57,6 +59,24 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ){
+        val dataViewModel : MainViewModel = viewModel()
+        val viewState by dataViewModel.state
+
+        when {
+            viewState.loading -> {
+                displayText.value = "loading"
+            }
+            viewState.error != null -> {
+                displayText.value = "Error"
+            }
+            else -> {
+                displayText.value = "loaded"
+                collisionCountLimit.value = viewState.value
+            }
+        }
+
+        Text(displayText.value)
+
         Button(
             onClick = {
                 mode.value = 1
@@ -164,7 +184,9 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                 }
                 score.value = 0f
                 showWinnerPage.value = false
-                navController.navigate(Screen.Game.route)
+                if (displayText.value == "loaded") {
+                    navController.navigate(Screen.Game.route)
+                }
             },
             modifier = modifier.height(64.dp),
             colors = ButtonDefaults.buttonColors(
@@ -330,7 +352,9 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                 scoreSpeeding.value = 0
                 reverseTom.value = false
                 fadeTom.value = 1f
-                navController.navigate(Screen.Game.route)
+                if (displayText.value == "loaded") {
+                    navController.navigate(Screen.Game.route)
+                }
             },
             modifier = modifier.height(64.dp),
             colors = ButtonDefaults.buttonColors(
@@ -496,7 +520,9 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                 scoreSpeeding.value = 0
                 reverseTom.value = false
                 fadeTom.value = 1f
-                navController.navigate(Screen.Game.route)
+                if (displayText.value == "loaded") {
+                    navController.navigate(Screen.Game.route)
+                }
             },
             modifier = modifier.height(64.dp),
             colors = ButtonDefaults.buttonColors(

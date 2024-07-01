@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 var height = mutableStateOf(0f)
 var width = mutableStateOf(0f)
@@ -26,6 +27,8 @@ var collided3 = mutableStateOf(false)
 var collided4 = mutableStateOf(false)
 var collided5 = mutableStateOf(false)
 var collisionCount = mutableStateOf(0)
+var collisionCountLimit = mutableStateOf(2)
+var displayText = mutableStateOf("no Msg")
 var reset = mutableStateOf(true)
 var moveTomLeft = mutableStateOf(false)
 var moveTomRight = mutableStateOf(false)
