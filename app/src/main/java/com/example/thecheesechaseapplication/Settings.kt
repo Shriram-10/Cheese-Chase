@@ -431,6 +431,27 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                     )
                 )
 
+                powerUp[0] = Dimensions(
+                    width.value / 12,
+                    width.value / 12,
+                    width.value / 6,
+                    height.value + width.value * 6 / 5
+                )
+
+                powerUp[1] = Dimensions(
+                    width.value / 12,
+                    width.value / 12,
+                    width.value / 2,
+                    height.value + width.value * 6 / 5
+                )
+
+                powerUp[2] = Dimensions(
+                    width.value / 12,
+                    width.value / 12,
+                    width.value * 5 / 6,
+                    height.value + width.value * 6 / 5
+                )
+
                 collisionCount.value = 3
                 collided1.value = false
                 collided2.value = false
