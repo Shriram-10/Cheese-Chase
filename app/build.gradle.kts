@@ -50,9 +50,13 @@ android {
 }
 
 dependencies {
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("io.coil-kt:coil-compose:2.4.0")
 
-    implementation ("androidx.compose.ui:ui-text-google-fonts:1.6.7")
-    implementation("androidx.compose.animation:animation-core-android:1.6.7")
+    implementation (libs.androidx.ui.text.google.fonts)
+    implementation(libs.androidx.animation.core.android)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
