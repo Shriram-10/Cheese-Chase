@@ -120,7 +120,7 @@ fun AudioLoader() {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreManager, context: Context){
+fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreManager, context: Context, dataViewModel: MainViewModel){
     AudioLoader()
 
     if (collisionCount.value < 2) {
@@ -449,7 +449,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
         }
 
         if (showWinnerPage.value){
-            WinnerPage(modifier, highScore, navController)
+            WinnerPage(highScore, navController, dataViewModel)
         }
     }
     if (moveLeft.value){
@@ -1524,11 +1524,4 @@ fun MoveTomRight(){
             }
         }
     }
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showBackground = true)
-@Composable
-fun GamePreview(){
-    Game(modifier = Modifier, navController = rememberNavController(), highScore = HighScoreManager(LocalContext.current), LocalContext.current)
 }

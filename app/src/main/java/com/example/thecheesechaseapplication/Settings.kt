@@ -46,7 +46,7 @@ import androidx.navigation.NavController
 import kotlin.math.roundToInt
 
 @Composable
-fun Settings(modifier: Modifier, navController: NavController, highScore: HighScoreManager){
+fun Settings(modifier: Modifier, navController: NavController, highScore: HighScoreManager, dataViewModel : MainViewModel){
     androidx.compose.foundation.Canvas(modifier = modifier.fillMaxSize()) {
         width.value = size.width
         height.value = size.height
@@ -59,9 +59,8 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ){
-        val dataViewModel : MainViewModel = viewModel()
-        val viewState by dataViewModel.state
 
+        val viewState by dataViewModel.state
         when {
             viewState.loading -> {
                 displayText.value = "loading"
@@ -74,8 +73,6 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                 collisionCountLimit.value = viewState.value
             }
         }
-
-        Text(displayText.value)
 
         Button(
             onClick = {
@@ -186,6 +183,8 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                 showWinnerPage.value = false
                 if (displayText.value == "loaded") {
                     navController.navigate(Screen.Game.route)
+                } else {
+                    navController.navigate(Screen.Load.route)
                 }
             },
             modifier = modifier.height(64.dp),
@@ -354,6 +353,8 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                 fadeTom.value = 1f
                 if (displayText.value == "loaded") {
                     navController.navigate(Screen.Game.route)
+                } else {
+                    navController.navigate(Screen.Load.route)
                 }
             },
             modifier = modifier.height(64.dp),
@@ -522,6 +523,8 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                 fadeTom.value = 1f
                 if (displayText.value == "loaded") {
                     navController.navigate(Screen.Game.route)
+                } else {
+                    navController.navigate(Screen.Load.route)
                 }
             },
             modifier = modifier.height(64.dp),

@@ -20,7 +20,11 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,21 +32,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import kotlin.math.roundToInt
 
 @Composable
-fun WinnerPage(modifier: Modifier, highScore: HighScoreManager, navController: NavController){
+fun WinnerPage(highScore: HighScoreManager, navController: NavController, dataViewModel: MainViewModel){
+
+    val viewState by dataViewModel.state
+
 
     val infiniteTransition = rememberInfiniteTransition()
-    val colors = infiniteTransition.animateColor(
-        Color(64,64,64),
-        Color(190,53,50),
-        animationSpec = infiniteRepeatable(
-            tween(300),
-            repeatMode = RepeatMode.Reverse
-        )
-    ).value
+
     val colors2 = infiniteTransition.animateColor(
         Color(255, 66, 66, 255),
         Color(255, 221, 50, 255),
@@ -51,6 +52,7 @@ fun WinnerPage(modifier: Modifier, highScore: HighScoreManager, navController: N
             repeatMode = RepeatMode.Reverse
         )
     ).value
+
     val colors3 = infiniteTransition.animateColor(
         Color(47, 136, 58, 255),
         Color(228, 134, 206, 255),
@@ -70,7 +72,7 @@ fun WinnerPage(modifier: Modifier, highScore: HighScoreManager, navController: N
             onClick = { },
             modifier = Modifier
                 .height(IntrinsicSize.Min)
-                .width((width.value/3).dp),
+                .width((width.value / 3).dp),
             shape = RoundedCornerShape(15),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(97,85,83),
@@ -281,6 +283,7 @@ fun WinnerPage(modifier: Modifier, highScore: HighScoreManager, navController: N
                             scoreSpeeding.value = 0
                             reverseTom.value = false
                             fadeTom.value = 1f
+                            collisionCountLimit.value = viewState.value
                             navController.popBackStack(Screen.Settings.route, false)
                         },
                         modifier = Modifier.height(40.dp),
@@ -426,10 +429,11 @@ fun WinnerPage(modifier: Modifier, highScore: HighScoreManager, navController: N
                         reverseTom.value = false
                         fadeTom.value = 1f
                         showWinnerPage.value = false
+                        collisionCountLimit.value = viewState.value
                     },
                     modifier = Modifier
                         .height(50.dp)
-                        .width((width.value/3).dp),
+                        .width((width.value / 3).dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(21, 121, 10, 255),
                         contentColor = Color.Black

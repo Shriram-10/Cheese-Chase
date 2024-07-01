@@ -18,7 +18,7 @@ class MainViewModel : ViewModel() {
         fetchObstacleLimit()
     }
 
-    private fun fetchObstacleLimit() {
+    fun fetchObstacleLimit() {
         viewModelScope.launch {
             try{
                 val response = dataService.getObstacleLimit()
