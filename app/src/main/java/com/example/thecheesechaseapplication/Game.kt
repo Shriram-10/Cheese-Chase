@@ -123,7 +123,7 @@ fun AudioLoader() {
 fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreManager, context: Context, dataViewModel: MainViewModel){
     AudioLoader()
 
-    if (collisionCount.value < 2) {
+    if (collisionCount.value < collisionCountLimit.value) {
         LaunchedEffect(Unit) {
             delay(1000)
             val startTime = withFrameMillis { it }
@@ -149,9 +149,9 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
         }
     }
 
-    if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value) && !jerryJump.value && collisionCount.value < 2){
+    if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value) && !jerryJump.value && collisionCount.value < collisionCountLimit.value){
         LaunchedEffect(Unit){
-            while(!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value) && !jerryJump.value && collisionCount.value < 2){
+            while(!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value) && !jerryJump.value && collisionCount.value < collisionCountLimit.value){
                 delay(4)
                 checkCollision()
             }
@@ -161,7 +161,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
     LaunchedEffect(Unit){
         while(true){
             delay(4)
-            if (collisionCount.value == 1){
+            if (collisionCount.value == collisionCountLimit.value - 1){
                 while(movingTom.value.centerY >= height.value * 4 / 5 && !reverseTom.value){
                     delay(8)
                     movingTom.value.centerY -= jerryVelocity.value / 4
@@ -223,13 +223,23 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
         }
     }
 
-    if (collisionCount.value == 1) {
-        var hasVibrated = false
-        LaunchedEffect(Unit) {
-            if (!hasVibrated && (mode.value == 2 || mode.value == 3)) {
+    var Vibrated = false
+    LaunchedEffect(Unit){
+        while(true) {
+            delay(4)
+            if (collisionCount.value in 1..collisionCountLimit.value - 1 && (collided1.value || collided2.value || collided3.value || collided4.value || collided5.value) && !Vibrated) {
                 HapticFeedback().triggerHapticFeedback(context, 250)
-                hasVibrated = true
+                delay(250)
+                Vibrated = true
+            } else if (Vibrated){
+                delay(1000)
+                Vibrated = false
             }
+        }
+    }
+
+    if (collisionCount.value == 1) {
+        LaunchedEffect(Unit) {
             while (true) {
                 delay(4)
                 if (movingTom.value.centerY < height.value * 4 / 5) {
@@ -335,7 +345,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
                 }
             }
         }
-    } else if (collisionCount.value == 2){
+    } else if (collisionCount.value == collisionCountLimit.value){
         LaunchedEffect(Unit){
             var hasVibrated = false
             var hasVibrated2 = false
@@ -377,7 +387,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
     }
 
     LaunchedEffect(key1 = reset.value){
-        while(collisionCount.value < 2){
+        while(collisionCount.value < collisionCountLimit.value){
             delay(8)
             if (collided1.value){
                 delay((width.value * 4.5f * 30 / (7.5 * (velocity.value))).roundToLong())
@@ -404,18 +414,19 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
     ){
         GameCanvas(modifier, context)
         Column{
-            Text(collided1.value.toString())
+            /*Text(collided1.value.toString())
             Text(collided2.value.toString())
             Text(collided3.value.toString())
             Text(collided4.value.toString())
             Text(collided5.value.toString())
             Text(collisionCount.value.toString())
+            Text(Vibrated.toString())
             Text(collisionCountLimit.value.toString())
             Text(startTimer1.value.toString())
             Text(startTimer2.value.toString())
-            Text(displayText.value)
+            Text(displayText.value)*/
         }
-        if (collisionCount.value < 2) {
+        if (collisionCount.value < collisionCountLimit.value) {
             Column {
                 Spacer(modifier = Modifier.height(12.dp))
 
@@ -561,7 +572,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
 
 @Composable
 fun UpdateTimer(){
-    if (powerUpsCollected.value == 2 && collisionCount.value < 2 || startTimer2.value){
+    if (powerUpsCollected.value == 2 && collisionCount.value < collisionCountLimit.value || startTimer2.value){
         LaunchedEffect(Unit) {
             while (circularTimer2.value < 360) {
                 delay(8)
@@ -571,7 +582,7 @@ fun UpdateTimer(){
             startTimer2.value = false
         }
     }
-    if (powerUpsCollected.value >= 1 && collisionCount.value < 2 || startTimer1.value){
+    if (powerUpsCollected.value >= 1 && collisionCount.value < collisionCountLimit.value || startTimer1.value){
         LaunchedEffect(Unit) {
             while (circularTimer1.value < 360) {
                 delay(8)
@@ -593,7 +604,7 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                 object : OrientationEventListener(context, SensorManager.SENSOR_DELAY_GAME) {
                     override fun onOrientationChanged(orientationDegrees: Int) {
                         orientation.value = orientationDegrees
-                        if (!fixPosition.value && !(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value) && collisionCount.value < 2) {
+                        if (!fixPosition.value && !(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value) && collisionCount.value < collisionCountLimit.value) {
                             when (orientationDegrees) {
                                 in 15..30 -> {
                                     moveRight.value = true;
@@ -624,6 +635,10 @@ fun GameCanvas(modifier:Modifier, context: Context) {
     }
 
     var y by remember { mutableStateOf(0f) }
+    if (collisionCount.value == 0 && resetObstacles.value){
+        y = 0f
+        resetObstacles.value = false
+    }
     xRight.value = x.value + width.value/15f
     xLeft.value = x.value - width.value/15f
     val infiniteTransition = rememberInfiniteTransition()
@@ -650,7 +665,7 @@ fun GameCanvas(modifier:Modifier, context: Context) {
         Color(252,242,152).copy(0.25f)
     )
 
-    if (collisionCount.value < 2){
+    if (collisionCount.value < collisionCountLimit.value){
         LaunchedEffect(Unit){
             delay(500)
             val startTime = withFrameMillis { it }
@@ -744,18 +759,6 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                 }
             }
         }
-    } else if (collisionCount.value == 3){
-        y = 0f
-        yBox[0] = height.value / 2
-        yBox[1] = height.value / 2
-        yBox[2] = height.value / 4
-        yBox[3] = 0f
-        yBox[4] = 0f
-        yBox[5] = - height.value / 4
-        yBox[6] = - height.value / 2
-        yBox[7] = - height.value / 2
-        yBox[8] = height.value * 3 / 4
-        collisionCount.value = 0
     }
 
     Box(
@@ -769,7 +772,7 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                 .pointerInput(Unit) {
                     detectTapGestures(
                         onTap = {
-                            if (collisionCount.value < 2 && !(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) {
+                            if (collisionCount.value < collisionCountLimit.value && !(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) {
                                 if (mode.value == 2 || mode.value == 3) {
                                     HapticFeedback().triggerHapticFeedback(context, 50)
                                 }
@@ -787,7 +790,7 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                         onDrag = { change, dragAmount ->
                             change.consume()
                             if (dragAmount.y < 0 && !jerryJump.value) {
-                                if (collisionCount.value < 2 && !(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) {
+                                if (collisionCount.value < collisionCountLimit.value && !(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) {
                                     if (mode.value == 2 || mode.value == 3) {
                                         jerryJump.value = true
                                     }
@@ -1039,7 +1042,7 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                                         if (collisionCount.value < 2) {
                                             activatePowerUp2.value = false
                                             powerUpInit2.value = 0
-                                            if (powerUp2Value.value == 1 && collisionCount.value == 1) {
+                                            if (powerUp2Value.value == 1 && collisionCount.value >= 1) {
                                                 reverseTom.value = true
                                             } else if (powerUp2Value.value == 2) {
                                                 shatterBlocks.value = true
@@ -1171,7 +1174,7 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                                         if (collisionCount.value < 2) {
                                             activatePowerUp1.value = false
                                             powerUpInit1.value = 0
-                                            if (powerUp1Value.value == 1 && collisionCount.value == 1) {
+                                            if (powerUp1Value.value == 1 && collisionCount.value >= 1) {
                                                 reverseTom.value = true
                                             } else if (powerUp1Value.value == 2) {
                                                 shatterBlocks.value = true

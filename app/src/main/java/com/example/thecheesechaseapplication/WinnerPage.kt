@@ -39,6 +39,7 @@ import kotlin.math.roundToInt
 @Composable
 fun WinnerPage(highScore: HighScoreManager, navController: NavController, dataViewModel: MainViewModel){
 
+    dataViewModel.fetchObstacleLimit()
     val viewState by dataViewModel.state
 
 
@@ -239,7 +240,18 @@ fun WinnerPage(highScore: HighScoreManager, navController: NavController, dataVi
                                 )
                             )
 
-                            collisionCount.value = 3
+                            yBox[0] = height.value / 2
+                            yBox[1] = height.value / 2
+                            yBox[2] = height.value / 4
+                            yBox[3] = 0f
+                            yBox[4] = 0f
+                            yBox[5] = - height.value / 4
+                            yBox[6] = - height.value / 2
+                            yBox[7] = - height.value / 2
+                            yBox[8] = height.value * 3 / 4
+                            collisionCount.value = 0
+                            resetObstacles.value = true
+
                             collided1.value = false
                             collided2.value = false
                             collided3.value = false
@@ -385,7 +397,18 @@ fun WinnerPage(highScore: HighScoreManager, navController: NavController, dataVi
                             )
                         )
 
-                        collisionCount.value = 3
+                        yBox[0] = height.value / 2
+                        yBox[1] = height.value / 2
+                        yBox[2] = height.value / 4
+                        yBox[3] = 0f
+                        yBox[4] = 0f
+                        yBox[5] = - height.value / 4
+                        yBox[6] = - height.value / 2
+                        yBox[7] = - height.value / 2
+                        yBox[8] = height.value * 3 / 4
+                        collisionCount.value = 0
+                        resetObstacles.value = true
+
                         collided1.value = false
                         collided2.value = false
                         collided3.value = false
