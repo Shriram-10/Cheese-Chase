@@ -1,6 +1,7 @@
 package com.example.thecheesechaseapplication
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.drawable.Icon
 import android.hardware.SensorManager
 import android.media.MediaPlayer
@@ -62,6 +63,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.drawscope.DrawStyle
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -72,17 +74,20 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -761,6 +766,10 @@ fun GameCanvas(modifier:Modifier, context: Context) {
         }
     }
 
+    val painterTom = rememberAsyncImagePainter(model = "https://chasedeux.vercel.app/image?character=tom")
+    val painterJerry = rememberAsyncImagePainter(model = "https://chasedeux.vercel.app/image?character=jerry")
+    val painterObstacle = rememberAsyncImagePainter(model = "https://chasedeux.vercel.app/image?character=obstacle")
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomCenter
@@ -873,7 +882,7 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                 )
             }
 
-            drawCircle(
+            /*drawCircle(
                 Brush.radialGradient(
                     colors = shadowColors,
                     center = Offset(size.width / 2, size.height / 2),
@@ -887,7 +896,8 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                 color = if (collisionCount.value == 1) colors else Color.Black,
                 radius = size.width / 15f * sizeDuringJump.value,
                 center = Offset(movingJerry.value.centerX, size.height - y)
-            )
+            )*/
+            
 
             if (collisionCount.value >= 1) {
                 drawCircle(

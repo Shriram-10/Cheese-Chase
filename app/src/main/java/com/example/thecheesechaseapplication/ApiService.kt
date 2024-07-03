@@ -13,4 +13,13 @@ val dataService = retrofit.create(ApiService::class.java)
 interface ApiService {
     @GET("obstacleLimit")
     suspend fun getObstacleLimit() : CollisionCount
+
+    @GET("/image?character=tom")
+    suspend fun getImageTom() : tomImage
+
+    @GET("/image?character=jerry")
+    suspend fun getImageJerry() : jerryImage
+
+    @GET("/image?character=obstacle")
+    suspend fun getImageObstacle() : obstacleImage
 }

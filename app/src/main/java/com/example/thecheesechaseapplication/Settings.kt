@@ -1,11 +1,11 @@
 package com.example.thecheesechaseapplication
 
-import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -43,6 +44,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import kotlin.math.roundToInt
 
 @Composable
@@ -61,13 +64,16 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
     ){
 
         val viewState by dataViewModel.state
+
         when {
-            viewState.loading -> {
+            (viewState.loading) -> {
                 displayText.value = "loading"
             }
-            viewState.error != null -> {
+
+            (viewState.error != null) -> {
                 displayText.value = "Error"
             }
+
             else -> {
                 displayText.value = "loaded"
                 collisionCountLimit.value = viewState.value
@@ -636,7 +642,9 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                                 containerColor = Color.Transparent
                             ),
                             shape = RoundedCornerShape(50),
-                            modifier = Modifier.height(32.dp).width(32.dp)
+                            modifier = Modifier
+                                .height(32.dp)
+                                .width(32.dp)
                         ) {
 
                         }
