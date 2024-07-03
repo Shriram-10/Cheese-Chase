@@ -62,21 +62,22 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ){
-
         val viewState by dataViewModel.state
 
-        when {
-            (viewState.loading) -> {
-                displayText.value = "loading"
-            }
+        if (chooseCollisionSource.value) {
+            when {
+                (viewState.loading) -> {
+                    displayText.value = "loading"
+                }
 
-            (viewState.error != null) -> {
-                displayText.value = "Error"
-            }
+                (viewState.error != null) -> {
+                    displayText.value = "Error"
+                }
 
-            else -> {
-                displayText.value = "loaded"
-                collisionCountLimit.value = viewState.value
+                else -> {
+                    displayText.value = "loaded"
+                    collisionCountLimit.value = viewState.value
+                }
             }
         }
 
@@ -198,7 +199,7 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                 }
                 score.value = 0f
                 showWinnerPage.value = false
-                if (displayText.value == "loaded") {
+                if ((displayText.value == "loaded" && chooseCollisionSource.value) || !chooseCollisionSource.value) {
                     navController.navigate(Screen.Game.route)
                 } else {
                     navController.navigate(Screen.Load.route)
@@ -379,7 +380,7 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                 scoreSpeeding.value = 0
                 reverseTom.value = false
                 fadeTom.value = 1f
-                if (displayText.value == "loaded") {
+                if ((displayText.value == "loaded" && chooseCollisionSource.value) || !chooseCollisionSource.value) {
                     navController.navigate(Screen.Game.route)
                 } else {
                     navController.navigate(Screen.Load.route)
@@ -560,7 +561,7 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                 scoreSpeeding.value = 0
                 reverseTom.value = false
                 fadeTom.value = 1f
-                if (displayText.value == "loaded") {
+                if ((displayText.value == "loaded" && chooseCollisionSource.value) || !chooseCollisionSource.value) {
                     navController.navigate(Screen.Game.route)
                 } else {
                     navController.navigate(Screen.Load.route)
@@ -692,6 +693,90 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                         fontSize = 16.sp,
                         color = Color.LightGray,
                         fontWeight = FontWeight.Light
+                    )
+                }
+
+                androidx.compose.foundation.Canvas(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(10.dp)
+                ) {
+                    drawLine(
+                        start = Offset(size.width / 20, size.height / 2),
+                        end = Offset(size.width * 19 / 20, size.height / 2),
+                        color = Color.White,
+                        strokeWidth = 4f
+                    )
+                }
+
+                Text(
+                    text = "Load and Play",
+                    fontSize = 24.sp,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = "Get collision limit from the API",
+                        fontSize = 18.sp,
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    /*Box {
+                        Button(
+                            onClick = {
+                                showNote.value = !showNote.value
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.Transparent
+                            ),
+                            shape = RoundedCornerShape(50),
+                            modifier = Modifier
+                                .height(32.dp)
+                                .width(32.dp)
+                        ) {
+
+                        }
+                        Icon(
+                            Icons.TwoTone.Info,
+                            contentDescription = null,
+                            tint = Color.Cyan,
+                            modifier = Modifier
+                                .height(32.dp)
+                                .width(32.dp)
+                                .scale(0.5f)
+                        )
+                    }*/
+
+                    Spacer(modifier = Modifier.width((width.value / 15).dp))
+
+                    Switch(
+                        modifier = Modifier
+                            .height(80.dp)
+                            .width(80.dp)
+                            .scale(1.8f),
+                        checked = chooseCollisionSource.value,
+                        onCheckedChange = {
+                            chooseCollisionSource.value = !chooseCollisionSource.value
+                            if (!chooseCollisionSource.value){
+                                collisionCountLimit.value = 2
+                            }
+                        },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = Color(126, 219, 225),
+                            checkedTrackColor = Color(62, 83, 86),
+                            uncheckedThumbColor = Color(49, 119, 120),
+                            uncheckedTrackColor = Color(215, 234, 238),
+                            disabledCheckedThumbColor = Color.DarkGray,
+                            disabledCheckedTrackColor = Color.Black,
+                            disabledUncheckedThumbColor = Color.Yellow,
+                            disabledUncheckedTrackColor = Color.LightGray
+                        ),
+                        thumbContent = {}
                     )
                 }
 

@@ -47,6 +47,7 @@ var velocity = mutableStateOf((height.value + width.value)/200)
 var acceleration = mutableStateOf(0.02f)
 
 var resetObstacles = mutableStateOf(false)
+var chooseCollisionSource = mutableStateOf(false)
 
 var movingJerry = mutableStateOf<Dimensions>(
     Dimensions(

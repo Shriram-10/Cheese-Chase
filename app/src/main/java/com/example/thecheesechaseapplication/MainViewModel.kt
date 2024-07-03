@@ -21,7 +21,9 @@ class MainViewModel : ViewModel() {
     )
 
     init {
-        fetchObstacleLimit()
+        if (chooseCollisionSource.value) {
+            fetchObstacleLimit()
+        }
     }
 
     fun fetchObstacleLimit() {

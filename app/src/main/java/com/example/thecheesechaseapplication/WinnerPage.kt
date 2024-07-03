@@ -295,7 +295,9 @@ fun WinnerPage(highScore: HighScoreManager, navController: NavController, dataVi
                             scoreSpeeding.value = 0
                             reverseTom.value = false
                             fadeTom.value = 1f
-                            collisionCountLimit.value = viewState.value
+                            if (chooseCollisionSource.value) {
+                                collisionCountLimit.value = viewState.value
+                            }
                             navController.popBackStack(Screen.Settings.route, false)
                         },
                         modifier = Modifier.height(40.dp),
@@ -452,7 +454,9 @@ fun WinnerPage(highScore: HighScoreManager, navController: NavController, dataVi
                         reverseTom.value = false
                         fadeTom.value = 1f
                         showWinnerPage.value = false
-                        collisionCountLimit.value = viewState.value
+                        if (chooseCollisionSource.value) {
+                            collisionCountLimit.value = viewState.value
+                        }
                     },
                     modifier = Modifier
                         .height(50.dp)

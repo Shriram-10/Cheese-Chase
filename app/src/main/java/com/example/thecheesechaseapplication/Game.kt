@@ -249,7 +249,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
         }
     }
 
-    if (collisionCount.value == 1) {
+    if (collisionCount.value in 1..collisionCountLimit.value - 1) {
         LaunchedEffect(Unit) {
             while (true) {
                 delay(4)
@@ -436,6 +436,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
             Text(startTimer1.value.toString())
             Text(startTimer2.value.toString())
             Text(displayText.value)*/
+            Text(collisionCountLimit.value.toString())
         }
         if (collisionCount.value < collisionCountLimit.value) {
             Column {
