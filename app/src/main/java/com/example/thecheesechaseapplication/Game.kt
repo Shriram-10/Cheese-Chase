@@ -776,10 +776,6 @@ fun GameCanvas(modifier:Modifier, context: Context) {
         }
     }
 
-    /*val painterTom = rememberAsyncImagePainter(model = "https://chasedeux.vercel.app/image?character=tom")
-    val painterJerry = rememberAsyncImagePainter(model = "https://chasedeux.vercel.app/image?character=jerry")
-    val painterObstacle = rememberAsyncImagePainter(model = "https://chasedeux.vercel.app/image?character=obstacle")*/
-
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomCenter
@@ -843,53 +839,11 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                     size = Size(size.width / 5, size.width / 5)
                 )
 
-                drawCircle(
-                    color = Color(253, 247, 82).copy(alpha = 0.5f),
-                    radius = size.width / 18f,
-                    center = Offset(movingBoxes[0].centerX, yBox[0])
-                )
-
-                withTransform({
-                    scale(
-                        0.4f,
-                        0.4f,
-                        pivot = Offset(size.width / 2, size.height / 2)
-                    )
-                }){
-                    if (bitmapObstacle != null) {
-                        drawImage(
-                            image = bitmapObstacle.asImageBitmap(),
-                            topLeft = Offset((movingBoxes[0].centerX - size.width / 10 - width.value / 3) * 10 / 4, (yBox[0] - height.value / 3) * 10 / 4)
-                        )
-                    }
-                }
-
                 drawRect(
                     topLeft = Offset(movingBoxes[1].centerX - size.width / 10, yBox[1]),
                     color = Color(128, 56, 42),
                     size = Size(size.width / 5, size.width / 5)
                 )
-
-                drawCircle(
-                    color = Color(253, 247, 82).copy(alpha = 0.5f),
-                    radius = size.width / 18f,
-                    center = Offset(movingBoxes[1].centerX, yBox[1])
-                )
-
-                withTransform({
-                    scale(
-                        0.4f,
-                        0.4f,
-                        pivot = Offset(size.width / 2, size.height / 2)
-                    )
-                }){
-                    if (bitmapObstacle != null) {
-                        drawImage(
-                            image = bitmapObstacle.asImageBitmap(),
-                            topLeft = Offset((movingBoxes[1].centerX - size.width / 10 - width.value / 3) * 10 / 4, (yBox[1] - height.value / 3) * 10 / 4)
-                        )
-                    }
-                }
 
                 drawRect(
                     topLeft = Offset(movingBoxes[2].centerX - size.width / 10, yBox[2]),
@@ -897,53 +851,11 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                     size = Size(size.width / 5, size.width / 5)
                 )
 
-                drawCircle(
-                    color = Color(253, 247, 82).copy(alpha = 0.5f),
-                    radius = size.width / 18f,
-                    center = Offset(movingBoxes[2].centerX, yBox[2])
-                )
-
-                withTransform({
-                    scale(
-                        0.4f,
-                        0.4f,
-                        pivot = Offset(size.width / 2, size.height / 2)
-                    )
-                }){
-                    if (bitmapObstacle != null) {
-                        drawImage(
-                            image = bitmapObstacle.asImageBitmap(),
-                            topLeft = Offset((movingBoxes[2].centerX - size.width / 10 - width.value / 3) * 10 / 4, (yBox[2] - height.value / 3) * 10 / 4)
-                        )
-                    }
-                }
-
                 drawRect(
                     topLeft = Offset(movingBoxes[3].centerX - size.width / 10, yBox[3]),
                     color = Color(128, 56, 42),
                     size = Size(size.width / 5, size.width / 5)
                 )
-
-                drawCircle(
-                    color = Color(253, 247, 82).copy(alpha = 0.5f),
-                    radius = size.width / 18f,
-                    center = Offset(movingBoxes[3].centerX, yBox[3])
-                )
-
-                withTransform({
-                    scale(
-                        0.4f,
-                        0.4f,
-                        pivot = Offset(size.width / 2, size.height / 2)
-                    )
-                }){
-                    if (bitmapObstacle != null) {
-                        drawImage(
-                            image = bitmapObstacle.asImageBitmap(),
-                            topLeft = Offset((movingBoxes[3].centerX - size.width / 10 - width.value / 3) * 10 / 4, (yBox[3] - height.value / 3) * 10 / 4)
-                        )
-                    }
-                }
 
                 drawRect(
                     topLeft = Offset(movingBoxes[4].centerX - size.width / 10, yBox[4]),
@@ -951,53 +863,11 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                     size = Size(size.width / 5, size.width / 5)
                 )
 
-                drawCircle(
-                    color = Color(253, 247, 82).copy(alpha = 0.5f),
-                    radius = size.width / 18f,
-                    center = Offset(movingBoxes[4].centerX, yBox[4])
-                )
-
-                withTransform({
-                    scale(
-                        0.4f,
-                        0.4f,
-                        pivot = Offset(size.width / 2, size.height / 2)
-                    )
-                }){
-                    if (bitmapObstacle != null) {
-                        drawImage(
-                            image = bitmapObstacle.asImageBitmap(),
-                            topLeft = Offset((movingBoxes[4].centerX - size.width / 10 - width.value / 3) * 10 / 4, (yBox[4] - height.value / 3) * 10 / 4)
-                        )
-                    }
-                }
-
                 drawRect(
                     topLeft = Offset(movingBoxes[5].centerX - size.width / 10, yBox[5]),
                     color = Color(128, 56, 42),
                     size = Size(size.width / 5, size.width / 5)
                 )
-
-                drawCircle(
-                    color = Color(253, 247, 82).copy(alpha = 0.5f),
-                    radius = size.width / 18f,
-                    center = Offset(movingBoxes[5].centerX, yBox[5])
-                )
-
-                withTransform({
-                    scale(
-                        0.4f,
-                        0.4f,
-                        pivot = Offset(size.width / 2, size.height / 2)
-                    )
-                }){
-                    if (bitmapObstacle != null) {
-                        drawImage(
-                            image = bitmapObstacle.asImageBitmap(),
-                            topLeft = Offset((movingBoxes[5].centerX - size.width / 10 - width.value / 3) * 10 / 4, (yBox[5] - height.value / 3) * 10 / 4)
-                        )
-                    }
-                }
 
                 drawRect(
                     topLeft = Offset(movingBoxes[6].centerX - size.width / 10, yBox[6]),
@@ -1005,53 +875,11 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                     size = Size(size.width / 5, size.width / 5)
                 )
 
-                drawCircle(
-                    color = Color(253, 247, 82).copy(alpha = 0.5f),
-                    radius = size.width / 18f,
-                    center = Offset(movingBoxes[6].centerX, yBox[6])
-                )
-
-                withTransform({
-                    scale(
-                        0.4f,
-                        0.4f,
-                        pivot = Offset(size.width / 2, size.height / 2)
-                    )
-                }){
-                    if (bitmapObstacle != null) {
-                        drawImage(
-                            image = bitmapObstacle.asImageBitmap(),
-                            topLeft = Offset((movingBoxes[6].centerX - size.width / 10 - width.value / 3) * 10 / 4, (yBox[6] - height.value / 3) * 10 / 4)
-                        )
-                    }
-                }
-
                 drawRect(
                     topLeft = Offset(movingBoxes[7].centerX - size.width / 10, yBox[7]),
                     color = Color(128, 56, 42),
                     size = Size(size.width / 5, size.width / 5)
                 )
-
-                drawCircle(
-                    color = Color(253, 247, 82).copy(alpha = 0.5f),
-                    radius = size.width / 18f,
-                    center = Offset(movingBoxes[7].centerX, yBox[7])
-                )
-
-                withTransform({
-                    scale(
-                        0.4f,
-                        0.4f,
-                        pivot = Offset(size.width / 2, size.height / 2)
-                    )
-                }){
-                    if (bitmapObstacle != null) {
-                        drawImage(
-                            image = bitmapObstacle.asImageBitmap(),
-                            topLeft = Offset((movingBoxes[7].centerX - size.width / 10 - width.value / 3) * 10 / 4, (yBox[7] - height.value / 3) * 10 / 4)
-                        )
-                    }
-                }
 
                 drawRect(
                     topLeft = Offset(movingBoxes[8].centerX - size.width / 10, yBox[8]),
@@ -1059,84 +887,291 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                     size = Size(size.width / 5, size.width / 5)
                 )
 
+                if (chooseImageSource.value) {
+                    drawCircle(
+                        color = Color(253, 247, 82).copy(alpha = 0.5f),
+                        radius = size.width / 18f,
+                        center = Offset(movingBoxes[0].centerX, yBox[0])
+                    )
+
+                    withTransform({
+                        scale(
+                            0.4f,
+                            0.4f,
+                            pivot = Offset(size.width / 2, size.height / 2)
+                        )
+                    }) {
+                        if (bitmapObstacle != null) {
+                            drawImage(
+                                image = bitmapObstacle.asImageBitmap(),
+                                topLeft = Offset(
+                                    (movingBoxes[0].centerX - size.width / 10 - width.value / 3) * 10 / 4,
+                                    (yBox[0] - height.value / 3) * 10 / 4
+                                )
+                            )
+                        }
+                    }
+
+                    drawCircle(
+                        color = Color(253, 247, 82).copy(alpha = 0.5f),
+                        radius = size.width / 18f,
+                        center = Offset(movingBoxes[1].centerX, yBox[1])
+                    )
+
+                    withTransform({
+                        scale(
+                            0.4f,
+                            0.4f,
+                            pivot = Offset(size.width / 2, size.height / 2)
+                        )
+                    }) {
+                        if (bitmapObstacle != null) {
+                            drawImage(
+                                image = bitmapObstacle.asImageBitmap(),
+                                topLeft = Offset(
+                                    (movingBoxes[1].centerX - size.width / 10 - width.value / 3) * 10 / 4,
+                                    (yBox[1] - height.value / 3) * 10 / 4
+                                )
+                            )
+                        }
+                    }
+
+                    drawCircle(
+                        color = Color(253, 247, 82).copy(alpha = 0.5f),
+                        radius = size.width / 18f,
+                        center = Offset(movingBoxes[2].centerX, yBox[2])
+                    )
+
+                    withTransform({
+                        scale(
+                            0.4f,
+                            0.4f,
+                            pivot = Offset(size.width / 2, size.height / 2)
+                        )
+                    }) {
+                        if (bitmapObstacle != null) {
+                            drawImage(
+                                image = bitmapObstacle.asImageBitmap(),
+                                topLeft = Offset(
+                                    (movingBoxes[2].centerX - size.width / 10 - width.value / 3) * 10 / 4,
+                                    (yBox[2] - height.value / 3) * 10 / 4
+                                )
+                            )
+                        }
+                    }
+
+                    drawCircle(
+                        color = Color(253, 247, 82).copy(alpha = 0.5f),
+                        radius = size.width / 18f,
+                        center = Offset(movingBoxes[3].centerX, yBox[3])
+                    )
+
+                    withTransform({
+                        scale(
+                            0.4f,
+                            0.4f,
+                            pivot = Offset(size.width / 2, size.height / 2)
+                        )
+                    }) {
+                        if (bitmapObstacle != null) {
+                            drawImage(
+                                image = bitmapObstacle.asImageBitmap(),
+                                topLeft = Offset(
+                                    (movingBoxes[3].centerX - size.width / 10 - width.value / 3) * 10 / 4,
+                                    (yBox[3] - height.value / 3) * 10 / 4
+                                )
+                            )
+                        }
+                    }
+
+                    drawCircle(
+                        color = Color(253, 247, 82).copy(alpha = 0.5f),
+                        radius = size.width / 18f,
+                        center = Offset(movingBoxes[4].centerX, yBox[4])
+                    )
+
+                    withTransform({
+                        scale(
+                            0.4f,
+                            0.4f,
+                            pivot = Offset(size.width / 2, size.height / 2)
+                        )
+                    }) {
+                        if (bitmapObstacle != null) {
+                            drawImage(
+                                image = bitmapObstacle.asImageBitmap(),
+                                topLeft = Offset(
+                                    (movingBoxes[4].centerX - size.width / 10 - width.value / 3) * 10 / 4,
+                                    (yBox[4] - height.value / 3) * 10 / 4
+                                )
+                            )
+                        }
+                    }
+
+                    drawCircle(
+                        color = Color(253, 247, 82).copy(alpha = 0.5f),
+                        radius = size.width / 18f,
+                        center = Offset(movingBoxes[5].centerX, yBox[5])
+                    )
+
+                    withTransform({
+                        scale(
+                            0.4f,
+                            0.4f,
+                            pivot = Offset(size.width / 2, size.height / 2)
+                        )
+                    }) {
+                        if (bitmapObstacle != null) {
+                            drawImage(
+                                image = bitmapObstacle.asImageBitmap(),
+                                topLeft = Offset(
+                                    (movingBoxes[5].centerX - size.width / 10 - width.value / 3) * 10 / 4,
+                                    (yBox[5] - height.value / 3) * 10 / 4
+                                )
+                            )
+                        }
+                    }
+
+                    drawCircle(
+                        color = Color(253, 247, 82).copy(alpha = 0.5f),
+                        radius = size.width / 18f,
+                        center = Offset(movingBoxes[6].centerX, yBox[6])
+                    )
+
+                    withTransform({
+                        scale(
+                            0.4f,
+                            0.4f,
+                            pivot = Offset(size.width / 2, size.height / 2)
+                        )
+                    }) {
+                        if (bitmapObstacle != null) {
+                            drawImage(
+                                image = bitmapObstacle.asImageBitmap(),
+                                topLeft = Offset(
+                                    (movingBoxes[6].centerX - size.width / 10 - width.value / 3) * 10 / 4,
+                                    (yBox[6] - height.value / 3) * 10 / 4
+                                )
+                            )
+                        }
+                    }
+
+                    drawCircle(
+                        color = Color(253, 247, 82).copy(alpha = 0.5f),
+                        radius = size.width / 18f,
+                        center = Offset(movingBoxes[7].centerX, yBox[7])
+                    )
+
+                    withTransform({
+                        scale(
+                            0.4f,
+                            0.4f,
+                            pivot = Offset(size.width / 2, size.height / 2)
+                        )
+                    }) {
+                        if (bitmapObstacle != null) {
+                            drawImage(
+                                image = bitmapObstacle.asImageBitmap(),
+                                topLeft = Offset(
+                                    (movingBoxes[7].centerX - size.width / 10 - width.value / 3) * 10 / 4,
+                                    (yBox[7] - height.value / 3) * 10 / 4
+                                )
+                            )
+                        }
+                    }
+
+                    drawCircle(
+                        color = Color(253, 247, 82).copy(alpha = 0.5f),
+                        radius = size.width / 18f,
+                        center = Offset(movingBoxes[8].centerX, yBox[8])
+                    )
+
+                    withTransform({
+                        scale(
+                            0.4f,
+                            0.4f,
+                            pivot = Offset(size.width / 2, size.height / 2)
+                        )
+                    }) {
+                        if (bitmapObstacle != null) {
+                            drawImage(
+                                image = bitmapObstacle.asImageBitmap(),
+                                topLeft = Offset(
+                                    (movingBoxes[8].centerX - size.width / 10 - width.value / 3) * 10 / 4,
+                                    (yBox[8] - height.value / 3) * 10 / 4
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+
+            if (!chooseImageSource.value) {
                 drawCircle(
-                    color = Color(253, 247, 82).copy(alpha = 0.5f),
-                    radius = size.width / 18f,
-                    center = Offset(movingBoxes[8].centerX, yBox[8])
+                    Brush.radialGradient(
+                        colors = shadowColors,
+                        center = Offset(size.width / 2, size.height / 2),
+                        radius = size.width / 15f * 1.1f * sizeDuringJump.value.pow(1.25f)
+                    ),
+                    radius = size.width / 15f * 1.1f * sizeDuringJump.value.pow(1.25f),
+                    center = Offset(movingJerry.value.centerX + 2f, size.height - y + 2f)
                 )
 
+                drawCircle(
+                    color = if (collisionCount.value == 1) colors else Color.Black,
+                    radius = size.width / 15f * sizeDuringJump.value,
+                    center = Offset(movingJerry.value.centerX, size.height - y)
+                )
+            } else {
                 withTransform({
                     scale(
-                        0.4f,
-                        0.4f,
+                        0.2f,
+                        0.2f,
                         pivot = Offset(size.width / 2, size.height / 2)
                     )
-                }){
-                    if (bitmapObstacle != null) {
+                }) {
+                    if (bitmapJerry != null) {
                         drawImage(
-                            image = bitmapObstacle.asImageBitmap(),
-                            topLeft = Offset((movingBoxes[8].centerX - size.width / 10 - width.value / 3) * 10 / 4, (yBox[8] - height.value / 3) * 10 / 4)
+                            image = bitmapJerry.asImageBitmap(),
+                            topLeft = Offset(
+                                (movingJerry.value.centerX - width.value * 0.99f / 2) * 10 / 2,
+                                (size.height - y + height.value / 3)
+                            ),
                         )
                     }
                 }
             }
 
-            /*drawCircle(
-                Brush.radialGradient(
-                    colors = shadowColors,
-                    center = Offset(size.width / 2, size.height / 2),
-                    radius = size.width / 15f * 1.1f * sizeDuringJump.value.pow(1.25f)
-                ),
-                radius = size.width / 15f * 1.1f * sizeDuringJump.value.pow(1.25f),
-                center = Offset(movingJerry.value.centerX + 2f, size.height - y + 2f)
-            )
-
-            drawCircle(
-                color = if (collisionCount.value == 1) colors else Color.Black,
-                radius = size.width / 15f * sizeDuringJump.value,
-                center = Offset(movingJerry.value.centerX, size.height - y)
-            )*/
-
-            withTransform({
-                scale(
-                    0.2f,
-                    0.2f,
-                    pivot = Offset(size.width / 2, size.height / 2)
-                )
-            }){
-                if (bitmapJerry != null) {
-                    drawImage(
-                        image = bitmapJerry.asImageBitmap(),
-                        topLeft = Offset((movingJerry.value.centerX - width.value * 0.99f / 2) * 10 / 2, (size.height - y + height.value / 3)),
-                    )
-                }
-            }
-
             if (collisionCount.value >= 1) {
-
-                /*drawCircle(
-                    color = if (!reverseTom.value) Color.Gray else Color.Gray.copy(alpha = fadeTom.value),
-                    radius = size.width / 15f,
-                    center = Offset(movingTom.value.centerX, movingTom.value.centerY)
-                )
-                drawCircle(
-                    color = if (!reverseTom.value) Color.DarkGray else Color.DarkGray.copy(alpha = fadeTom.value),
-                    radius = size.width / 12f,
-                    center = Offset(movingTom.value.centerX, movingTom.value.centerY),
-                    style = Stroke(width = 8f)
-                )*/
-                withTransform({
-                    scale(
-                        0.6f,
-                        0.6f,
-                        pivot = Offset(size.width / 2, size.height / 2)
+                if (!chooseImageSource.value) {
+                    drawCircle(
+                        color = if (!reverseTom.value) Color.Gray else Color.Gray.copy(alpha = fadeTom.value),
+                        radius = size.width / 15f,
+                        center = Offset(movingTom.value.centerX, movingTom.value.centerY)
                     )
-                }){
-                    if (bitmapTom != null) {
-                        drawImage(
-                            image = bitmapTom.asImageBitmap(),
-                            topLeft = Offset((movingTom.value.centerX - width.value * 0.985f / 3) * 10 / 6, movingTom.value.centerY)
+                    drawCircle(
+                        color = if (!reverseTom.value) Color.DarkGray else Color.DarkGray.copy(alpha = fadeTom.value),
+                        radius = size.width / 12f,
+                        center = Offset(movingTom.value.centerX, movingTom.value.centerY),
+                        style = Stroke(width = 8f)
+                    )
+                } else {
+                    withTransform({
+                        scale(
+                            0.6f,
+                            0.6f,
+                            pivot = Offset(size.width / 2, size.height / 2)
                         )
+                    }) {
+                        if (bitmapTom != null) {
+                            drawImage(
+                                image = bitmapTom.asImageBitmap(),
+                                topLeft = Offset(
+                                    (movingTom.value.centerX - width.value * 0.985f / 3) * 10 / 6,
+                                    movingTom.value.centerY
+                                )
+                            )
+                        }
                     }
                 }
             }
