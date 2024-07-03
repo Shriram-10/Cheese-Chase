@@ -14,6 +14,12 @@ class MainViewModel : ViewModel() {
         val error : String? = null
     )
 
+    data class StateOfRetrival_HitHindrance(
+        val loading : Boolean = true,
+        val value : hitHindrance? = null,
+        val error : String? = null
+    )
+
     init {
         fetchObstacleLimit()
     }
@@ -35,6 +41,26 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    fun fetchHitHindrance(){
+        viewModelScope.launch {
+            try {
+                val response = dataService.getHitHindrance()
+                _stateOfHitHindrance.value = _stateOfHitHindrance.value.copy(
+                    loading = false,
+                    value = response
+                )
+            } catch (e : Exception) {
+                _stateOfHitHindrance.value = _stateOfHitHindrance.value.copy(
+                    loading = false,
+                    error = "Data not loaded.\n${e.localizedMessage}"
+                )
+            }
+        }
+    }
+
     private val _state = mutableStateOf(StateOfRetrival_obstacleLimit())
     val state : State<StateOfRetrival_obstacleLimit> = _state
+
+    private val _stateOfHitHindrance = mutableStateOf(StateOfRetrival_HitHindrance())
+    val stateOfHitHindrance : State<StateOfRetrival_HitHindrance> = _stateOfHitHindrance
 }

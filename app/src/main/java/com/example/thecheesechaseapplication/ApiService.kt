@@ -14,6 +14,9 @@ interface ApiService {
     @GET("obstacleLimit")
     suspend fun getObstacleLimit() : CollisionCount
 
+    @GET("hitHindrance")
+    suspend fun getHitHindrance() : hitHindrance
+
     /*@GET("/image?character=tom")
     suspend fun getImageTom() : tomImage
 
