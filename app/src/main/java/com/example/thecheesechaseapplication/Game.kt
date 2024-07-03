@@ -2,6 +2,7 @@ package com.example.thecheesechaseapplication
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Icon
 import android.hardware.SensorManager
 import android.media.MediaPlayer
@@ -64,10 +65,12 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.DrawStyle
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.scale
+import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -87,7 +90,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
+import coil.request.SuccessResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -602,6 +608,9 @@ fun UpdateTimer(){
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun GameCanvas(modifier:Modifier, context: Context) {
+    val bitmapJerry = LoadImageAsBitmap(url = "https://chasedeux.vercel.app/image?character=jerry")
+    val bitmapTom = LoadImageAsBitmap(url = "https://chasedeux.vercel.app/image?character=tom")
+    val bitmapObstacle = LoadImageAsBitmap(url = "https://chasedeux.vercel.app/image?character=obstacle")
 
     if (chooseGyro.value && mode.value == 3) {
         DisposableEffect(context) {
@@ -766,9 +775,9 @@ fun GameCanvas(modifier:Modifier, context: Context) {
         }
     }
 
-    val painterTom = rememberAsyncImagePainter(model = "https://chasedeux.vercel.app/image?character=tom")
+    /*val painterTom = rememberAsyncImagePainter(model = "https://chasedeux.vercel.app/image?character=tom")
     val painterJerry = rememberAsyncImagePainter(model = "https://chasedeux.vercel.app/image?character=jerry")
-    val painterObstacle = rememberAsyncImagePainter(model = "https://chasedeux.vercel.app/image?character=obstacle")
+    val painterObstacle = rememberAsyncImagePainter(model = "https://chasedeux.vercel.app/image?character=obstacle")*/
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -833,11 +842,53 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                     size = Size(size.width / 5, size.width / 5)
                 )
 
+                drawCircle(
+                    color = Color(253, 247, 82).copy(alpha = 0.5f),
+                    radius = size.width / 18f,
+                    center = Offset(movingBoxes[0].centerX, yBox[0])
+                )
+
+                withTransform({
+                    scale(
+                        0.4f,
+                        0.4f,
+                        pivot = Offset(size.width / 2, size.height / 2)
+                    )
+                }){
+                    if (bitmapObstacle != null) {
+                        drawImage(
+                            image = bitmapObstacle.asImageBitmap(),
+                            topLeft = Offset((movingBoxes[0].centerX - size.width / 10 - width.value / 3) * 10 / 4, (yBox[0] - height.value / 3) * 10 / 4)
+                        )
+                    }
+                }
+
                 drawRect(
                     topLeft = Offset(movingBoxes[1].centerX - size.width / 10, yBox[1]),
                     color = Color(128, 56, 42),
                     size = Size(size.width / 5, size.width / 5)
                 )
+
+                drawCircle(
+                    color = Color(253, 247, 82).copy(alpha = 0.5f),
+                    radius = size.width / 18f,
+                    center = Offset(movingBoxes[1].centerX, yBox[1])
+                )
+
+                withTransform({
+                    scale(
+                        0.4f,
+                        0.4f,
+                        pivot = Offset(size.width / 2, size.height / 2)
+                    )
+                }){
+                    if (bitmapObstacle != null) {
+                        drawImage(
+                            image = bitmapObstacle.asImageBitmap(),
+                            topLeft = Offset((movingBoxes[1].centerX - size.width / 10 - width.value / 3) * 10 / 4, (yBox[1] - height.value / 3) * 10 / 4)
+                        )
+                    }
+                }
 
                 drawRect(
                     topLeft = Offset(movingBoxes[2].centerX - size.width / 10, yBox[2]),
@@ -845,11 +896,53 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                     size = Size(size.width / 5, size.width / 5)
                 )
 
+                drawCircle(
+                    color = Color(253, 247, 82).copy(alpha = 0.5f),
+                    radius = size.width / 18f,
+                    center = Offset(movingBoxes[2].centerX, yBox[2])
+                )
+
+                withTransform({
+                    scale(
+                        0.4f,
+                        0.4f,
+                        pivot = Offset(size.width / 2, size.height / 2)
+                    )
+                }){
+                    if (bitmapObstacle != null) {
+                        drawImage(
+                            image = bitmapObstacle.asImageBitmap(),
+                            topLeft = Offset((movingBoxes[2].centerX - size.width / 10 - width.value / 3) * 10 / 4, (yBox[2] - height.value / 3) * 10 / 4)
+                        )
+                    }
+                }
+
                 drawRect(
                     topLeft = Offset(movingBoxes[3].centerX - size.width / 10, yBox[3]),
                     color = Color(128, 56, 42),
                     size = Size(size.width / 5, size.width / 5)
                 )
+
+                drawCircle(
+                    color = Color(253, 247, 82).copy(alpha = 0.5f),
+                    radius = size.width / 18f,
+                    center = Offset(movingBoxes[3].centerX, yBox[3])
+                )
+
+                withTransform({
+                    scale(
+                        0.4f,
+                        0.4f,
+                        pivot = Offset(size.width / 2, size.height / 2)
+                    )
+                }){
+                    if (bitmapObstacle != null) {
+                        drawImage(
+                            image = bitmapObstacle.asImageBitmap(),
+                            topLeft = Offset((movingBoxes[3].centerX - size.width / 10 - width.value / 3) * 10 / 4, (yBox[3] - height.value / 3) * 10 / 4)
+                        )
+                    }
+                }
 
                 drawRect(
                     topLeft = Offset(movingBoxes[4].centerX - size.width / 10, yBox[4]),
@@ -857,11 +950,53 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                     size = Size(size.width / 5, size.width / 5)
                 )
 
+                drawCircle(
+                    color = Color(253, 247, 82).copy(alpha = 0.5f),
+                    radius = size.width / 18f,
+                    center = Offset(movingBoxes[4].centerX, yBox[4])
+                )
+
+                withTransform({
+                    scale(
+                        0.4f,
+                        0.4f,
+                        pivot = Offset(size.width / 2, size.height / 2)
+                    )
+                }){
+                    if (bitmapObstacle != null) {
+                        drawImage(
+                            image = bitmapObstacle.asImageBitmap(),
+                            topLeft = Offset((movingBoxes[4].centerX - size.width / 10 - width.value / 3) * 10 / 4, (yBox[4] - height.value / 3) * 10 / 4)
+                        )
+                    }
+                }
+
                 drawRect(
                     topLeft = Offset(movingBoxes[5].centerX - size.width / 10, yBox[5]),
                     color = Color(128, 56, 42),
                     size = Size(size.width / 5, size.width / 5)
                 )
+
+                drawCircle(
+                    color = Color(253, 247, 82).copy(alpha = 0.5f),
+                    radius = size.width / 18f,
+                    center = Offset(movingBoxes[5].centerX, yBox[5])
+                )
+
+                withTransform({
+                    scale(
+                        0.4f,
+                        0.4f,
+                        pivot = Offset(size.width / 2, size.height / 2)
+                    )
+                }){
+                    if (bitmapObstacle != null) {
+                        drawImage(
+                            image = bitmapObstacle.asImageBitmap(),
+                            topLeft = Offset((movingBoxes[5].centerX - size.width / 10 - width.value / 3) * 10 / 4, (yBox[5] - height.value / 3) * 10 / 4)
+                        )
+                    }
+                }
 
                 drawRect(
                     topLeft = Offset(movingBoxes[6].centerX - size.width / 10, yBox[6]),
@@ -869,17 +1004,80 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                     size = Size(size.width / 5, size.width / 5)
                 )
 
+                drawCircle(
+                    color = Color(253, 247, 82).copy(alpha = 0.5f),
+                    radius = size.width / 18f,
+                    center = Offset(movingBoxes[6].centerX, yBox[6])
+                )
+
+                withTransform({
+                    scale(
+                        0.4f,
+                        0.4f,
+                        pivot = Offset(size.width / 2, size.height / 2)
+                    )
+                }){
+                    if (bitmapObstacle != null) {
+                        drawImage(
+                            image = bitmapObstacle.asImageBitmap(),
+                            topLeft = Offset((movingBoxes[6].centerX - size.width / 10 - width.value / 3) * 10 / 4, (yBox[6] - height.value / 3) * 10 / 4)
+                        )
+                    }
+                }
+
                 drawRect(
                     topLeft = Offset(movingBoxes[7].centerX - size.width / 10, yBox[7]),
                     color = Color(128, 56, 42),
                     size = Size(size.width / 5, size.width / 5)
                 )
 
+                drawCircle(
+                    color = Color(253, 247, 82).copy(alpha = 0.5f),
+                    radius = size.width / 18f,
+                    center = Offset(movingBoxes[7].centerX, yBox[7])
+                )
+
+                withTransform({
+                    scale(
+                        0.4f,
+                        0.4f,
+                        pivot = Offset(size.width / 2, size.height / 2)
+                    )
+                }){
+                    if (bitmapObstacle != null) {
+                        drawImage(
+                            image = bitmapObstacle.asImageBitmap(),
+                            topLeft = Offset((movingBoxes[7].centerX - size.width / 10 - width.value / 3) * 10 / 4, (yBox[7] - height.value / 3) * 10 / 4)
+                        )
+                    }
+                }
+
                 drawRect(
                     topLeft = Offset(movingBoxes[8].centerX - size.width / 10, yBox[8]),
                     color = Color(128, 56, 42),
                     size = Size(size.width / 5, size.width / 5)
                 )
+
+                drawCircle(
+                    color = Color(253, 247, 82).copy(alpha = 0.5f),
+                    radius = size.width / 18f,
+                    center = Offset(movingBoxes[8].centerX, yBox[8])
+                )
+
+                withTransform({
+                    scale(
+                        0.4f,
+                        0.4f,
+                        pivot = Offset(size.width / 2, size.height / 2)
+                    )
+                }){
+                    if (bitmapObstacle != null) {
+                        drawImage(
+                            image = bitmapObstacle.asImageBitmap(),
+                            topLeft = Offset((movingBoxes[8].centerX - size.width / 10 - width.value / 3) * 10 / 4, (yBox[8] - height.value / 3) * 10 / 4)
+                        )
+                    }
+                }
             }
 
             /*drawCircle(
@@ -897,10 +1095,25 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                 radius = size.width / 15f * sizeDuringJump.value,
                 center = Offset(movingJerry.value.centerX, size.height - y)
             )*/
-            
+
+            withTransform({
+                scale(
+                    0.2f,
+                    0.2f,
+                    pivot = Offset(size.width / 2, size.height / 2)
+                )
+            }){
+                if (bitmapJerry != null) {
+                    drawImage(
+                        image = bitmapJerry.asImageBitmap(),
+                        topLeft = Offset((movingJerry.value.centerX - width.value * 0.99f / 2) * 10 / 2, (size.height - y + height.value / 3)),
+                    )
+                }
+            }
 
             if (collisionCount.value >= 1) {
-                drawCircle(
+
+                /*drawCircle(
                     color = if (!reverseTom.value) Color.Gray else Color.Gray.copy(alpha = fadeTom.value),
                     radius = size.width / 15f,
                     center = Offset(movingTom.value.centerX, movingTom.value.centerY)
@@ -910,8 +1123,23 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                     radius = size.width / 12f,
                     center = Offset(movingTom.value.centerX, movingTom.value.centerY),
                     style = Stroke(width = 8f)
-                )
+                )*/
+                withTransform({
+                    scale(
+                        0.6f,
+                        0.6f,
+                        pivot = Offset(size.width / 2, size.height / 2)
+                    )
+                }){
+                    if (bitmapTom != null) {
+                        drawImage(
+                            image = bitmapTom.asImageBitmap(),
+                            topLeft = Offset((movingTom.value.centerX - width.value * 0.985f / 3) * 10 / 6, movingTom.value.centerY)
+                        )
+                    }
+                }
             }
+
 
             if (powerUpDisplay[0]) {
 
@@ -1034,6 +1262,27 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                     style = Fill
                 )
             }
+
+            drawLine(
+                color = Color.White,
+                start = Offset(size.width / 2, 0f),
+                end = Offset(size.width / 2, size.height),
+                strokeWidth = 1f
+            )
+
+            drawLine(
+                color = Color.White,
+                start = Offset(size.width / 6, 0f),
+                end = Offset(size.width / 6, size.height),
+                strokeWidth = 1f
+            )
+
+            drawLine(
+                color = Color.White,
+                start = Offset(size.width / 1.2f, 0f),
+                end = Offset(size.width / 1.2f, size.height),
+                strokeWidth = 1f
+            )
         }
         Column {
             Row(
@@ -1049,7 +1298,7 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                             .pointerInput(Unit) {
                                 detectTapGestures(
                                     onTap = {
-                                        if (collisionCount.value < 2) {
+                                        if (collisionCount.value < collisionCountLimit.value) {
                                             activatePowerUp2.value = false
                                             powerUpInit2.value = 0
                                             if (powerUp2Value.value == 1 && collisionCount.value >= 1) {
@@ -1181,7 +1430,7 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                             .pointerInput(Unit) {
                                 detectTapGestures(
                                     onTap = {
-                                        if (collisionCount.value < 2) {
+                                        if (collisionCount.value < collisionCountLimit.value) {
                                             activatePowerUp1.value = false
                                             powerUpInit1.value = 0
                                             if (powerUp1Value.value == 1 && collisionCount.value >= 1) {
@@ -1320,6 +1569,28 @@ fun GameCanvas(modifier:Modifier, context: Context) {
         powerUp2Value.value = Random.nextInt(1,4)
         powerUpInit2.value = 1
     }
+}
+
+
+@Composable
+fun LoadImageAsBitmap(url: String): Bitmap? {
+    var bitmap by remember { mutableStateOf<Bitmap?>(null) }
+    val context = LocalContext.current
+
+    LaunchedEffect(url) {
+        val loader = ImageLoader(context)
+        val request = ImageRequest.Builder(context)
+            .data(url)
+            .allowHardware(false) // Disable hardware bitmaps
+            .build()
+
+        val result = loader.execute(request)
+        if (result is SuccessResult) {
+            bitmap = (result.drawable as BitmapDrawable).bitmap
+        }
+    }
+
+    return bitmap
 }
 
 @Composable
