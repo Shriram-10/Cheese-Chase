@@ -852,6 +852,68 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                     )
                 }
 
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = "Load Rewards from the API",
+                        fontSize = 18.sp,
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    /*Box {
+                    Button(
+                        onClick = {
+                            showNote.value = !showNote.value
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent
+                        ),
+                        shape = RoundedCornerShape(50),
+                        modifier = Modifier
+                            .height(32.dp)
+                            .width(32.dp)
+                    ) {
+
+                    }
+                    Icon(
+                        Icons.TwoTone.Info,
+                        contentDescription = null,
+                        tint = Color.Cyan,
+                        modifier = Modifier
+                            .height(32.dp)
+                            .width(32.dp)
+                            .scale(0.5f)
+                    )
+                }*/
+
+                    Spacer(modifier = Modifier.width((width.value / 15).dp))
+
+                    Switch(
+                        modifier = Modifier
+                            .height(80.dp)
+                            .width(80.dp)
+                            .scale(1.8f),
+                        checked = chooseRewardSource.value,
+                        onCheckedChange = {
+                            chooseRewardSource.value = !chooseRewardSource.value
+                        },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = Color(126, 219, 225),
+                            checkedTrackColor = Color(62, 83, 86),
+                            uncheckedThumbColor = Color(49, 119, 120),
+                            uncheckedTrackColor = Color(215, 234, 238),
+                            disabledCheckedThumbColor = Color.DarkGray,
+                            disabledCheckedTrackColor = Color.Black,
+                            disabledUncheckedThumbColor = Color.Yellow,
+                            disabledUncheckedTrackColor = Color.LightGray
+                        ),
+                        thumbContent = {}
+                    )
+                }
+
                 androidx.compose.foundation.Canvas(
                     modifier = Modifier
                         .fillMaxWidth()

@@ -132,6 +132,8 @@ fun AudioLoader() {
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreManager, context: Context, dataViewModel: MainViewModel){
+
+    val viewState by dataViewModel.stateOfHitHindrance
     AudioLoader()
 
     if (collisionCount.value < collisionCountLimit.value) {
@@ -423,7 +425,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
     Box(
         modifier = modifier.fillMaxSize(),
     ){
-        GameCanvas(modifier, context)
+        GameCanvas(modifier, context, dataViewModel)
         Column{
             /*Text(collided1.value.toString())
             Text(collided2.value.toString())
@@ -437,6 +439,8 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
             Text(startTimer2.value.toString())
             Text(displayText.value)*/
             Text(collisionCountLimit.value.toString())
+            Text(viewState.value?.type.toString())
+            Text(viewState.value?.amount.toString())
         }
         if (collisionCount.value < collisionCountLimit.value) {
             Column {
@@ -608,10 +612,12 @@ fun UpdateTimer(){
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun GameCanvas(modifier:Modifier, context: Context) {
+fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel) {
     val bitmapJerry = LoadImageAsBitmap(url = "https://chasedeux.vercel.app/image?character=jerry")
     val bitmapTom = LoadImageAsBitmap(url = "https://chasedeux.vercel.app/image?character=tom")
     val bitmapObstacle = LoadImageAsBitmap(url = "https://chasedeux.vercel.app/image?character=obstacle")
+
+    val viewState by dataViewModel.stateOfHitHindrance
 
     if (chooseGyro.value && mode.value == 3) {
         DisposableEffect(context) {
@@ -765,12 +771,22 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                         }
                     }
                 }
-                if (scoreSpeeding.value == 1) {
-                    score.value += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) 3 * ((height.value + width.value) / 2000) else 3 * ((height.value + width.value) / 6000)
-                } else if (scoreSpeeding.value == 2) {
-                    score.value += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) 6 * ((height.value + width.value) / 2000) else 6 * ((height.value + width.value) / 6000)
+                if (!chooseRewardSource.value) {
+                    if (scoreSpeeding.value == 1) {
+                        score.value += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) 3 * ((height.value + width.value) / 2000) else 3 * ((height.value + width.value) / 6000)
+                    } else if (scoreSpeeding.value == 2) {
+                        score.value += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) 6 * ((height.value + width.value) / 2000) else 6 * ((height.value + width.value) / 6000)
+                    } else {
+                        score.value += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) ((height.value + width.value) / 2000) else ((height.value + width.value) / 6000)
+                    }
                 } else {
-                    score.value += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) ((height.value + width.value) / 2000) else ((height.value + width.value) / 6000)
+                    if (scoreSpeeding.value == 1) {
+                        score.value += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) viewState.value?.amount!! * ((height.value + width.value) / 2000) else 3 * ((height.value + width.value) / 6000)
+                    } else if (scoreSpeeding.value == 2) {
+                        score.value += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) viewState.value?.amount!! * viewState.value?.amount!! * ((height.value + width.value) / 2000) else 6 * ((height.value + width.value) / 6000)
+                    } else {
+                        score.value += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) ((height.value + width.value) / 2000) else ((height.value + width.value) / 6000)
+                    }
                 }
             }
         }
@@ -1469,18 +1485,24 @@ fun GameCanvas(modifier:Modifier, context: Context) {
                                         if (collisionCount.value < collisionCountLimit.value) {
                                             activatePowerUp1.value = false
                                             powerUpInit1.value = 0
-                                            if (powerUp1Value.value == 1 && collisionCount.value >= 1) {
-                                                reverseTom.value = true
-                                            } else if (powerUp1Value.value == 2) {
-                                                shatterBlocks.value = true
-                                            } else if (powerUp1Value.value == 3) {
-                                                scoreSpeeding.value += 1
-                                            }
-                                            powerUp1Value.value = 0
-                                            if (powerUpsCollected.value == 1) {
-                                                powerUpsCollected.value -= 1
-                                            } else if (powerUpsCollected.value == 2) {
-                                                powerUpsCollected.value -= 2
+                                            if (!chooseRewardSource.value) {
+                                                if (powerUp1Value.value == 1 && collisionCount.value >= 1) {
+                                                    reverseTom.value = true
+                                                } else if (powerUp1Value.value == 2) {
+                                                    shatterBlocks.value = true
+                                                } else if (powerUp1Value.value == 3) {
+                                                    scoreSpeeding.value += 1
+                                                }
+                                                powerUp1Value.value = 0
+                                                if (powerUpsCollected.value == 1) {
+                                                    powerUpsCollected.value -= 1
+                                                } else if (powerUpsCollected.value == 2) {
+                                                    powerUpsCollected.value -= 2
+                                                }
+                                            } else {
+                                                if (powerUp1Value.value == 1 && collisionCount.value >= 1) {
+                                                    scoreSpeeding.value += 1
+                                                }
                                             }
                                             circularTimer1.value = 0f
                                         }
@@ -1597,13 +1619,34 @@ fun GameCanvas(modifier:Modifier, context: Context) {
             Spacer(modifier = Modifier.height(12.dp))
         }
     }
-    if (activatePowerUp1.value && powerUpInit1.value == 0){
-        powerUp1Value.value = Random.nextInt(1,4)
-        powerUpInit1.value = 1
-    }
-    if (activatePowerUp2.value && powerUpInit2.value == 0){
-        powerUp2Value.value = Random.nextInt(1,4)
-        powerUpInit2.value = 1
+    if (!chooseRewardSource.value) {
+        if (activatePowerUp1.value && powerUpInit1.value == 0) {
+            powerUp1Value.value = Random.nextInt(1, 4)
+            powerUpInit1.value = 1
+        }
+        if (activatePowerUp2.value && powerUpInit2.value == 0) {
+            powerUp2Value.value = Random.nextInt(1, 4)
+            powerUpInit2.value = 1
+        }
+    } else {
+        if (powerUpInit1.value == 0 && startTimer1.value && !setReward1.value){
+            dataViewModel.fetchHitHindrance()
+            setReward1.value = true
+        }
+        if (activatePowerUp1.value && powerUpInit1.value == 0) {
+            powerUp1Value.value = viewState.value?.type!!
+            powerUpInit1.value = 1
+            setReward1.value = false
+        }
+        if (powerUpInit2.value == 0 && startTimer2.value && !setReward2.value){
+            dataViewModel.fetchHitHindrance()
+            setReward2.value = true
+        }
+        if (activatePowerUp2.value && powerUpInit2.value == 0) {
+            powerUp2Value.value = viewState.value?.type!!
+            powerUpInit2.value = 1
+            setReward2.value = false
+        }
     }
 }
 

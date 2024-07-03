@@ -49,6 +49,9 @@ var acceleration = mutableStateOf(0.02f)
 var resetObstacles = mutableStateOf(false)
 var chooseCollisionSource = mutableStateOf(false)
 var chooseImageSource = mutableStateOf(false)
+var chooseRewardSource = mutableStateOf(false)
+var setReward1 = mutableStateOf(false)
+var setReward2 = mutableStateOf(false)
 
 var movingJerry = mutableStateOf<Dimensions>(
     Dimensions(
