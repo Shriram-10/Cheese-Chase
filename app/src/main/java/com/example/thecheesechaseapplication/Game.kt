@@ -10,6 +10,7 @@ import android.os.Build
 import android.view.OrientationEventListener
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.animateColor
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
@@ -141,8 +142,8 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
     LaunchedEffect(Unit){
         while(true){
             delay(4)
-            if (collisionCount.value == collisionCountLimit.value - 1){
-                while(movingTom.value.centerY >= height.value * 4 / 5 && !reverseTom.value){
+            if (collisionCount.value in 1..collisionCountLimit.value - 1){
+                while(movingTom.value.centerY >= height.value * 8 / 9 && !reverseTom.value){
                     delay(8)
                     movingTom.value.centerY -= jerryVelocity.value / 4
                     if (!sidewaysCollision.value) {
@@ -612,7 +613,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
         }
     }
 
-    if (powerUp1Value.value == 3) {
+    if (powerUp1Value.value == 3 || powerUp2Value.value == 3) {
         LaunchedEffect(Unit) {
             tomClosingIn.value = true
         }
@@ -626,16 +627,57 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
                 while(movingTom.value.centerY >= currentTomLocation.value - height.value / 20 * (powerUp1Amount.value + powerUp2Amount.value)){
                     delay(4)
                     movingTom.value.centerY -= jerryVelocity.value / 4
-                    if (movingTom.value.centerY >= height.value * 2 / 3 + movingJerry.value.height * 2 / 3){
+                    if (movingTom.value.centerY < height.value * 2 / 3 + movingJerry.value.height * 2 / 3){
+                        if (jerryLocate.value == tomLocate.value - 1 || jerryLocate.value == tomLocate.value - 2){
+                            moveTomLeft.value = true
+                        } else if (jerryLocate.value == tomLocate.value + 1 || jerryLocate.value == tomLocate.value + 2){
+                            moveTomRight.value = true
+                        }
+                        HapticFeedback().triggerHapticFeedback(context, 250)
+                        delay(500)
                         collisionCount.value = collisionCountLimit.value
                     }
-                }
-                if (movingTom.value.centerY < currentTomLocation.value + height.value / 20 * (powerUp1Amount.value + powerUp2Amount.value)){
-                    powerUp1Amount.value = 0
-                    powerUp2Amount.value = 0
-                    tomClosingIn.value = false
+                    if (movingTom.value.centerY < currentTomLocation.value - height.value / 20 * (powerUp1Amount.value + powerUp2Amount.value)){
+                        powerUp1Amount.value = 0
+                        powerUp2Amount.value = 0
+                        tomClosingIn.value = false
+                    }
                 }
             }
+        }
+    }
+
+    if (powerUp1Value.value == 3 && activatePowerUp1.value){
+        LaunchedEffect(Unit){
+            delay(2500)
+            circularTimer1.value = 0f
+            powerUpInit1.value = 0
+            usePowerUp.value = 0
+            activatePowerUp1.value = false
+        }
+    } else if (powerUp2Value.value == 3 && activatePowerUp2.value){
+        LaunchedEffect(Unit){
+            delay(2500)
+            circularTimer2.value = 0f
+            powerUpInit1.value = 0
+            usePowerUp.value = 0
+            activatePowerUp2.value = false
+        }
+    } else if (powerUp1Value.value == 3 && !activatePowerUp1.value) {
+        LaunchedEffect(Unit) {
+            if (powerUpsCollected.value == 1) {
+                powerUpsCollected.value -= 1
+            } else if (powerUpsCollected.value == 2) {
+                powerUpsCollected.value -= 2
+            }
+            powerUp1Value.value = 0
+        }
+    } else if (powerUp2Value.value == 3 && !activatePowerUp2.value) {
+        LaunchedEffect(Unit) {
+            if (powerUpsCollected.value == 2 || powerUpsCollected.value == 1) {
+                powerUpsCollected.value -= 1
+            }
+            powerUp2Value.value = 0
         }
     }
 }
@@ -672,6 +714,15 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
     val bitmapObstacle = LoadImageAsBitmap(url = "https://chasedeux.vercel.app/image?character=obstacle")
 
     val viewState by dataViewModel.stateOfHitHindrance
+    val infiniteTransition = rememberInfiniteTransition()
+    
+    val animatedColors = infiniteTransition.animateColor(
+        Color(180,60,40).copy(0.5f),
+        Color(234,51,128).copy(alpha = 0.5f),
+        animationSpec = infiniteRepeatable(tween(200),
+            repeatMode = RepeatMode.Reverse
+        )
+    ).value
 
     if (chooseGyro.value && mode.value == 3) {
         DisposableEffect(context) {
@@ -716,7 +767,7 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
     }
     xRight.value = x.value + width.value/15f
     xLeft.value = x.value - width.value/15f
-    val infiniteTransition = rememberInfiniteTransition()
+
     val colors = infiniteTransition.animateColor(
         Color(64,64,64),
         Color(190,53,50),
@@ -728,6 +779,11 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
     val powerUpColors = listOf(
         Color.White.copy(0.3f),
         Color(234,51,128).copy(alpha = 0.5f)
+    )
+
+    val animatedPowerUpColors = listOf(
+        Color.White.copy(0.3f),
+        animatedColors
     )
 
     val shadowColors = listOf(
@@ -1423,8 +1479,6 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
                                                     scoreSpeeding.value += 1
                                                 } else if (powerUp2Value.value == 2) {
                                                     autoJump.value = true
-                                                } else if (powerUp2Value.value == 3 && collisionCount.value >= 1) {
-                                                    tomClosingIn.value = true
                                                 }
                                             }
                                             powerUp2Value.value = 0
@@ -1455,7 +1509,7 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
                         } else {
                             drawCircle(
                                 brush = Brush.radialGradient(
-                                    colors = powerUpColors,
+                                    colors = if (powerUp2Value.value != 3) powerUpColors else animatedPowerUpColors,
                                     radius = size.width / 2,
                                     center = Offset(size.width / 2, size.height / 2),
                                 )
@@ -1690,7 +1744,7 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
                         } else {
                             drawCircle(
                                 brush = Brush.radialGradient(
-                                    colors = powerUpColors,
+                                    colors = if (powerUp1Value.value != 3) powerUpColors else animatedPowerUpColors,
                                     radius = size.width / 2,
                                     center = Offset(size.width / 2, size.height / 2),
                                 )
@@ -1888,7 +1942,7 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
             setReward1.value = true
         }
         if (activatePowerUp1.value && powerUpInit1.value == 0) {
-            powerUp1Value.value = viewState.value?.type!!
+            powerUp1Value.value = 3 /*viewState.value?.type!!*/
             powerUp1Amount.value = viewState.value?.amount!!
             powerUpInit1.value = 1
             setReward1.value = false
@@ -1898,7 +1952,7 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
             setReward2.value = true
         }
         if (activatePowerUp2.value && powerUpInit2.value == 0) {
-            powerUp2Value.value = viewState.value?.type!!
+            powerUp2Value.value = 3 /*viewState.value?.type!!*/
             powerUp2Amount.value = viewState.value?.amount!!
             powerUpInit2.value = 1
             setReward2.value = false
