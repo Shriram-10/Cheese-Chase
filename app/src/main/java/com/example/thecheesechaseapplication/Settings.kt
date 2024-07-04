@@ -178,7 +178,11 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                     yBox[8] = height.value * 3 / 4
                     collisionCount.value = 0
                     resetObstacles.value = true
-
+                    if (!chooseImageSource.value){
+                        sizeDuringJump.value = 1f
+                    } else {
+                        sizeDuringJump.value = 0.2f
+                    }
                     collided1.value = false
                     collided2.value = false
                     collided3.value = false
@@ -360,7 +364,11 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                     }
                     score.value = 0f
                     showWinnerPage.value = false
-
+                    if (!chooseImageSource.value){
+                        sizeDuringJump.value = 1f
+                    } else {
+                        sizeDuringJump.value = 0.2f
+                    }
                     powerUpDisplay[0] = true
                     powerUpDisplay[1] = true
                     powerUpDisplay[2] = true
@@ -541,7 +549,11 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                     }
                     score.value = 0f
                     showWinnerPage.value = false
-
+                    if (!chooseImageSource.value){
+                        sizeDuringJump.value = 1f
+                    } else {
+                        sizeDuringJump.value = 0.2f
+                    }
                     powerUpDisplay[0] = true
                     powerUpDisplay[1] = true
                     powerUpDisplay[2] = true

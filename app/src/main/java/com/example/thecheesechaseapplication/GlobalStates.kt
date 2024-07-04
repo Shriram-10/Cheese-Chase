@@ -57,6 +57,7 @@ var powerUp1Amount = mutableStateOf(0)
 var powerUp2Amount = mutableStateOf(0)
 
 var autoJump = mutableStateOf(false)
+var usePowerUp = mutableStateOf(0)
 var tomClosingIn = mutableStateOf(false)
 
 var movingJerry = mutableStateOf<Dimensions>(

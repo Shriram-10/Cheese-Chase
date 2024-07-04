@@ -3,7 +3,6 @@ package com.example.thecheesechaseapplication
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Icon
 import android.hardware.SensorManager
 import android.media.MediaPlayer
 import android.net.Uri
@@ -11,22 +10,14 @@ import android.os.Build
 import android.view.OrientationEventListener
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.animateColor
-import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animate
-import androidx.compose.animation.core.animateDecay
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,8 +29,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -56,45 +45,25 @@ import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.drawscope.DrawStyle
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.withTransform
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.imageResource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.ImageLoader
-import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.request.SuccessResult
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -427,25 +396,12 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
     ){
         GameCanvas(modifier, context, dataViewModel)
         Column{
-            /*Text(collided1.value.toString())
-            Text(collided2.value.toString())
-            Text(collided3.value.toString())
-            Text(collided4.value.toString())
-            Text(collided5.value.toString())
-            Text(collisionCount.value.toString())
-            Text(Vibrated.toString())
-            Text(collisionCountLimit.value.toString())
-            Text(startTimer1.value.toString())
-            Text(startTimer2.value.toString())
-            Text(displayText.value)*/
             Text(collisionCountLimit.value.toString())
             Text(chooseRewardSource.value.toString())
             Text(powerUp1Value.value.toString())
             Text(powerUp1Amount.value.toString())
             Text(powerUp2Value.value.toString())
             Text(powerUp2Amount.value.toString())
-            Text(viewState.value?.type.toString())
-            Text(viewState.value?.amount.toString())
         }
         if (collisionCount.value < collisionCountLimit.value) {
             Column {
@@ -511,23 +467,71 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
     if (jerryJump.value){
         mp?.start()
         LaunchedEffect(Unit){
-            delay((width.value * 2.2f * 30 / (7.5 * (velocity.value))).roundToLong())
-            jerryJump.value = false
-        }
-        LaunchedEffect(Unit){
-            while(sizeDuringJump.value <= 1.3f) {
-                delay(4)
-                sizeDuringJump.value += 0.3f * 18 / (width.value * 30 / (7.5f * 2 * (velocity.value)))
+            if (!autoJump.value) {
+                delay((width.value * 2.2f * 30 / (7.5 * (velocity.value))).roundToLong())
+                jerryJump.value = false
+            } else {
+                if (usePowerUp.value == 1){
+                    delay(1000 * powerUp1Amount.value.toLong())
+                    powerUp1Amount.value = 0
+                    usePowerUp.value = 0
+                    jerryJump.value = false
+                    autoJump.value = false
+                } else if (usePowerUp.value == 2){
+                    delay(1000 * powerUp2Amount.value.toLong())
+                    powerUp2Amount.value = 0
+                    usePowerUp.value = 0
+                    jerryJump.value = false
+                    autoJump.value = false
+                }
             }
-            delay((width.value * 1.8 * 30 / (7.5 * 2 * ((width.value + height.value) / 200))).roundToLong())
-            while(sizeDuringJump.value > 1f){
-                delay(4)
-                sizeDuringJump.value -= 0.3f * 18 / (width.value * 30 / (7.5f * 2 * (velocity.value)))
+        }
+        if (!chooseImageSource.value) {
+            LaunchedEffect(Unit) {
+                while (sizeDuringJump.value <= 1.3f) {
+                    delay(4)
+                    sizeDuringJump.value += 0.3f * 18 / (width.value * 30 / (7.5f * 2 * (velocity.value)))
+                }
+                delay((width.value * 1.8 * 30 / (7.5 * 2 * ((width.value + height.value) / 200))).roundToLong())
+                while (sizeDuringJump.value > 1f) {
+                    delay(4)
+                    sizeDuringJump.value -= 0.3f * 18 / (width.value * 30 / (7.5f * 2 * (velocity.value)))
+                }
+            }
+        } else {
+            if (!autoJump.value) {
+                LaunchedEffect(Unit) {
+                    while (sizeDuringJump.value <= 0.24f) {
+                        delay(4)
+                        sizeDuringJump.value += 0.05f * 18 / (width.value * 30 / (7.5f * 2 * (velocity.value)))
+                    }
+                    delay((width.value * 2.2 * 30 / (7.5 * 2 * ((width.value + height.value) / 200))).roundToLong())
+                    while (sizeDuringJump.value > 0.2f) {
+                        delay(4)
+                        sizeDuringJump.value -= 0.08f * 18 / (width.value * 30 / (7.5f * 2 * (velocity.value)))
+                    }
+                }
+            } else {
+                LaunchedEffect(Unit) {
+                    while (sizeDuringJump.value <= 0.24f) {
+                        delay(4)
+                        sizeDuringJump.value += 0.05f * 18 / (width.value * 30 / (7.5f * 2 * (velocity.value)))
+                    }
+                    if (usePowerUp.value == 1) {
+                        delay((powerUp1Amount.value / 2 * 1000).toLong())
+                    } else if (usePowerUp.value == 2) {
+                        delay((powerUp2Amount.value / 2 * 1000).toLong())
+                    }
+                    while (sizeDuringJump.value > 0.2f) {
+                        delay(4)
+                        sizeDuringJump.value -= 0.08f * 18 / (width.value * 30 / (7.5f * 2 * (velocity.value)))
+                    }
+                }
             }
         }
     }
     if (collided1.value || collided2.value || collided3.value || collided4.value || collided5.value){
-        sizeDuringJump.value = 1f
+        sizeDuringJump.value = if (!chooseImageSource.value) 1f else 0.2f
     }
 
     if (makeDelay.value){
@@ -595,6 +599,12 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
     }
     if (startTimer2.value) {
         UpdateTimer()
+    }
+
+    if (autoJump.value){
+        LaunchedEffect(Unit) {
+            jerryJump.value = true
+        }
     }
 }
 
@@ -1155,8 +1165,8 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
             } else {
                 withTransform({
                     scale(
-                        0.2f,
-                        0.2f,
+                        if (!(jerryJump.value || autoJump.value)) 0.2f else sizeDuringJump.value,
+                        if (!(jerryJump.value || autoJump.value)) 0.2f else sizeDuringJump.value,
                         pivot = Offset(size.width / 2, size.height / 2)
                     )
                 }) {
@@ -1366,6 +1376,7 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
                                     onTap = {
                                         if (collisionCount.value < collisionCountLimit.value) {
                                             activatePowerUp2.value = false
+                                            usePowerUp.value = 2
                                             powerUpInit2.value = 0
                                             if (powerUp2Value.value == 1 && collisionCount.value >= 1) {
                                                 reverseTom.value = true
@@ -1377,6 +1388,20 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
                                             powerUp2Value.value = 0
                                             if (powerUpsCollected.value == 2 || powerUpsCollected.value == 1) {
                                                 powerUpsCollected.value -= 1
+                                            } else {
+                                                if (powerUp2Value.value == 1) {
+                                                    scoreSpeeding.value += 1
+                                                } else if (powerUp2Value.value == 2) {
+                                                    autoJump.value = true
+                                                } else if (powerUp2Value.value == 3 && collisionCount.value >= 1) {
+                                                    tomClosingIn.value = true
+                                                }
+                                            }
+                                            powerUp2Value.value = 0
+                                            if (powerUpsCollected.value == 1) {
+                                                powerUpsCollected.value -= 1
+                                            } else if (powerUpsCollected.value == 2) {
+                                                powerUpsCollected.value -= 2
                                             }
                                             circularTimer2.value = 0f
                                         }
@@ -1409,33 +1434,59 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
                             )
 
                             if (powerUp2Value.value == 1){
-                                drawCircle(
-                                    color = Color.Gray,
-                                    radius = size.width / 4,
-                                    center = Offset(size.width / 2, size.height / 2),
-                                    style = Fill
-                                )
+                                if (!chooseRewardSource.value) {
+                                    drawCircle(
+                                        color = Color.Gray,
+                                        radius = size.width / 4,
+                                        center = Offset(size.width / 2, size.height / 2),
+                                        style = Fill
+                                    )
 
-                                drawCircle(
-                                    color = Color.DarkGray,
-                                    radius = size.width / 3.6f,
-                                    center = Offset(size.width / 2, size.height / 2),
-                                    style = Stroke(width = 3f)
-                                )
+                                    drawCircle(
+                                        color = Color.DarkGray,
+                                        radius = size.width / 3.6f,
+                                        center = Offset(size.width / 2, size.height / 2),
+                                        style = Stroke(width = 3f)
+                                    )
 
-                                drawLine(
-                                    color = Color(202,60,70),
-                                    start = Offset(size.width / 5, size.height / 5),
-                                    end = Offset(size.width * 4 / 5f, size.height * 4 / 5f),
-                                    strokeWidth = 10f
-                                )
+                                    drawLine(
+                                        color = Color(202, 60, 70),
+                                        start = Offset(size.width / 5, size.height / 5),
+                                        end = Offset(size.width * 4 / 5f, size.height * 4 / 5f),
+                                        strokeWidth = 10f
+                                    )
 
-                                drawLine(
-                                    color = Color(202,60,70),
-                                    start = Offset(size.width * 4 / 5, size.height / 5),
-                                    end = Offset(size.width / 5f, size.height * 4 / 5f),
-                                    strokeWidth = 10f
-                                )
+                                    drawLine(
+                                        color = Color(202, 60, 70),
+                                        start = Offset(size.width * 4 / 5, size.height / 5),
+                                        end = Offset(size.width / 5f, size.height * 4 / 5f),
+                                        strokeWidth = 10f
+                                    )
+                                } else {
+                                    drawCircle(
+                                        brush = Brush.radialGradient(
+                                            colors = yellowColors,
+                                            radius = size.width / 3,
+                                            center = Offset(size.width / 2, size.height / 2)
+                                        ),
+                                        radius = size.width / 3,
+                                        center = Offset(size.width / 2, size.height / 2)
+                                    )
+
+                                    drawLine(
+                                        start = Offset(size.width / 2, size.height / 4),
+                                        end = Offset(size.width / 2, size.height * 3 / 4),
+                                        color = Color(202,60,70),
+                                        strokeWidth = 10f
+                                    )
+
+                                    drawLine(
+                                        start = Offset(size.width / 4, size.height / 2),
+                                        end = Offset(size.width * 3 / 4, size.height / 2),
+                                        color = Color(202,60,70),
+                                        strokeWidth = 10f
+                                    )
+                                }
                             }
                             if (powerUp2Value.value == 2){
                                 drawRect(
@@ -1498,6 +1549,7 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
                                     onTap = {
                                         if (collisionCount.value < collisionCountLimit.value) {
                                             activatePowerUp1.value = false
+                                            usePowerUp.value = 1
                                             powerUpInit1.value = 0
                                             if (!chooseRewardSource.value) {
                                                 if (powerUp1Value.value == 1 && collisionCount.value >= 1) {
@@ -1553,33 +1605,59 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
                             )
 
                             if (powerUp1Value.value == 1) {
-                                drawCircle(
-                                    color = Color.Gray,
-                                    radius = size.width / 4,
-                                    center = Offset(size.width / 2, size.height / 2),
-                                    style = Fill
-                                )
+                                if (!chooseRewardSource.value) {
+                                    drawCircle(
+                                        color = Color.Gray,
+                                        radius = size.width / 4,
+                                        center = Offset(size.width / 2, size.height / 2),
+                                        style = Fill
+                                    )
 
-                                drawCircle(
-                                    color = Color.DarkGray,
-                                    radius = size.width / 3.6f,
-                                    center = Offset(size.width / 2, size.height / 2),
-                                    style = Stroke(width = 3f)
-                                )
+                                    drawCircle(
+                                        color = Color.DarkGray,
+                                        radius = size.width / 3.6f,
+                                        center = Offset(size.width / 2, size.height / 2),
+                                        style = Stroke(width = 3f)
+                                    )
 
-                                drawLine(
-                                    color = Color(202,60,70),
-                                    start = Offset(size.width / 5, size.height / 5),
-                                    end = Offset(size.width * 4 / 5f, size.height * 4 / 5f),
-                                    strokeWidth = 10f
-                                )
+                                    drawLine(
+                                        color = Color(202, 60, 70),
+                                        start = Offset(size.width / 5, size.height / 5),
+                                        end = Offset(size.width * 4 / 5f, size.height * 4 / 5f),
+                                        strokeWidth = 10f
+                                    )
 
-                                drawLine(
-                                    color = Color(202,60,70),
-                                    start = Offset(size.width * 4 / 5, size.height / 5),
-                                    end = Offset(size.width / 5f, size.height * 4 / 5f),
-                                    strokeWidth = 10f
-                                )
+                                    drawLine(
+                                        color = Color(202, 60, 70),
+                                        start = Offset(size.width * 4 / 5, size.height / 5),
+                                        end = Offset(size.width / 5f, size.height * 4 / 5f),
+                                        strokeWidth = 10f
+                                    )
+                                } else {
+                                    drawCircle(
+                                        brush = Brush.radialGradient(
+                                            colors = yellowColors,
+                                            radius = size.width / 3,
+                                            center = Offset(size.width / 2, size.height / 2)
+                                        ),
+                                        radius = size.width / 3,
+                                        center = Offset(size.width / 2, size.height / 2)
+                                    )
+
+                                    drawLine(
+                                        start = Offset(size.width / 2, size.height / 4),
+                                        end = Offset(size.width / 2, size.height * 3 / 4),
+                                        color = Color(202,60,70),
+                                        strokeWidth = 10f
+                                    )
+
+                                    drawLine(
+                                        start = Offset(size.width / 4, size.height / 2),
+                                        end = Offset(size.width * 3 / 4, size.height / 2),
+                                        color = Color(202,60,70),
+                                        strokeWidth = 10f
+                                    )
+                                }
                             }
                             if (powerUp1Value.value == 2) {
                                 drawRect(
@@ -1669,7 +1747,6 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
         }
     }
 }
-
 
 @Composable
 fun LoadImageAsBitmap(url: String): Bitmap? {
