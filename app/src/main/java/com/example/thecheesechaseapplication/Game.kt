@@ -1489,25 +1489,54 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
                                 }
                             }
                             if (powerUp2Value.value == 2){
-                                drawRect(
-                                    color = Color(128, 56, 42),
-                                    topLeft = Offset(size.width / 4, size.height / 4),
-                                    size = Size(size.width / 2, size.height / 2)
-                                )
+                                if (!chooseRewardSource.value) {
+                                    drawRect(
+                                        color = Color(128, 56, 42),
+                                        topLeft = Offset(size.width / 4, size.height / 4),
+                                        size = Size(size.width / 2, size.height / 2)
+                                    )
 
-                                drawLine(
-                                    color = Color(202,60,70),
-                                    start = Offset(size.width / 5, size.height / 5),
-                                    end = Offset(size.width * 4 / 5f, size.height * 4 / 5f),
-                                    strokeWidth = 10f
-                                )
+                                    drawLine(
+                                        color = Color(202, 60, 70),
+                                        start = Offset(size.width / 5, size.height / 5),
+                                        end = Offset(size.width * 4 / 5f, size.height * 4 / 5f),
+                                        strokeWidth = 10f
+                                    )
 
-                                drawLine(
-                                    color = Color(202,60,70),
-                                    start = Offset(size.width * 4 / 5, size.height / 5),
-                                    end = Offset(size.width / 5f, size.height * 4 / 5f),
-                                    strokeWidth = 10f
-                                )
+                                    drawLine(
+                                        color = Color(202, 60, 70),
+                                        start = Offset(size.width * 4 / 5, size.height / 5),
+                                        end = Offset(size.width / 5f, size.height * 4 / 5f),
+                                        strokeWidth = 10f
+                                    )
+                                } else {
+                                    drawRect(
+                                        color = Color(128, 56, 42),
+                                        topLeft = Offset(size.width / 3, size.height / 2),
+                                        size = Size(size.width / 3, size.height / 3)
+                                    )
+
+                                    drawLine(
+                                        start = Offset(size.width / 2, size.height / 5),
+                                        end = Offset(size.width / 2, size.height * 4 / 5f),
+                                        color = Color(202,60,70),
+                                        strokeWidth = 10f
+                                    )
+
+                                    drawLine(
+                                        start = Offset(size.width / 2 + 5f, size.height / 5),
+                                        end = Offset(size.width / 5, size.height / 3f),
+                                        color = Color(202,60,70),
+                                        strokeWidth = 10f
+                                    )
+
+                                    drawLine(
+                                        start = Offset(size.width / 2, size.height / 5),
+                                        end = Offset(size.width * 4 / 5, size.height / 3f),
+                                        color = Color(202,60,70),
+                                        strokeWidth = 10f
+                                    )
+                                }
                             }
                             if (powerUp2Value.value == 3){
                                 drawCircle(
@@ -1660,25 +1689,54 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
                                 }
                             }
                             if (powerUp1Value.value == 2) {
-                                drawRect(
-                                    color = Color(128, 56, 42),
-                                    topLeft = Offset(size.width / 4, size.height / 4),
-                                    size = Size(size.width / 2, size.height / 2)
-                                )
+                                if (!chooseRewardSource.value) {
+                                    drawRect(
+                                        color = Color(128, 56, 42),
+                                        topLeft = Offset(size.width / 4, size.height / 4),
+                                        size = Size(size.width / 2, size.height / 2)
+                                    )
 
-                                drawLine(
-                                    color = Color(202,60,70),
-                                    start = Offset(size.width / 5, size.height / 5),
-                                    end = Offset(size.width * 4 / 5f, size.height * 4 / 5f),
-                                    strokeWidth = 10f
-                                )
+                                    drawLine(
+                                        color = Color(202, 60, 70),
+                                        start = Offset(size.width / 5, size.height / 5),
+                                        end = Offset(size.width * 4 / 5f, size.height * 4 / 5f),
+                                        strokeWidth = 10f
+                                    )
 
-                                drawLine(
-                                    color = Color(202,60,70),
-                                    start = Offset(size.width * 4 / 5, size.height / 5),
-                                    end = Offset(size.width / 5f, size.height * 4 / 5f),
-                                    strokeWidth = 10f
-                                )
+                                    drawLine(
+                                        color = Color(202, 60, 70),
+                                        start = Offset(size.width * 4 / 5, size.height / 5),
+                                        end = Offset(size.width / 5f, size.height * 4 / 5f),
+                                        strokeWidth = 10f
+                                    )
+                                } else {
+                                    drawRect(
+                                        color = Color(128, 56, 42),
+                                        topLeft = Offset(size.width / 3, size.height / 2),
+                                        size = Size(size.width / 3, size.height / 3)
+                                    )
+
+                                    drawLine(
+                                        start = Offset(size.width / 2, size.height / 5),
+                                        end = Offset(size.width / 2, size.height * 4 / 5f),
+                                        color = Color(202,60,70),
+                                        strokeWidth = 10f
+                                    )
+
+                                    drawLine(
+                                        start = Offset(size.width / 2 + 5f, size.height / 5),
+                                        end = Offset(size.width / 5, size.height / 3f),
+                                        color = Color(202,60,70),
+                                        strokeWidth = 10f
+                                    )
+
+                                    drawLine(
+                                        start = Offset(size.width / 2, size.height / 5),
+                                        end = Offset(size.width * 4 / 5, size.height / 3f),
+                                        color = Color(202,60,70),
+                                        strokeWidth = 10f
+                                    )
+                                }
                             }
                             if (powerUp1Value.value == 3){
                                 drawCircle(
