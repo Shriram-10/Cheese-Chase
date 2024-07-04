@@ -623,14 +623,14 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
             viewTom.value = true
             if (collisionCount.value < collisionCountLimit.value) {
                 currentTomLocation.value = movingTom.value.centerY
-                while(movingTom.value.centerY >= currentTomLocation.value - height.value / 15 * (powerUp1Amount.value + powerUp2Amount.value)){
+                while(movingTom.value.centerY >= currentTomLocation.value - height.value / 20 * (powerUp1Amount.value + powerUp2Amount.value)){
                     delay(4)
                     movingTom.value.centerY -= jerryVelocity.value / 4
                     if (movingTom.value.centerY >= height.value * 2 / 3 + movingJerry.value.height * 2 / 3){
                         collisionCount.value = collisionCountLimit.value
                     }
                 }
-                if (movingTom.value.centerY < currentTomLocation.value + height.value / 15 * (powerUp1Amount.value + powerUp2Amount.value)){
+                if (movingTom.value.centerY < currentTomLocation.value + height.value / 20 * (powerUp1Amount.value + powerUp2Amount.value)){
                     powerUp1Amount.value = 0
                     powerUp2Amount.value = 0
                     tomClosingIn.value = false

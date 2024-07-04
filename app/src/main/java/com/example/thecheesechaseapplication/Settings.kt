@@ -389,6 +389,13 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                     scoreSpeeding.value = 0
                     reverseTom.value = false
                     fadeTom.value = 1f
+                    viewTom.value = false
+                    tomClosingIn.value = false
+                    currentTomLocation.value = 0f
+                    usePowerUp.value = 0
+                    autoJump.value = false
+                    powerUp1Amount.value = 0
+                    powerUp2Amount.value = 0
                     if ((displayText.value == "loaded" && chooseCollisionSource.value) || !chooseCollisionSource.value) {
                         navController.navigate(Screen.Game.route)
                     } else {
@@ -574,6 +581,13 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
                     scoreSpeeding.value = 0
                     reverseTom.value = false
                     fadeTom.value = 1f
+                    viewTom.value = false
+                    tomClosingIn.value = false
+                    currentTomLocation.value = 0f
+                    usePowerUp.value = 0
+                    autoJump.value = false
+                    powerUp1Amount.value = 0
+                    powerUp2Amount.value = 0
                     if ((displayText.value == "loaded" && chooseCollisionSource.value) || !chooseCollisionSource.value) {
                         navController.navigate(Screen.Game.route)
                     } else {

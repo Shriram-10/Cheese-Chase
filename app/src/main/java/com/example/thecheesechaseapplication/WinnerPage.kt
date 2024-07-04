@@ -295,6 +295,13 @@ fun WinnerPage(highScore: HighScoreManager, navController: NavController, dataVi
                             scoreSpeeding.value = 0
                             reverseTom.value = false
                             fadeTom.value = 1f
+                            viewTom.value = false
+                            tomClosingIn.value = false
+                            currentTomLocation.value = 0f
+                            usePowerUp.value = 0
+                            autoJump.value = false
+                            powerUp1Amount.value = 0
+                            powerUp2Amount.value = 0
                             if (chooseCollisionSource.value) {
                                 collisionCountLimit.value = viewState.value
                             }
@@ -410,7 +417,6 @@ fun WinnerPage(highScore: HighScoreManager, navController: NavController, dataVi
                         yBox[8] = height.value * 3 / 4
                         collisionCount.value = 0
                         resetObstacles.value = true
-
                         collided1.value = false
                         collided2.value = false
                         collided3.value = false
@@ -454,6 +460,13 @@ fun WinnerPage(highScore: HighScoreManager, navController: NavController, dataVi
                         reverseTom.value = false
                         fadeTom.value = 1f
                         showWinnerPage.value = false
+                        viewTom.value = false
+                        tomClosingIn.value = false
+                        currentTomLocation.value = 0f
+                        usePowerUp.value = 0
+                        autoJump.value = false
+                        powerUp1Amount.value = 0
+                        powerUp2Amount.value = 0
                         if (chooseCollisionSource.value) {
                             collisionCountLimit.value = viewState.value
                         }
