@@ -142,8 +142,8 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
     LaunchedEffect(Unit){
         while(true){
             delay(4)
-            if (collisionCount.value in 1..collisionCountLimit.value - 1){
-                while(movingTom.value.centerY >= height.value * 8 / 9 && !reverseTom.value){
+            if (collisionCount.value == 1){
+                while((movingTom.value.centerY >= height.value * 4 / 5 && !reverseTom.value && !chooseRewardSource.value) || (movingTom.value.centerY >= height.value)){
                     delay(8)
                     movingTom.value.centerY -= jerryVelocity.value / 4
                     if (!sidewaysCollision.value) {
@@ -223,7 +223,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
         LaunchedEffect(Unit) {
             while (true) {
                 delay(4)
-                if (movingTom.value.centerY < height.value * 4 / 5) {
+                if ((movingTom.value.centerY < height.value * 4 / 5 && !chooseRewardSource.value) || (chooseRewardSource.value && movingTom.value.centerY <= height.value)) {
                     if (jerryJump.value) {
                         if (tomLocate.value == jerryLocate.value) {
                             for (i in 0..8) {
@@ -401,6 +401,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
             Text(powerUp2Value.value.toString())
             Text(powerUp2Amount.value.toString())
             Text(usePowerUp.value.toString())
+            Text(powerUpsCollected.value.toString())
         }
         if (collisionCount.value < collisionCountLimit.value) {
             Column {
@@ -670,6 +671,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
             } else if (powerUpsCollected.value == 2) {
                 powerUpsCollected.value -= 2
             }
+            startTimer1.value = false
             powerUp1Value.value = 0
         }
     } else if (powerUp2Value.value == 3 && !activatePowerUp2.value) {
@@ -677,6 +679,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
             if (powerUpsCollected.value == 2 || powerUpsCollected.value == 1) {
                 powerUpsCollected.value -= 1
             }
+            startTimer2.value = false
             powerUp2Value.value = 0
         }
     }
