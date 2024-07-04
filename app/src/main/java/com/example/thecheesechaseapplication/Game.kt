@@ -46,7 +46,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -102,7 +101,6 @@ fun AudioLoader() {
 @Composable
 fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreManager, context: Context, dataViewModel: MainViewModel){
 
-    val viewState by dataViewModel.stateOfHitHindrance
     AudioLoader()
 
     if (collisionCount.value < collisionCountLimit.value) {
@@ -397,11 +395,11 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
         GameCanvas(modifier, context, dataViewModel)
         Column{
             Text(collisionCountLimit.value.toString())
-            Text(chooseRewardSource.value.toString())
             Text(powerUp1Value.value.toString())
             Text(powerUp1Amount.value.toString())
             Text(powerUp2Value.value.toString())
             Text(powerUp2Amount.value.toString())
+            Text(usePowerUp.value.toString())
         }
         if (collisionCount.value < collisionCountLimit.value) {
             Column {
@@ -518,13 +516,20 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
                         sizeDuringJump.value += 0.05f * 18 / (width.value * 30 / (7.5f * 2 * (velocity.value)))
                     }
                     if (usePowerUp.value == 1) {
-                        delay((powerUp1Amount.value / 2 * 1000).toLong())
+                        delay((powerUp1Amount.value * 3 / 4 * 1000).toLong())
                     } else if (usePowerUp.value == 2) {
-                        delay((powerUp2Amount.value / 2 * 1000).toLong())
+                        delay((powerUp2Amount.value * 3 / 4 * 1000).toLong())
                     }
                     while (sizeDuringJump.value > 0.2f) {
                         delay(4)
                         sizeDuringJump.value -= 0.08f * 18 / (width.value * 30 / (7.5f * 2 * (velocity.value)))
+                    }
+                    if (usePowerUp.value == 1){
+                        powerUp1Amount.value = 0
+                        usePowerUp.value = 0
+                    } else if (usePowerUp.value == 2){
+                        powerUp2Amount.value = 0
+                        usePowerUp.value = 0
                     }
                 }
             }
@@ -604,6 +609,33 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
     if (autoJump.value){
         LaunchedEffect(Unit) {
             jerryJump.value = true
+        }
+    }
+
+    if (powerUp1Value.value == 3) {
+        LaunchedEffect(Unit) {
+            tomClosingIn.value = true
+        }
+    }
+
+    if (tomClosingIn.value){
+        LaunchedEffect(Unit) {
+            viewTom.value = true
+            if (collisionCount.value < collisionCountLimit.value) {
+                currentTomLocation.value = movingTom.value.centerY
+                while(movingTom.value.centerY >= currentTomLocation.value - height.value / 15 * (powerUp1Amount.value + powerUp2Amount.value)){
+                    delay(4)
+                    movingTom.value.centerY -= jerryVelocity.value / 4
+                    if (movingTom.value.centerY >= height.value * 2 / 3 + movingJerry.value.height * 2 / 3){
+                        collisionCount.value = collisionCountLimit.value
+                    }
+                }
+                if (movingTom.value.centerY < currentTomLocation.value + height.value / 15 * (powerUp1Amount.value + powerUp2Amount.value)){
+                    powerUp1Amount.value = 0
+                    powerUp2Amount.value = 0
+                    tomClosingIn.value = false
+                }
+            }
         }
     }
 }
@@ -1182,7 +1214,7 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
                 }
             }
 
-            if (collisionCount.value >= 1) {
+            if (collisionCount.value >= 1 || viewTom.value) {
                 if (!chooseImageSource.value) {
                     drawCircle(
                         color = if (!reverseTom.value) Color.Gray else Color.Gray.copy(alpha = fadeTom.value),
@@ -1378,16 +1410,14 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
                                             activatePowerUp2.value = false
                                             usePowerUp.value = 2
                                             powerUpInit2.value = 0
-                                            if (powerUp2Value.value == 1 && collisionCount.value >= 1) {
-                                                reverseTom.value = true
-                                            } else if (powerUp2Value.value == 2) {
-                                                shatterBlocks.value = true
-                                            } else if (powerUp2Value.value == 3) {
-                                                scoreSpeeding.value += 1
-                                            }
-                                            powerUp2Value.value = 0
-                                            if (powerUpsCollected.value == 2 || powerUpsCollected.value == 1) {
-                                                powerUpsCollected.value -= 1
+                                            if (!chooseRewardSource.value) {
+                                                if (powerUp2Value.value == 1 && collisionCount.value >= 1) {
+                                                    reverseTom.value = true
+                                                } else if (powerUp2Value.value == 2) {
+                                                    shatterBlocks.value = true
+                                                } else if (powerUp2Value.value == 3) {
+                                                    scoreSpeeding.value += 1
+                                                }
                                             } else {
                                                 if (powerUp2Value.value == 1) {
                                                     scoreSpeeding.value += 1
@@ -1398,10 +1428,8 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
                                                 }
                                             }
                                             powerUp2Value.value = 0
-                                            if (powerUpsCollected.value == 1) {
+                                            if (powerUpsCollected.value == 2 || powerUpsCollected.value == 1) {
                                                 powerUpsCollected.value -= 1
-                                            } else if (powerUpsCollected.value == 2) {
-                                                powerUpsCollected.value -= 2
                                             }
                                             circularTimer2.value = 0f
                                         }
@@ -1539,29 +1567,66 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
                                 }
                             }
                             if (powerUp2Value.value == 3){
-                                drawCircle(
-                                    brush = Brush.radialGradient(
-                                        colors = yellowColors,
+                                if (!chooseRewardSource.value) {
+                                    drawCircle(
+                                        brush = Brush.radialGradient(
+                                            colors = yellowColors,
+                                            radius = size.width / 3,
+                                            center = Offset(size.width / 2, size.height / 2)
+                                        ),
                                         radius = size.width / 3,
                                         center = Offset(size.width / 2, size.height / 2)
-                                    ),
-                                    radius = size.width / 3,
-                                    center = Offset(size.width / 2, size.height / 2)
-                                )
+                                    )
 
-                                drawLine(
-                                    start = Offset(size.width / 2, size.height / 4),
-                                    end = Offset(size.width / 2, size.height * 3 / 4),
-                                    color = Color(202,60,70),
-                                    strokeWidth = 10f
-                                )
+                                    drawLine(
+                                        start = Offset(size.width / 2, size.height / 4),
+                                        end = Offset(size.width / 2, size.height * 3 / 4),
+                                        color = Color(202, 60, 70),
+                                        strokeWidth = 10f
+                                    )
 
-                                drawLine(
-                                    start = Offset(size.width / 4, size.height / 2),
-                                    end = Offset(size.width * 3 / 4, size.height / 2),
-                                    color = Color(202,60,70),
-                                    strokeWidth = 10f
-                                )
+                                    drawLine(
+                                        start = Offset(size.width / 4, size.height / 2),
+                                        end = Offset(size.width * 3 / 4, size.height / 2),
+                                        color = Color(202, 60, 70),
+                                        strokeWidth = 10f
+                                    )
+                                } else {
+                                    drawCircle(
+                                        color = Color.Gray,
+                                        radius = size.width / 4,
+                                        center = Offset(size.width / 2, size.height / 2),
+                                        style = Fill
+                                    )
+
+                                    drawCircle(
+                                        color = Color.DarkGray,
+                                        radius = size.width / 3.6f,
+                                        center = Offset(size.width / 2, size.height / 2),
+                                        style = Stroke(width = 3f)
+                                    )
+
+                                    drawLine(
+                                        start = Offset(size.width / 2, size.height / 5),
+                                        end = Offset(size.width / 2, size.height * 4 / 5f),
+                                        color = Color(202,60,70),
+                                        strokeWidth = 10f
+                                    )
+
+                                    drawLine(
+                                        start = Offset(size.width / 2 + 5f, size.height / 5),
+                                        end = Offset(size.width / 5, size.height / 3f),
+                                        color = Color(202,60,70),
+                                        strokeWidth = 10f
+                                    )
+
+                                    drawLine(
+                                        start = Offset(size.width / 2, size.height / 5),
+                                        end = Offset(size.width * 4 / 5, size.height / 3f),
+                                        color = Color(202,60,70),
+                                        strokeWidth = 10f
+                                    )
+                                }
                             }
                         }
                     }
@@ -1593,8 +1658,6 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
                                                     scoreSpeeding.value += 1
                                                 } else if (powerUp1Value.value == 2) {
                                                     autoJump.value = true
-                                                } else if (powerUp1Value.value == 3 && collisionCount.value >= 1) {
-                                                    tomClosingIn.value = true
                                                 }
                                             }
                                             powerUp1Value.value = 0
@@ -1739,29 +1802,66 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
                                 }
                             }
                             if (powerUp1Value.value == 3){
-                                drawCircle(
-                                    brush = Brush.radialGradient(
-                                        colors = yellowColors,
+                                if (!chooseRewardSource.value) {
+                                    drawCircle(
+                                        brush = Brush.radialGradient(
+                                            colors = yellowColors,
+                                            radius = size.width / 3,
+                                            center = Offset(size.width / 2, size.height / 2)
+                                        ),
                                         radius = size.width / 3,
                                         center = Offset(size.width / 2, size.height / 2)
-                                    ),
-                                    radius = size.width / 3,
-                                    center = Offset(size.width / 2, size.height / 2)
-                                )
+                                    )
 
-                                drawLine(
-                                    start = Offset(size.width / 2, size.height / 4),
-                                    end = Offset(size.width / 2, size.height * 3 / 4),
-                                    color = Color(202,60,70),
-                                    strokeWidth = 10f
-                                )
+                                    drawLine(
+                                        start = Offset(size.width / 2, size.height / 4),
+                                        end = Offset(size.width / 2, size.height * 3 / 4),
+                                        color = Color(202, 60, 70),
+                                        strokeWidth = 10f
+                                    )
 
-                                drawLine(
-                                    start = Offset(size.width / 4, size.height / 2),
-                                    end = Offset(size.width * 3 / 4, size.height / 2),
-                                    color = Color(202,60,70),
-                                    strokeWidth = 10f
-                                )
+                                    drawLine(
+                                        start = Offset(size.width / 4, size.height / 2),
+                                        end = Offset(size.width * 3 / 4, size.height / 2),
+                                        color = Color(202, 60, 70),
+                                        strokeWidth = 10f
+                                    )
+                                } else {
+                                    drawCircle(
+                                        color = Color.Gray,
+                                        radius = size.width / 4,
+                                        center = Offset(size.width / 2, size.height / 2),
+                                        style = Fill
+                                    )
+
+                                    drawCircle(
+                                        color = Color.DarkGray,
+                                        radius = size.width / 3.6f,
+                                        center = Offset(size.width / 2, size.height / 2),
+                                        style = Stroke(width = 3f)
+                                    )
+
+                                    drawLine(
+                                        start = Offset(size.width / 2, size.height / 5),
+                                        end = Offset(size.width / 2, size.height * 4 / 5f),
+                                        color = Color(202,60,70),
+                                        strokeWidth = 10f
+                                    )
+
+                                    drawLine(
+                                        start = Offset(size.width / 2 + 5f, size.height / 5),
+                                        end = Offset(size.width / 5, size.height / 3f),
+                                        color = Color(202,60,70),
+                                        strokeWidth = 10f
+                                    )
+
+                                    drawLine(
+                                        start = Offset(size.width / 2, size.height / 5),
+                                        end = Offset(size.width * 4 / 5, size.height / 3f),
+                                        color = Color(202,60,70),
+                                        strokeWidth = 10f
+                                    )
+                                }
                             }
                         }
                     }
