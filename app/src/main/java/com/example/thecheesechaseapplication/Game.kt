@@ -439,6 +439,11 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
             Text(startTimer2.value.toString())
             Text(displayText.value)*/
             Text(collisionCountLimit.value.toString())
+            Text(chooseRewardSource.value.toString())
+            Text(powerUp1Value.value.toString())
+            Text(powerUp1Amount.value.toString())
+            Text(powerUp2Value.value.toString())
+            Text(powerUp2Amount.value.toString())
             Text(viewState.value?.type.toString())
             Text(viewState.value?.amount.toString())
         }
@@ -570,12 +575,19 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
         LaunchedEffect(Unit){
             delay((2.5 * height.value / velocity.value * 15).toLong())
             scoreSpeeding.value -= 1
+            if (powerUp1Amount.value != 0){
+                powerUp1Amount.value = 0
+            } else if (powerUp2Amount.value != 0){
+                powerUp2Amount.value = 0
+            }
         }
     }
     if (scoreSpeeding.value == 2) {
         LaunchedEffect(Unit) {
             delay((2.5 * height.value / velocity.value * 15).toLong())
             scoreSpeeding.value -= 2
+            powerUp1Amount.value = 0
+            powerUp2Amount.value = 0
         }
     }
     if (startTimer1.value){
@@ -780,10 +792,12 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
                         score.value += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) ((height.value + width.value) / 2000) else ((height.value + width.value) / 6000)
                     }
                 } else {
-                    if (scoreSpeeding.value == 1) {
-                        score.value += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) viewState.value?.amount!! * ((height.value + width.value) / 2000) else 3 * ((height.value + width.value) / 6000)
-                    } else if (scoreSpeeding.value == 2) {
-                        score.value += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) viewState.value?.amount!! * viewState.value?.amount!! * ((height.value + width.value) / 2000) else 6 * ((height.value + width.value) / 6000)
+                    if (scoreSpeeding.value == 1 && powerUp1Amount.value != 0) {
+                        score.value += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) powerUp1Amount.value * ((height.value + width.value) / 2000) else 3 * ((height.value + width.value) / 6000)
+                    } else if (scoreSpeeding.value == 1 && powerUp1Amount.value != 0){
+                        score.value += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) powerUp2Amount.value * ((height.value + width.value) / 2000) else 3 * ((height.value + width.value) / 6000)
+                    }else if (scoreSpeeding.value == 2) {
+                        score.value += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) powerUp1Amount.value * powerUp2Amount.value * ((height.value + width.value) / 2000) else 6 * ((height.value + width.value) / 6000)
                     } else {
                         score.value += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) ((height.value + width.value) / 2000) else ((height.value + width.value) / 6000)
                     }
@@ -1493,16 +1507,20 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
                                                 } else if (powerUp1Value.value == 3) {
                                                     scoreSpeeding.value += 1
                                                 }
-                                                powerUp1Value.value = 0
-                                                if (powerUpsCollected.value == 1) {
-                                                    powerUpsCollected.value -= 1
-                                                } else if (powerUpsCollected.value == 2) {
-                                                    powerUpsCollected.value -= 2
-                                                }
                                             } else {
-                                                if (powerUp1Value.value == 1 && collisionCount.value >= 1) {
+                                                if (powerUp1Value.value == 1) {
                                                     scoreSpeeding.value += 1
+                                                } else if (powerUp1Value.value == 2) {
+                                                    autoJump.value = true
+                                                } else if (powerUp1Value.value == 3 && collisionCount.value >= 1) {
+                                                    tomClosingIn.value = true
                                                 }
+                                            }
+                                            powerUp1Value.value = 0
+                                            if (powerUpsCollected.value == 1) {
+                                                powerUpsCollected.value -= 1
+                                            } else if (powerUpsCollected.value == 2) {
+                                                powerUpsCollected.value -= 2
                                             }
                                             circularTimer1.value = 0f
                                         }
@@ -1635,6 +1653,7 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
         }
         if (activatePowerUp1.value && powerUpInit1.value == 0) {
             powerUp1Value.value = viewState.value?.type!!
+            powerUp1Amount.value = viewState.value?.amount!!
             powerUpInit1.value = 1
             setReward1.value = false
         }
@@ -1644,6 +1663,7 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
         }
         if (activatePowerUp2.value && powerUpInit2.value == 0) {
             powerUp2Value.value = viewState.value?.type!!
+            powerUp2Amount.value = viewState.value?.amount!!
             powerUpInit2.value = 1
             setReward2.value = false
         }

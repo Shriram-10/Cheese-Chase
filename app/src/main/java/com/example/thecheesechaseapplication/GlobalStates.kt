@@ -53,6 +53,12 @@ var chooseRewardSource = mutableStateOf(false)
 var setReward1 = mutableStateOf(false)
 var setReward2 = mutableStateOf(false)
 
+var powerUp1Amount = mutableStateOf(0)
+var powerUp2Amount = mutableStateOf(0)
+
+var autoJump = mutableStateOf(false)
+var tomClosingIn = mutableStateOf(false)
+
 var movingJerry = mutableStateOf<Dimensions>(
     Dimensions(
         0f,
