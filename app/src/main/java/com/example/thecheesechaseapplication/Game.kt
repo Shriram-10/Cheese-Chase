@@ -614,7 +614,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
         }
     }
 
-    if (powerUp1Value.value == 3 || powerUp2Value.value == 3) {
+    if ((powerUp1Value.value == 3 || powerUp2Value.value == 3) && chooseRewardSource.value) {
         LaunchedEffect(Unit) {
             tomClosingIn.value = true
         }
@@ -648,7 +648,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
         }
     }
 
-    if (powerUp1Value.value == 3 && activatePowerUp1.value){
+    if (powerUp1Value.value == 3 && activatePowerUp1.value && chooseRewardSource.value){
         LaunchedEffect(Unit){
             delay(2500)
             circularTimer1.value = 0f
@@ -656,7 +656,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
             usePowerUp.value = 0
             activatePowerUp1.value = false
         }
-    } else if (powerUp2Value.value == 3 && activatePowerUp2.value){
+    } else if (powerUp2Value.value == 3 && activatePowerUp2.value && chooseRewardSource.value){
         LaunchedEffect(Unit){
             delay(2500)
             circularTimer2.value = 0f
@@ -664,7 +664,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
             usePowerUp.value = 0
             activatePowerUp2.value = false
         }
-    } else if (powerUp1Value.value == 3 && !activatePowerUp1.value) {
+    } else if (powerUp1Value.value == 3 && !activatePowerUp1.value && chooseRewardSource.value) {
         LaunchedEffect(Unit) {
             if (powerUpsCollected.value == 1) {
                 powerUpsCollected.value -= 1
@@ -674,7 +674,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
             startTimer1.value = false
             powerUp1Value.value = 0
         }
-    } else if (powerUp2Value.value == 3 && !activatePowerUp2.value) {
+    } else if (powerUp2Value.value == 3 && !activatePowerUp2.value && chooseRewardSource.value) {
         LaunchedEffect(Unit) {
             if (powerUpsCollected.value == 2 || powerUpsCollected.value == 1) {
                 powerUpsCollected.value -= 1
@@ -741,7 +741,7 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
                                 }
 
                                 in 330..345 -> {
-                                    moveLeft.value = true  // Move left
+                                    moveLeft.value = true
                                     fixPosition.value = true
                                 }
                             }
@@ -833,20 +833,25 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
                             yBox[i] += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) velocity.value else (velocity.value) / 3
                             movingBoxes[i].centerY += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) velocity.value else (velocity.value) / 3
                         } else {
-                            yBoxLocate[i] = Random.nextInt(-1, 2)
-                            if (yBoxLocate[i] == -1) {
-                                movingBoxes[i].centerX = width.value / 6
-                                yBoxLocate[i] = -1
-                            } else if (yBoxLocate[i] == 0) {
-                                movingBoxes[i].centerX = width.value / 2
-                                yBoxLocate[i] = 0
-                            } else if (yBoxLocate[i] == 1) {
-                                movingBoxes[i].centerX = width.value * 5 / 6
-                                yBoxLocate[i] = 1
+                            if (chooseRandomSource.value && !chooseObstaclesSource.value) {
+                                yBoxLocate[i] = Random.nextInt(-1, 2)
+                                if (yBoxLocate[i] == -1) {
+                                    movingBoxes[i].centerX = width.value / 6
+                                    yBoxLocate[i] = -1
+                                } else if (yBoxLocate[i] == 0) {
+                                    movingBoxes[i].centerX = width.value / 2
+                                    yBoxLocate[i] = 0
+                                } else if (yBoxLocate[i] == 1) {
+                                    movingBoxes[i].centerX = width.value * 5 / 6
+                                    yBoxLocate[i] = 1
+                                }
+                                yBoxOffset[i] = Random.nextFloat() * width.value / 5f
+                                yBox[i] -= height.value + width.value + yBoxOffset[i]
+                                movingBoxes[i].centerY -= height.value + width.value + yBoxOffset[i]
+                            } else if (!chooseRandomSource.value && !chooseObstaclesSource.value){
+                                movingBoxes[i].centerY -= height.value + width.value
+                                yBox[i] -= height.value + width.value
                             }
-                            yBoxOffset[i] = Random.nextFloat() * width.value / 5f
-                            yBox[i] -= height.value + width.value + yBoxOffset[i]
-                            movingBoxes[i].centerY -= height.value + width.value + yBoxOffset[i]
                         }
                     }
                 } else if (shatterBlocks.value && resetBoxes.value == 0){
@@ -1512,7 +1517,7 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
                         } else {
                             drawCircle(
                                 brush = Brush.radialGradient(
-                                    colors = if (powerUp2Value.value != 3) powerUpColors else animatedPowerUpColors,
+                                    colors = if (powerUp2Value.value != 3 && !chooseRewardSource.value) powerUpColors else animatedPowerUpColors,
                                     radius = size.width / 2,
                                     center = Offset(size.width / 2, size.height / 2),
                                 )
@@ -1747,7 +1752,7 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
                         } else {
                             drawCircle(
                                 brush = Brush.radialGradient(
-                                    colors = if (powerUp1Value.value != 3) powerUpColors else animatedPowerUpColors,
+                                    colors = if (powerUp1Value.value != 3 && !chooseRewardSource.value) powerUpColors else animatedPowerUpColors,
                                     radius = size.width / 2,
                                     center = Offset(size.width / 2, size.height / 2),
                                 )
@@ -1945,7 +1950,7 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
             setReward1.value = true
         }
         if (activatePowerUp1.value && powerUpInit1.value == 0) {
-            powerUp1Value.value = 3 /*viewState.value?.type!!*/
+            powerUp1Value.value = viewState.value?.type!!
             powerUp1Amount.value = viewState.value?.amount!!
             powerUpInit1.value = 1
             setReward1.value = false
@@ -1955,7 +1960,7 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
             setReward2.value = true
         }
         if (activatePowerUp2.value && powerUpInit2.value == 0) {
-            powerUp2Value.value = 3 /*viewState.value?.type!!*/
+            powerUp2Value.value = viewState.value?.type!!
             powerUp2Amount.value = viewState.value?.amount!!
             powerUpInit2.value = 1
             setReward2.value = false

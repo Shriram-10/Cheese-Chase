@@ -62,6 +62,9 @@ var tomClosingIn = mutableStateOf(false)
 var currentTomLocation = mutableStateOf(0f)
 var viewTom = mutableStateOf(false)
 
+var chooseObstaclesSource = mutableStateOf(false)
+var chooseRandomSource = mutableStateOf(false)
+
 var movingJerry = mutableStateOf<Dimensions>(
     Dimensions(
         0f,
