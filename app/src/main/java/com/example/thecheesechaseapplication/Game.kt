@@ -101,7 +101,7 @@ fun AudioLoader() {
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreManager, context: Context, dataViewModel: MainViewModel){
-
+    val viewStateOfObstacles by dataViewModel.stateOfObstacleCourse
     AudioLoader()
 
     if (collisionCount.value < collisionCountLimit.value) {
@@ -402,6 +402,7 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
             Text(powerUp2Amount.value.toString())
             Text(usePowerUp.value.toString())
             Text(powerUpsCollected.value.toString())
+            Text(viewStateOfObstacles.value.toString())
         }
         if (collisionCount.value < collisionCountLimit.value) {
             Column {
@@ -717,6 +718,7 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
     val bitmapObstacle = LoadImageAsBitmap(url = "https://chasedeux.vercel.app/image?character=obstacle")
 
     val viewState by dataViewModel.stateOfHitHindrance
+    val viewStateOfObstacles by dataViewModel.stateOfObstacleCourse
     val infiniteTransition = rememberInfiniteTransition()
     
     val animatedColors = infiniteTransition.animateColor(
@@ -851,6 +853,19 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
                             } else if (!chooseRandomSource.value && !chooseObstaclesSource.value){
                                 movingBoxes[i].centerY -= height.value + width.value
                                 yBox[i] -= height.value + width.value
+                            } else if (chooseObstaclesSource.value){
+                                dataViewModel.fetchObstacleCourse(9)
+                                val x = viewStateOfObstacles.value?.get(i)
+                                if (x === "L"){
+                                    yBoxLocate[i] = -1
+                                } else if (x === "M"){
+                                    yBoxLocate[i] = 0
+                                } else if (x === "R"){
+                                    yBoxLocate[i] = 1
+                                }
+                                yBoxOffset[i] = /*Random.nextFloat() * width.value / 5f*/0f
+                                yBox[i] -= height.value + width.value + yBoxOffset[i]
+                                movingBoxes[i].centerY -= height.value + width.value + yBoxOffset[i]
                             }
                         }
                     }
