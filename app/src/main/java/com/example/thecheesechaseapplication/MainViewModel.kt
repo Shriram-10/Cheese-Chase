@@ -20,9 +20,32 @@ class MainViewModel : ViewModel() {
         val error : String? = null
     )
 
+    data class StateOfRetrival_ObstacleCourse(
+        val loading : Boolean = true,
+        val value : List<String>? = null,
+        val error : String? = null
+    )
+
     init {
         if (chooseCollisionSource.value) {
             fetchObstacleLimit()
+        }
+    }
+
+    fun fetchObstacleCourse(extent : Int){
+        viewModelScope.launch {
+            try{
+                val response = dataService.getObstacleCourse(obstacleCourseRequest(extent = extent))
+                _stateOfObstacleCourse.value = _stateOfObstacleCourse.value.copy(
+                    loading = false,
+                    value = response.obstacleCourse
+                )
+            } catch (e : Exception) {
+                _stateOfObstacleCourse.value = _stateOfObstacleCourse.value.copy(
+                    loading = false,
+                    error = "Data not loaded.\n${e.localizedMessage}"
+                )
+            }
         }
     }
 
@@ -65,4 +88,7 @@ class MainViewModel : ViewModel() {
 
     private val _stateOfHitHindrance = mutableStateOf(StateOfRetrival_HitHindrance())
     val stateOfHitHindrance : State<StateOfRetrival_HitHindrance> = _stateOfHitHindrance
+
+    private val _stateOfObstacleCourse = mutableStateOf(StateOfRetrival_ObstacleCourse())
+    val stateOfObstacleCourse : State<StateOfRetrival_ObstacleCourse> = _stateOfObstacleCourse
 }
