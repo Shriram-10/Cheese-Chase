@@ -17,6 +17,7 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -24,6 +25,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -33,6 +35,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -411,29 +415,103 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .height(80.dp)
                         .background(Color(170,194,176)),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    Button(
+                    Column(
+                        modifier = Modifier.fillMaxHeight()
+                    ){
+                        Spacer(Modifier.height(8.dp))
+
+
+                        Card(
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color(100,100,100)
+                            ),
+                            modifier = Modifier
+                                .width((width.value * 1.2f / 6).dp)
+                                .height(40.dp)
+                                .height(20.dp)
+                                .border(2.dp, Color.Black, RoundedCornerShape(25))
+                        ){
+                            Row(
+                                modifier = Modifier.fillMaxSize(),
+                                horizontalArrangement = Arrangement.Start
+                            ){
+                                Box(
+                                    modifier = Modifier
+                                        .padding(2.dp)
+                                        .fillMaxHeight()
+                                        .fillMaxWidth()
+                                        .background(Color(103,202,77)),
+
+                                    ){
+
+                                }
+                            }
+                        }
+                    }
+
+
+                    Spacer(modifier = Modifier.width((width.value / 40).dp))
+
+                    Card(
                         modifier = Modifier
-                            .height(60.dp)
+                            .height(68.dp)
+                            .width(72.dp)
                             .padding(top = 12.dp, bottom = 12.dp),
-                        onClick = {},
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(96, 149, 160)
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color(176,136,99)
                         ),
                         shape = RoundedCornerShape(25),
-                        elevation = ButtonDefaults.buttonElevation(
+                        elevation = CardDefaults.cardElevation(
                             defaultElevation = 8.dp,
                             pressedElevation = 8.dp
                         )
                     ) {
-                        Text(
-                            text = "Score : ${(score.value / 20).roundToInt()}✨",
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White,
-                            fontSize = 16.sp
-                        )
+                        Column(
+                            modifier = Modifier
+                                .padding(0.dp)
+                                .fillMaxSize(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ){
+                            Text(
+                                text = "SCORE",
+                                color = Color(246, 231, 107, 255),
+                                fontSize = 8.sp,
+                                fontWeight = FontWeight.ExtraBold
+                            )
+
+                            Spacer(Modifier.height(4.dp))
+
+                            Box(
+                                contentAlignment = Alignment.Center
+                            ){
+                                Button(
+                                    onClick = {},
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = Color(209,58,53)
+                                    ),
+                                    modifier = Modifier
+                                        .height(24.dp)
+                                        .width(40.dp),
+                                    shape = RoundedCornerShape(25),
+                                    elevation = ButtonDefaults.buttonElevation(
+                                        defaultElevation = 4.dp,
+                                    )
+                                ){
+
+                                }
+                                Text(
+                                    text = "${(score.value / 20).roundToInt()}",
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.White,
+                                    fontSize = 14.sp
+                                )
+                            }
+                        }
                     }
 
                     Spacer(modifier = Modifier.width((width.value / 40).dp))
@@ -1594,7 +1672,7 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
                         } else {
                             drawCircle(
                                 brush = Brush.radialGradient(
-                                    colors = if ((powerUp1Value.value != 3 && chooseRewardSource.value) || !chooseRewardSource.value) powerUpColors else animatedPowerUpColors,
+                                    colors = if ((powerUp2Value.value != 3 && chooseRewardSource.value) || !chooseRewardSource.value) powerUpColors else animatedPowerUpColors,
                                     radius = size.width / 2,
                                     center = Offset(size.width / 2, size.height / 2),
                                 )
