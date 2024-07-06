@@ -63,6 +63,7 @@ fun Settings(modifier: Modifier, navController: NavController, highScore: HighSc
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            dataViewModel.fetchObstacleCourse(9)
             val viewState by dataViewModel.state
 
             if (chooseCollisionSource.value) {

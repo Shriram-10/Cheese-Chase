@@ -22,7 +22,7 @@ class MainViewModel : ViewModel() {
 
     data class StateOfRetrival_ObstacleCourse(
         val loading : Boolean = true,
-        val value : List<String>? = null,
+        val value : MutableList<String>? = null,
         val error : String? = null
     )
 

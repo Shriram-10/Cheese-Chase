@@ -11,7 +11,7 @@ data class obstacleCourseRequest(
 )
 
 data class obstacleCourseResponse(
-    val obstacleCourse : List<String>
+    val obstacleCourse : MutableList<String>
 )
 
 data class randomWordRequest(

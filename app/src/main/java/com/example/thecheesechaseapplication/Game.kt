@@ -803,6 +803,8 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
         Color(252,242,152).copy(0.25f)
     )
 
+    var obstaclesList : MutableList<String> = mutableListOf()
+
     if (collisionCount.value < collisionCountLimit.value){
         LaunchedEffect(Unit){
             delay(500)
@@ -812,6 +814,27 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
                 val elapsedTime = withFrameMillis { it } - startTime
                 y += elapsedTime / 50f
                 movingJerry.value.centerY -= elapsedTime / 50f
+            }
+        }
+
+        LaunchedEffect(Unit){
+            while(true){
+                delay(4)
+                if (fetchCourse.value){
+                    dataViewModel.fetchObstacleCourse(9)
+                    delay(20)
+                    fetchCourse.value = false
+                }
+            }
+        }
+
+        LaunchedEffect(Unit){
+            while(true){
+                delay(4)
+                if (obstaclesList.count { it == "L" || it == "R" || it == "M" } == 0){
+                    obstaclesList = viewStateOfObstacles.value!!
+                    fetchCourse.value = true
+                }
             }
         }
 
@@ -829,6 +852,7 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
             )
             velocity.value = (height.value + width.value) / 200
             delay(1250)
+
             while (true) {
                 delay(16)
                 if (!shatterBlocks.value) {
@@ -856,18 +880,22 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
                                 movingBoxes[i].centerY -= height.value + width.value
                                 yBox[i] -= height.value + width.value
                             } else if (chooseObstaclesSource.value){
-                                dataViewModel.fetchObstacleCourse(9)
-                                val x = viewStateOfObstacles.value?.get(i)
-                                if (x === "L"){
+                                if (obstaclesList[i] == "L"){
                                     yBoxLocate[i] = -1
-                                } else if (x === "M"){
+                                    movingBoxes[i].centerX = width.value / 6
+                                    obstaclesList[i] = "U"
+                                } else if (obstaclesList[i] == "M") {
                                     yBoxLocate[i] = 0
-                                } else if (x === "R"){
+                                    movingBoxes[i].centerX = width.value / 2
+                                    obstaclesList[i] = "U"
+                                } else if (obstaclesList[i] == "R"){
                                     yBoxLocate[i] = 1
+                                    movingBoxes[i].centerX = width.value * 5 / 6
+                                    obstaclesList[i] = "U"
                                 }
-                                yBoxOffset[i] = /*Random.nextFloat() * width.value / 5f*/0f
-                                yBox[i] -= height.value + width.value + yBoxOffset[i]
+                                yBoxOffset[i] = Random.nextFloat() * width.value / 5f
                                 movingBoxes[i].centerY -= height.value + width.value + yBoxOffset[i]
+                                yBox[i] -= height.value + width.value + yBoxOffset[i]
                             }
                         }
                     }
@@ -1344,13 +1372,11 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
 
                 val path1 = Path()
 
-                // Move to the initial point of the star
                 path1.moveTo(
                     x = powerUp[0].centerX + size.width / 24 * cos(0f),
                     y = powerUp[0].centerY + size.width / 48 * sin(0f)
                 )
 
-                // Draw the lines between the points of the star
                 for (i in 1 until 5 * 2) {
                     val radius = if (i % 2 == 0) size.width / 24 else size.width / 48
                     val pointAngle = i * 72 * Math.PI / 180f
@@ -1385,13 +1411,11 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
 
                 val path2 = Path()
 
-                // Move to the initial point of the star
                 path2.moveTo(
                     x = powerUp[1].centerX + size.width / 24 * cos(0f),
                     y = powerUp[1].centerY + size.width / 48 * sin(0f)
                 )
 
-                // Draw the lines between the points of the star
                 for (i in 1 until 5 * 2) {
                     val radius = if (i % 2 == 0) size.width / 24 else size.width / 48
                     val pointAngle = i * 72 * Math.PI / 180f
@@ -1426,13 +1450,11 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
 
                 val path3 = Path()
 
-                // Move to the initial point of the star
                 path3.moveTo(
                     x = powerUp[2].centerX + size.width / 24 * cos(0f),
                     y = powerUp[2].centerY + size.width / 48 * sin(0f)
                 )
 
-                // Draw the lines between the points of the star
                 for (i in 1 until 5 * 2) {
                     val radius = if (i % 2 == 0) size.width / 24 else size.width / 48
                     val pointAngle = i * 72 * Math.PI / 180f

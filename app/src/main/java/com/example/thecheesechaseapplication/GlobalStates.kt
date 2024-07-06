@@ -64,8 +64,7 @@ var viewTom = mutableStateOf(false)
 
 var chooseObstaclesSource = mutableStateOf(false)
 var chooseRandomSource = mutableStateOf(false)
-
-var showLoadingPage = mutableStateOf(false)
+var fetchCourse = mutableStateOf(true)
 
 var movingJerry = mutableStateOf<Dimensions>(
     Dimensions(
