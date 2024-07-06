@@ -405,12 +405,6 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
             Text(usePowerUp.value.toString())
             Text(powerUpsCollected.value.toString())
             Text(viewStateOfObstacles.value.toString())
-            Text(powerUpDisplay[0].toString())
-            Text(powerUp[0].centerY.toString())
-            Text(powerUpDisplay[1].toString())
-            Text(powerUp[1].centerY.toString())
-            Text(powerUpDisplay[2].toString())
-            Text(powerUp[2].centerY.toString())
         }
         if (collisionCount.value < collisionCountLimit.value) {
             Column {
