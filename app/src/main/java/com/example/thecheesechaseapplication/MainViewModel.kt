@@ -26,6 +26,18 @@ class MainViewModel : ViewModel() {
         val error : String? = null
     )
 
+    data class StateOfRetrival_RandomWord(
+        val loading : Boolean = true,
+        val value : String? = null,
+        val error : String? = null
+    )
+
+    data class StateOfRetrival_Theme(
+        val loading : Boolean = true,
+        val value : Int? = null,
+        val error : String? = null
+    )
+
     init {
         if (chooseCollisionSource.value) {
             fetchObstacleLimit()
@@ -66,6 +78,8 @@ class MainViewModel : ViewModel() {
         }
     }
 
+
+
     fun fetchHitHindrance(){
         viewModelScope.launch {
             try {
@@ -83,6 +97,40 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    fun fetchRandomWord(length: Int) {
+        viewModelScope.launch {
+            try {
+                val response = dataService.getRandomWord(randomWordRequest(length = length))
+                _stateOfRandomWord.value = _stateOfRandomWord.value.copy(
+                    loading = false,
+                    value = response.word
+                )
+            } catch (e : Exception) {
+                _stateOfRandomWord.value = _stateOfRandomWord.value.copy(
+                    loading = false,
+                    error = "Data not loaded.\n${e.localizedMessage}"
+                )
+            }
+        }
+    }
+
+    fun fetchRandomWord(date : String, time : String) {
+        viewModelScope.launch {
+            try {
+                val response = dataService.getTheme(themeRequest(date = date, time = time))
+                _stateOfRandomWord.value = _stateOfRandomWord.value.copy(
+                    loading = false,
+                    value = response.theme
+                )
+            } catch (e : Exception) {
+                _stateOfRandomWord.value = _stateOfRandomWord.value.copy(
+                    loading = false,
+                    error = "Data not loaded.\n${e.localizedMessage}"
+                )
+            }
+        }
+    }
+
     private val _state = mutableStateOf(StateOfRetrival_obstacleLimit())
     val state : State<StateOfRetrival_obstacleLimit> = _state
 
@@ -91,4 +139,10 @@ class MainViewModel : ViewModel() {
 
     private val _stateOfObstacleCourse = mutableStateOf(StateOfRetrival_ObstacleCourse())
     val stateOfObstacleCourse : State<StateOfRetrival_ObstacleCourse> = _stateOfObstacleCourse
+
+    private val _stateOfRandomWord = mutableStateOf(StateOfRetrival_RandomWord())
+    val stateOfRandomWord : State<StateOfRetrival_RandomWord> = _stateOfRandomWord
+
+    private val _stateOfTheme = mutableStateOf(StateOfRetrival_Theme())
+    val stateOfTheme : State<StateOfRetrival_Theme> = _stateOfTheme
 }
