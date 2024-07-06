@@ -12,14 +12,6 @@ private val retrofit = Retrofit.Builder().baseUrl("https://chasedeux.vercel.app/
 
 val dataService = retrofit.create(ApiService::class.java)
 
-data class obstacleCourseRequest(
-    val extent : Int
-)
-
-data class obstacleCourseResponse(
-    val obstacleCourse : List<String>
-)
-
 interface ApiService {
     @GET("obstacleLimit")
     suspend fun getObstacleLimit() : CollisionCount
@@ -30,13 +22,10 @@ interface ApiService {
     @POST("obstacleCourse")
     suspend fun getObstacleCourse(@Body request : obstacleCourseRequest) : obstacleCourseResponse
 
-    /*@GET("/image?character=tom")
-    suspend fun getImageTom() : tomImage
+    @POST("randomWord")
+    suspend fun getRandomWord(@Body request : randomWordRequest) : randomWord
 
-    @GET("/image?character=jerry")
-    suspend fun getImageJerry() : jerryImage
-
-    @GET("/image?character=obstacle")
-    suspend fun getImageObstacle() : obstacleImage*/
+    @POST("theme")
+    suspend fun getTheme(@Body request : themeRequest) : theme
 }
 
