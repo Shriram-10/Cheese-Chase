@@ -70,6 +70,7 @@ import androidx.navigation.NavController
 import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
+import com.example.thecheesechaseapplication.ui.theme.fontFamily2
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -411,14 +412,59 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
                         shape = RoundedCornerShape(5)
                     )
             ) {
-
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(80.dp)
-                        .background(Color(170,194,176)),
+                        .background(Color(170, 194, 176)),
                     horizontalArrangement = Arrangement.End
                 ) {
+
+                Spacer(modifier = Modifier.width((width.value / 40).dp))
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ){
+                    Text(
+                        text = "Lives",
+                        color = Color.White,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Spacer(Modifier.height(4.dp))
+
+                    Box(
+                        contentAlignment = Alignment.Center
+                    ){
+                        Button(
+                            onClick = {},
+                            modifier = Modifier
+                                .width(50.dp)
+                                .height(50.dp)
+                                .border(4.dp, Color.Black, RoundedCornerShape(50)),
+                            shape = RoundedCornerShape(50),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(134,192,246)
+                            ),
+                            elevation = ButtonDefaults.buttonElevation(
+                                defaultElevation = 8.dp,
+                                pressedElevation = 8.dp
+                            )
+                        ){
+
+                        }
+
+                        Text(
+                            text = (collisionCountLimit.value - collisionCount.value).toString(),
+                            color = Color.White,
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.ExtraBold
+                        )
+                    }
+                }
+
+                    Spacer(modifier = Modifier.weight(1f))
+
                     Column(
                         modifier = Modifier.fillMaxHeight()
                     ){
@@ -444,12 +490,26 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
                                         .padding(2.dp)
                                         .fillMaxHeight()
                                         .fillMaxWidth()
-                                        .background(Color(103,202,77)),
+                                        .background(Color(103, 202, 77)),
 
                                     ){
 
                                 }
                             }
+                        }
+
+                        Row(
+                            modifier = Modifier
+                                .width((width.value * 1.2f / 6).dp),
+                            horizontalArrangement = Arrangement.Center
+                        ){
+                            Text(
+                                text = "TIME",
+                                color = Color.White,
+                                fontSize = 26.sp,
+                                fontFamily = fontFamily2,
+                                fontWeight = FontWeight.ExtraBold
+                            )
                         }
                     }
 

@@ -21,6 +21,10 @@ val fontFamily = FontFamily(
     Font(googleFont = fontName, fontProvider = provider),
 )
 
+val fontFamily2 = FontFamily(
+    androidx.compose.ui.text.font.Font(R.font.rubikglitchpop)
+)
+
 // Set of Material typography styles to start with
 val Typography = Typography(
     bodyLarge = TextStyle(
