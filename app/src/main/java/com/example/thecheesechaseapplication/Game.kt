@@ -103,6 +103,8 @@ fun AudioLoader() {
 fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreManager, context: Context, dataViewModel: MainViewModel){
     val viewStateOfObstacles by dataViewModel.stateOfObstacleCourse
     AudioLoader()
+    
+    BackNavigator(navController = navController)
 
     if (collisionCount.value < collisionCountLimit.value) {
         LaunchedEffect(Unit) {
@@ -1532,7 +1534,7 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
                         } else {
                             drawCircle(
                                 brush = Brush.radialGradient(
-                                    colors = if (powerUp2Value.value != 3 && !chooseRewardSource.value) powerUpColors else animatedPowerUpColors,
+                                    colors = if ((powerUp1Value.value != 3 && chooseRewardSource.value) || !chooseRewardSource.value) powerUpColors else animatedPowerUpColors,
                                     radius = size.width / 2,
                                     center = Offset(size.width / 2, size.height / 2),
                                 )
@@ -1767,7 +1769,7 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
                         } else {
                             drawCircle(
                                 brush = Brush.radialGradient(
-                                    colors = if (powerUp1Value.value != 3 && !chooseRewardSource.value) powerUpColors else animatedPowerUpColors,
+                                    colors = if ((powerUp1Value.value != 3 && chooseRewardSource.value) || !chooseRewardSource.value) powerUpColors else animatedPowerUpColors,
                                     radius = size.width / 2,
                                     center = Offset(size.width / 2, size.height / 2),
                                 )

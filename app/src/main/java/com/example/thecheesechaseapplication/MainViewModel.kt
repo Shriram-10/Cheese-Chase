@@ -114,7 +114,7 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun fetchRandomWord(date : String, time : String) {
+    fun fetchTheme(date : String, time : String) {
         viewModelScope.launch {
             try {
                 val response = dataService.getTheme(themeRequest(date = date, time = time))

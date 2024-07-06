@@ -49,7 +49,11 @@ fun Navigation(modifier: Modifier){
         composable(
             route = Screen.Load.route
         ){
-            LoadingPage(modifier = modifier)
+            LoadingPage(
+                modifier = modifier,
+                navController = navController,
+                dataViewModel = dataViewModel
+            )
         }
         composable(
             route = Screen.Game.route
