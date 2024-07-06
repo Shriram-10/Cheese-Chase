@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -46,6 +47,7 @@ import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
@@ -396,26 +398,26 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
         modifier = modifier.fillMaxSize(),
     ){
         GameCanvas(modifier, context, dataViewModel)
-        Column{
-            Text(collisionCountLimit.value.toString())
-            Text(powerUp1Value.value.toString())
-            Text(powerUp1Amount.value.toString())
-            Text(powerUp2Value.value.toString())
-            Text(powerUp2Amount.value.toString())
-            Text(usePowerUp.value.toString())
-            Text(powerUpsCollected.value.toString())
-            Text(viewStateOfObstacles.value.toString())
-        }
+
         if (collisionCount.value < collisionCountLimit.value) {
-            Column {
-                Spacer(modifier = Modifier.height(12.dp))
+            Column(
+                modifier = Modifier
+                    .shadow(
+                        elevation = 8.dp,
+                        shape = RoundedCornerShape(5)
+                    )
+            ) {
 
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color(170,194,176)),
                     horizontalArrangement = Arrangement.End
                 ) {
                     Button(
-                        modifier = Modifier.height(36.dp),
+                        modifier = Modifier
+                            .height(60.dp)
+                            .padding(top = 12.dp, bottom = 12.dp),
                         onClick = {},
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color(96, 149, 160)
