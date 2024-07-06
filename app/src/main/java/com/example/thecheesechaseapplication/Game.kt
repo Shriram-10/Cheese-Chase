@@ -405,6 +405,12 @@ fun Game(modifier: Modifier, navController: NavController, highScore: HighScoreM
             Text(usePowerUp.value.toString())
             Text(powerUpsCollected.value.toString())
             Text(viewStateOfObstacles.value.toString())
+            Text(powerUpDisplay[0].toString())
+            Text(powerUp[0].centerY.toString())
+            Text(powerUpDisplay[1].toString())
+            Text(powerUp[1].centerY.toString())
+            Text(powerUpDisplay[2].toString())
+            Text(powerUp[2].centerY.toString())
         }
         if (collisionCount.value < collisionCountLimit.value) {
             Column {
@@ -834,6 +840,34 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
                 if (obstaclesList.count { it == "L" || it == "R" || it == "M" } == 0){
                     obstaclesList = viewStateOfObstacles.value!!
                     fetchCourse.value = true
+                    if (initiatePowerUpUpdate.value && obstaclesList.count { it == "B" } <= 3) {
+                        for (i in 0..obstaclesList.count { it == "B"}) {
+                            if (obstaclesList.count { it == "B" } != 0) {
+                                val x = Random.nextInt(0, obstaclesList.count { it == "B" })
+                                if (!powerUpDisplay[x]) {
+                                    powerUpDisplay[x] = true
+                                    powerUp[x].centerY = -Random.nextFloat() * (height.value + width.value)
+                                    for (j in 0..8) {
+                                        if (powerUp[x].centerX == movingBoxes[j].centerX) {
+                                            if (powerUp[x].centerY >= movingBoxes[j].centerY - movingBoxes[j].height / 2 - powerUp[x].height / 2 && powerUp[x].centerY <= movingBoxes[j].centerY + movingBoxes[j].height / 2 + powerUp[x].height / 2) {
+                                                powerUp[x].centerY += powerUp[x].height / 2 + movingBoxes[j].height / 2
+                                            }
+                                        }
+                                    }
+
+                                    for (j in 0..2) {
+                                        if (powerUp[x].centerX == powerUp[j].centerX && j != x) {
+                                            if (powerUp[x].centerY >= powerUp[j].centerY - powerUp[j].height / 2 - powerUp[x].height / 2 && powerUp[x].centerY <= powerUp[j].centerY + powerUp[j].height / 2 + powerUp[x].height / 2) {
+                                                powerUpDisplay[x] = false
+                                            }
+                                        }
+                                    }
+
+                                    initiatePowerUpUpdate.value = false
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -920,9 +954,17 @@ fun GameCanvas(modifier:Modifier, context: Context, dataViewModel: MainViewModel
                 for (i in 0..2) {
                     if (powerUp[i].centerY <= 2.5f * (height.value + width.value)) {
                         powerUp[i].centerY += if (!(collided1.value || collided2.value || collided3.value || collided4.value || collided5.value)) velocity.value else (velocity.value) / 3
-                    } else if (powerUp[i].centerY > 2.5f * (height.value + width.value)) {
-                        powerUpDisplay[i] = Random.nextBoolean()
-                        powerUp[i].centerY = -Random.nextFloat() * (height.value + width.value)
+                    }
+                    if (!chooseObstaclesSource.value) {
+                         if (powerUp[i].centerY > 2.5f * (height.value + width.value)) {
+                            powerUpDisplay[i] = Random.nextBoolean()
+                            powerUp[i].centerY = -Random.nextFloat() * (height.value + width.value)
+                        }
+                    } else {
+                        if (powerUp[i].centerY > (height.value + width.value)) {
+                            powerUpDisplay[i] = false
+                            initiatePowerUpUpdate.value = true
+                        }
                     }
                     if (!shatterBlocks.value) {
                         for (j in 0..8) {
